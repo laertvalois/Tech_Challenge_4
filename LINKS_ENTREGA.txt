@@ -1,0 +1,56 @@
+================================================================================
+TECH CHALLENGE - SISTEMA PREDITIVO DE OBESIDADE
+================================================================================
+
+LINKS DE ENTREGA
+================================================================================
+
+1. APLICAÇÃO PREDITIVA (STREAMLIT):
+   [INSERIR LINK DO STREAMLIT CLOUD AQUI]
+   Exemplo: https://seu-usuario-obesity-app.streamlit.app
+
+2. DASHBOARD ANALÍTICO:
+   [INSERIR LINK DO DASHBOARD AQUI]
+   Exemplo: https://seu-usuario-obesity-dashboard.streamlit.app
+
+3. REPOSITÓRIO GITHUB:
+   [INSERIR LINK DO REPOSITÓRIO AQUI]
+   Exemplo: https://github.com/seu-usuario/tech-challenge-obesity
+
+4. VÍDEO DE APRESENTAÇÃO:
+   [INSERIR LINK DO VÍDEO AQUI]
+   Exemplo: https://youtube.com/watch?v=... ou link do Google Drive
+
+================================================================================
+INFORMAÇÕES DO PROJETO
+================================================================================
+
+- Modelo: Random Forest
+- Acurácia: 98.58%
+- F1-Score: 98.58%
+- Requisito atendido: ✅ Sim (acima de 75%)
+
+TECNOLOGIAS UTILIZADAS:
+- Python 3.x
+- scikit-learn
+- Streamlit
+- pandas, numpy
+- plotly, matplotlib, seaborn
+
+================================================================================
+INSTRUÇÕES PARA DEPLOY
+================================================================================
+
+1. Para fazer deploy no Streamlit Cloud:
+   - Acesse: https://streamlit.io/cloud
+   - Conecte seu repositório GitHub
+   - Configure os arquivos de configuração necessários
+   - Deploy automático será feito
+
+2. Para executar localmente:
+   - Instale as dependências: pip install -r requirements.txt
+   - Execute: streamlit run app/app.py (para aplicação)
+   - Execute: streamlit run dashboard/dashboard.py (para dashboard)
+
+================================================================================
+
