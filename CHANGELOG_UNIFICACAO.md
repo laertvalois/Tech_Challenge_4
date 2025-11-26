@@ -9,8 +9,8 @@
   - 🔮 Predição: Sistema preditivo de obesidade
   - 📊 Dashboard Analítico: Visualizações e insights
 
-### 2. Páginas Modulares
-- **Pasta:** `app/pages/`
+### 2. Módulos Modulares
+- **Pasta:** `app/modules/` (renomeado de `pages/` para evitar detecção automática do Streamlit)
 - **Arquivos criados:**
   - `prediction.py`: Lógica da página de predição
   - `dashboard.py`: Lógica do dashboard analítico

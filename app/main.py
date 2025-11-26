@@ -9,9 +9,9 @@ import os
 # Adicionar src ao path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-# Importar páginas
-from pages.prediction import show_prediction_page
-from pages.dashboard import show_dashboard_page
+# Importar módulos
+from modules.prediction import show_prediction_page
+from modules.dashboard import show_dashboard_page
 
 # Configuração da página
 st.set_page_config(
