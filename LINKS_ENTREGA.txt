@@ -14,8 +14,7 @@ LINKS DE ENTREGA
    Exemplo: https://seu-usuario-obesity-dashboard.streamlit.app
 
 3. REPOSITÓRIO GITHUB:
-   [INSERIR LINK DO REPOSITÓRIO AQUI]
-   Exemplo: https://github.com/seu-usuario/tech-challenge-obesity
+   https://github.com/laertvalois/Tech_Challenge_4
 
 4. VÍDEO DE APRESENTAÇÃO:
    [INSERIR LINK DO VÍDEO AQUI]
