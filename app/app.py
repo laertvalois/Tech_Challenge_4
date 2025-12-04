@@ -164,14 +164,9 @@ st.markdown("""
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
-    /* Multiselect e selectboxes nos filtros - manter branco mas com borda azul se necessário */
-    div[data-baseweb="select"] {
-        background-color: white;
-    }
-    
-    /* Garantir que todos os selectboxes tenham borda azul */
-    div[data-baseweb="select"] > div {
-        border: 1.5px solid #005ca9 !important;
+    /* Multiselect e selectboxes nos filtros - manter branco (filtros têm estilo próprio) */
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] {
+        background-color: white !important;
     }
     
     /* Labels dos filtros - mais discretos */
@@ -312,31 +307,34 @@ st.markdown("""
         border-left: 4px solid #005ca9;
     }
     
-    /* Garantir que todos os campos tenham borda azul padrão */
+    /* Garantir que todos os campos estejam padronizados - azul claro acinzentado sem borda */
     .stTextInput > div > div > input,
     .stNumberInput > div > div > input {
-        background-color: white !important;
-        border: 1.5px solid #005ca9 !important;
+        background-color: #e8f0f5 !important;
+        border: none !important;
         border-radius: 6px !important;
     }
     
     .stTextInput > div > div > input:hover,
-    .stNumberInput > div > div > input:hover,
+    .stNumberInput > div > div > input:hover {
+        background-color: #dde8f0 !important;
+    }
+    
     .stTextInput > div > div > input:focus,
     .stNumberInput > div > div > input:focus {
-        border: 1.5px solid #004a8a !important;
+        background-color: #d3e0eb !important;
         box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox com borda azul padrão */
+    /* Selectbox padronizado - azul claro acinzentado sem borda */
     .stSelectbox > div > div > div[data-baseweb="select"] {
-        background-color: white !important;
-        border: 1.5px solid #005ca9 !important;
+        background-color: #e8f0f5 !important;
+        border: none !important;
         border-radius: 6px !important;
     }
     
     .stSelectbox > div > div > div[data-baseweb="select"]:hover {
-        border: 1.5px solid #004a8a !important;
+        background-color: #dde8f0 !important;
     }
     
     /* Container dos inputs - transparente para não interferir */
@@ -346,10 +344,26 @@ st.markdown("""
         background-color: transparent !important;
     }
     
-    /* Garantir que selectboxes também tenham borda azul */
-    div[data-baseweb="select"] {
-        border: 1.5px solid #005ca9 !important;
+    /* Garantir que selectboxes também estejam padronizados - sem borda */
+    /* Aplicar apenas nos campos do formulário, não nos filtros */
+    div[data-baseweb="select"] > div {
+        border: none !important;
+        background-color: #e8f0f5 !important;
         border-radius: 6px !important;
+    }
+    
+    /* Exceção: filtros mantêm background branco */
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
+        background-color: white !important;
+    }
+    
+    div[data-baseweb="select"] > div:hover {
+        background-color: #dde8f0 !important;
+    }
+    
+    /* Exceção: filtros não mudam no hover */
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div:hover {
+        background-color: white !important;
     }
     
     /* Override das tags vermelhas do Streamlit para azul */
