@@ -15,6 +15,8 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib import colors
 from streamlit_option_menu import option_menu
+import plotly.express as px
+import plotly.graph_objects as go
 
 # Adicionar src ao path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -663,7 +665,6 @@ elif selected == "Predição de Obesidade":
             }).sort_values('Probabilidade (%)', ascending=False)
             
             # Gráfico de barras
-            import plotly.express as px
             fig = px.bar(
                 prob_df,
                 x='Nível de Obesidade',
@@ -823,7 +824,6 @@ elif selected == "Insights e Métricas":
                 OBESITY_LEVELS_PT.get(k, k): v for k, v in obesity_counts.items()
             })
             
-            import plotly.express as px
             fig_bar = px.bar(
                 x=obesity_counts_pt.index,
                 y=obesity_counts_pt.values,
@@ -1041,6 +1041,283 @@ elif selected == "Insights e Métricas":
                 xaxis_tickangle=-45
             )
             st.plotly_chart(fig_fcvc, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Análise de Correlação
+        st.header("🔗 Análise de Correlação")
+        st.markdown("""
+        Esta seção apresenta a análise de correlação entre as variáveis numéricas e suas relações com o nível de obesidade.
+        """)
+        
+        # Preparar dados numéricos para correlação
+        numerical_cols = ['Age', 'Height', 'Weight', 'BMI', 'FCVC', 'NCP', 'CH2O', 'FAF', 'TUE']
+        numerical_cols = [col for col in numerical_cols if col in df_filtered.columns]
+        
+        if len(numerical_cols) > 0:
+            corr_df = df_filtered[numerical_cols].corr()
+            
+            # Heatmap de correlação
+            fig_corr = go.Figure(data=go.Heatmap(
+                z=corr_df.values,
+                x=corr_df.columns,
+                y=corr_df.columns,
+                colorscale='RdBu',
+                zmid=0,
+                text=corr_df.round(2).values,
+                texttemplate='%{text}',
+                textfont={"size": 10},
+                colorbar=dict(title="Correlação")
+            ))
+            fig_corr.update_layout(
+                title='Matriz de Correlação entre Variáveis Numéricas',
+                height=600,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            st.plotly_chart(fig_corr, use_container_width=True)
+            
+            # Análise de correlações específicas
+            st.subheader("📊 Correlações com IMC e Obesidade")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Correlação IMC vs outras variáveis
+                if 'BMI' in corr_df.columns:
+                    bmi_corr = corr_df['BMI'].sort_values(ascending=False)
+                    bmi_corr = bmi_corr[bmi_corr.index != 'BMI']
+                    
+                    fig_bmi_corr = px.bar(
+                        x=bmi_corr.values,
+                        y=bmi_corr.index,
+                        orientation='h',
+                        title='Correlação das Variáveis com IMC',
+                        labels={'x': 'Correlação', 'y': 'Variável'},
+                        color=bmi_corr.values,
+                        color_continuous_scale='RdYlGn',
+                        color_continuous_midpoint=0
+                    )
+                    fig_bmi_corr.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        height=400
+                    )
+                    st.plotly_chart(fig_bmi_corr, use_container_width=True)
+            
+            with col2:
+                # Tabela de correlações
+                st.markdown("**Principais Correlações:**")
+                corr_table = []
+                for col in numerical_cols:
+                    if col != 'BMI' and 'BMI' in corr_df.columns:
+                        corr_val = corr_df.loc[col, 'BMI']
+                        corr_table.append({
+                            'Variável': col,
+                            'Correlação com IMC': f"{corr_val:.3f}",
+                            'Interpretação': 'Forte' if abs(corr_val) > 0.7 else 'Moderada' if abs(corr_val) > 0.4 else 'Fraca'
+                        })
+                
+                if corr_table:
+                    corr_table_df = pd.DataFrame(corr_table).sort_values('Correlação com IMC', key=lambda x: x.str.replace('Correlação com IMC', '').astype(float).abs(), ascending=False)
+                    st.dataframe(corr_table_df, use_container_width=True, hide_index=True)
+        
+        # Conclusão da Análise de Correlação
+        with st.expander("📝 Conclusão da Análise de Correlação", expanded=False):
+            st.markdown("""
+            **Principais Descobertas:**
+            
+            1. **IMC e Peso/Altura:** Como esperado, há forte correlação positiva entre IMC e Peso, e negativa com Altura.
+            
+            2. **Atividade Física:** A frequência de atividade física (FAF) geralmente apresenta correlação negativa com IMC, indicando que maior atividade física está associada a menor IMC.
+            
+            3. **Hábitos Alimentares:** Variáveis como consumo de vegetais (FCVC) e número de refeições (NCP) podem apresentar correlações interessantes com o IMC.
+            
+            4. **Idade:** A correlação entre idade e IMC pode variar, mas geralmente há uma relação positiva moderada.
+            
+            **Implicações Clínicas:**
+            - Variáveis com alta correlação com IMC são importantes preditores
+            - Correlações moderadas podem indicar fatores de risco ou proteção
+            - A análise de correlação ajuda a identificar variáveis redundantes ou complementares
+            """)
+        
+        st.markdown("---")
+        
+        # Análise de Boxplots
+        st.header("📦 Análise de Boxplots")
+        st.markdown("""
+        Os boxplots mostram a distribuição das variáveis numéricas por nível de obesidade, permitindo identificar diferenças, outliers e padrões.
+        """)
+        
+        # Boxplots por nível de obesidade
+        boxplot_vars = ['Age', 'BMI', 'Weight', 'Height', 'FAF', 'FCVC']
+        boxplot_vars = [var for var in boxplot_vars if var in df_filtered.columns]
+        
+        if len(boxplot_vars) > 0:
+            # Selecionar variáveis para boxplot
+            selected_boxplot_vars = st.multiselect(
+                "Selecione as variáveis para análise de boxplot:",
+                options=boxplot_vars,
+                default=boxplot_vars[:4] if len(boxplot_vars) >= 4 else boxplot_vars
+            )
+            
+            if selected_boxplot_vars:
+                # Criar boxplots
+                num_vars = len(selected_boxplot_vars)
+                cols_per_row = 2
+                num_rows = (num_vars + cols_per_row - 1) // cols_per_row
+                
+                for i in range(0, num_vars, cols_per_row):
+                    cols = st.columns(cols_per_row)
+                    for j, var in enumerate(selected_boxplot_vars[i:i+cols_per_row]):
+                        with cols[j]:
+                            df_plot = df_filtered.copy()
+                            df_plot['Obesity_PT'] = df_plot['Obesity'].map(OBESITY_LEVELS_PT)
+                            
+                            fig_box = px.box(
+                                df_plot,
+                                x='Obesity_PT',
+                                y=var,
+                                title=f'Distribuição de {var} por Nível de Obesidade',
+                                color='Obesity_PT',
+                                color_discrete_sequence=px.colors.qualitative.Set3
+                            )
+                            fig_box.update_layout(
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                xaxis_tickangle=-45,
+                                showlegend=False,
+                                height=400
+                            )
+                            st.plotly_chart(fig_box, use_container_width=True)
+        
+        # Conclusão da Análise de Boxplots
+        with st.expander("📝 Conclusão da Análise de Boxplots", expanded=False):
+            st.markdown("""
+            **Principais Observações:**
+            
+            1. **Distribuição de IMC:** Os boxplots mostram claramente a separação entre diferentes níveis de obesidade, com medianas crescentes conforme o nível aumenta.
+            
+            2. **Outliers:** A presença de outliers pode indicar casos extremos que requerem atenção especial ou podem ser erros de medição.
+            
+            3. **Variabilidade:** A amplitude interquartil (IQR) mostra a variabilidade dentro de cada grupo. Grupos com maior IQR têm mais variabilidade.
+            
+            4. **Diferenças entre Grupos:** Boxplots permitem identificar visualmente diferenças significativas entre os níveis de obesidade para cada variável.
+            
+            5. **Idade e Outras Variáveis:** A distribuição da idade e outras características pode variar entre os grupos, indicando perfis diferentes.
+            
+            **Implicações:**
+            - Identificação de grupos de risco com características distintas
+            - Detecção de outliers que podem necessitar investigação adicional
+            - Compreensão da variabilidade dentro de cada categoria de obesidade
+            """)
+        
+        st.markdown("---")
+        
+        # Análise de Distribuição
+        st.header("📊 Análise de Distribuição")
+        st.markdown("""
+        Esta seção apresenta análises detalhadas das distribuições das variáveis, incluindo histogramas, densidade e estatísticas descritivas.
+        """)
+        
+        # Selecionar variáveis para análise de distribuição
+        dist_vars = ['Age', 'BMI', 'Weight', 'Height', 'FAF', 'FCVC', 'NCP', 'CH2O', 'TUE']
+        dist_vars = [var for var in dist_vars if var in df_filtered.columns]
+        
+        if len(dist_vars) > 0:
+            selected_dist_var = st.selectbox(
+                "Selecione a variável para análise de distribuição:",
+                options=dist_vars
+            )
+            
+            if selected_dist_var:
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Histograma
+                    fig_hist = px.histogram(
+                        df_filtered,
+                        x=selected_dist_var,
+                        nbins=30,
+                        title=f'Distribuição de {selected_dist_var}',
+                        labels={selected_dist_var: selected_dist_var, 'count': 'Frequência'},
+                        color_discrete_sequence=['#4CAF50']
+                    )
+                    fig_hist.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        height=400
+                    )
+                    st.plotly_chart(fig_hist, use_container_width=True)
+                
+                with col2:
+                    # Distribuição por nível de obesidade
+                    df_plot = df_filtered.copy()
+                    df_plot['Obesity_PT'] = df_plot['Obesity'].map(OBESITY_LEVELS_PT)
+                    
+                    fig_dist = px.histogram(
+                        df_plot,
+                        x=selected_dist_var,
+                        color='Obesity_PT',
+                        nbins=30,
+                        title=f'Distribuição de {selected_dist_var} por Nível de Obesidade',
+                        labels={selected_dist_var: selected_dist_var, 'count': 'Frequência'},
+                        barmode='overlay',
+                        opacity=0.7
+                    )
+                    fig_dist.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        height=400
+                    )
+                    st.plotly_chart(fig_dist, use_container_width=True)
+                
+                # Estatísticas descritivas
+                st.subheader(f"📈 Estatísticas Descritivas - {selected_dist_var}")
+                
+                stats_col1, stats_col2, stats_col3, stats_col4 = st.columns(4)
+                
+                with stats_col1:
+                    st.metric("Média", f"{df_filtered[selected_dist_var].mean():.2f}")
+                
+                with stats_col2:
+                    st.metric("Mediana", f"{df_filtered[selected_dist_var].median():.2f}")
+                
+                with stats_col3:
+                    st.metric("Desvio Padrão", f"{df_filtered[selected_dist_var].std():.2f}")
+                
+                with stats_col4:
+                    st.metric("Coef. Variação", f"{(df_filtered[selected_dist_var].std() / df_filtered[selected_dist_var].mean() * 100):.2f}%")
+                
+                # Estatísticas por nível de obesidade
+                st.subheader(f"📊 Estatísticas por Nível de Obesidade - {selected_dist_var}")
+                
+                stats_by_obesity = df_filtered.groupby('Obesity')[selected_dist_var].agg(['mean', 'median', 'std', 'min', 'max']).round(2)
+                stats_by_obesity.index = [OBESITY_LEVELS_PT.get(idx, idx) for idx in stats_by_obesity.index]
+                stats_by_obesity.columns = ['Média', 'Mediana', 'Desvio Padrão', 'Mínimo', 'Máximo']
+                st.dataframe(stats_by_obesity, use_container_width=True)
+        
+        # Conclusão da Análise de Distribuição
+        with st.expander("📝 Conclusão da Análise de Distribuição", expanded=False):
+            st.markdown("""
+            **Principais Descobertas:**
+            
+            1. **Normalidade:** A análise de distribuição permite verificar se as variáveis seguem distribuição normal, o que é importante para alguns testes estatísticos.
+            
+            2. **Assimetria:** Distribuições assimétricas podem indicar que a maioria dos valores está concentrada em uma faixa específica.
+            
+            3. **Diferenças entre Grupos:** As distribuições por nível de obesidade mostram como cada variável se comporta em diferentes categorias.
+            
+            4. **Valores Extremos:** A identificação de valores extremos (mínimos e máximos) ajuda a entender a amplitude dos dados.
+            
+            5. **Variabilidade:** O coeficiente de variação indica a variabilidade relativa dos dados, útil para comparar variáveis com escalas diferentes.
+            
+            **Implicações:**
+            - Compreensão da natureza dos dados e suas características
+            - Identificação de padrões e tendências
+            - Base para decisões sobre transformações de dados se necessário
+            - Suporte para interpretação de resultados do modelo
+            """)
         
         st.markdown("---")
         
