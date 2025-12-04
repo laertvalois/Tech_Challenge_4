@@ -32,53 +32,120 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado para cores claras e melhor UX
+# CSS personalizado com cores frias
 st.markdown("""
 <style>
+    /* Background das páginas */
     .main {
-        background-color: #f8f9fa;
+        background-color: #f5f5f5;
     }
-    /* Aumentar largura do sidebar */
+    .stApp {
+        background-color: #f5f5f5;
+    }
+    
+    /* Background do sidebar/menu */
     section[data-testid="stSidebar"] {
+        background-color: #dcdcdc !important;
         width: 350px !important;
     }
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
         width: 350px !important;
+        background-color: #dcdcdc;
     }
+    [data-testid="stSidebar"] > div:first-child {
+        background-color: #dcdcdc;
+    }
+    
+    /* Títulos das páginas - cor fria com fonte branca */
+    h1 {
+        color: white !important;
+        background-color: #005ca9e6 !important;
+        padding: 1rem 1.5rem !important;
+        border-radius: 10px !important;
+        margin-bottom: 1rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Headers (h2) - cor fria com fonte branca */
+    h2 {
+        color: white !important;
+        background-color: #005ca9e6 !important;
+        padding: 0.75rem 1.25rem !important;
+        border-radius: 8px !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Aplicar estilo também para elementos específicos do Streamlit */
+    [data-testid="stHeader"] h1 {
+        color: white !important;
+        background-color: #005ca9e6 !important;
+        padding: 1rem 1.5rem !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Subheaders (h3) - tom mais claro */
+    h3 {
+        color: #005ca9 !important;
+        font-weight: 600 !important;
+        margin-top: 1rem !important;
+    }
+    
+    /* Filtros - estilo com cor fria */
+    div[style*="background-color: #005ca9e6"] label,
+    div[style*="005ca9e6"] label {
+        color: white !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Botões */
     .stButton>button {
-        background-color: #4CAF50;
-        color: white;
+        background-color: #005ca9 !important;
+        color: white !important;
         border-radius: 8px;
         padding: 0.5rem 2rem;
         font-weight: 600;
+        border: none;
     }
     .stButton>button:hover {
-        background-color: #45a049;
+        background-color: #004a8a !important;
     }
+    
+    /* Cards de métricas */
     .metric-card {
         background-color: white;
         padding: 1rem;
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin: 0.5rem 0;
+        border-left: 4px solid #005ca9;
     }
+    
+    /* Result box */
     .result-box {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
         color: white;
         padding: 2rem;
         border-radius: 15px;
         text-align: center;
         margin: 1rem 0;
     }
+    
+    /* Info boxes */
     .info-box {
         background-color: #e3f2fd;
         padding: 1rem;
         border-radius: 8px;
-        border-left: 4px solid #2196F3;
+        border-left: 4px solid #005ca9;
         margin: 1rem 0;
     }
+    
+    /* Logo/título do sidebar */
     .logo-title {
-        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
         color: white;
         padding: 1rem;
         border-radius: 10px;
@@ -87,14 +154,47 @@ st.markdown("""
         font-weight: bold;
         margin-bottom: 1rem;
     }
-    h1 {
-        color: #2c3e50;
+    
+    /* Multiselect e selectboxes nos filtros */
+    div[data-baseweb="select"] {
+        background-color: white;
     }
-    h2 {
-        color: #34495e;
+    
+    /* Labels dos filtros */
+    .filter-container .stMultiSelect label,
+    .filter-container .stSelectbox label,
+    .filter-container .stSlider label {
+        color: white !important;
+        font-weight: 600 !important;
     }
-    h3 {
-        color: #5a6c7d;
+    
+    /* Slider nos filtros */
+    .stSlider label {
+        color: white !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Ajustar cor dos textos dentro do container de filtros */
+    .filter-container p,
+    .filter-container div {
+        color: white;
+    }
+    
+    /* Expanders */
+    .streamlit-expanderHeader {
+        background-color: #e8f4f8;
+        color: #005ca9;
+        font-weight: 600;
+    }
+    
+    /* Tabelas */
+    .dataframe {
+        background-color: white;
+    }
+    
+    /* Markdown info/success/warning */
+    .stAlert {
+        border-left: 4px solid #005ca9;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -365,16 +465,20 @@ with st.sidebar:
         menu_icon="cast",
         default_index=0,
         styles={
-            "container": {"padding": "5!important", "background-color": "#f8f9fa"},
-            "icon": {"color": "#4CAF50", "font-size": "18px"},
+            "container": {"padding": "5!important", "background-color": "#dcdcdc"},
+            "icon": {"color": "#005ca9", "font-size": "18px"},
             "nav-link": {
                 "font-size": "16px",
                 "text-align": "left",
                 "margin": "0px",
                 "color": "#2c3e50",
-                "--hover-color": "#e3f2fd",
+                "--hover-color": "#b3d9f2",
+                "border-radius": "5px",
             },
-            "nav-link-selected": {"background-color": "#4CAF50"},
+            "nav-link-selected": {
+                "background-color": "#005ca9e6",
+                "color": "white",
+            },
         }
     )
     
@@ -755,8 +859,11 @@ elif selected == "Insights e Métricas":
     df = load_data()
     
     if df is not None:
-        # Filtros no topo da página
-        st.header("🔍 Filtros")
+        # Filtros no topo da página com estilo
+        st.markdown("""
+        <div style="background-color: #005ca9e6; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+            <h2 style="color: white; margin: 0 0 1rem 0; padding: 0; font-weight: 600;">🔍 Filtros</h2>
+        """, unsafe_allow_html=True)
         
         # Container para filtros
         filter_col1, filter_col2, filter_col3 = st.columns(3)
@@ -798,6 +905,7 @@ elif selected == "Insights e Métricas":
                 value=(int(df['Age'].min()), int(df['Age'].max()))
             )
         
+        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("---")
         
         # Aplicar filtros
