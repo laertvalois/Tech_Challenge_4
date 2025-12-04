@@ -35,12 +35,12 @@ st.set_page_config(
 # CSS personalizado com cores frias
 st.markdown("""
 <style>
-    /* Background das páginas */
+    /* Background das páginas - branco */
     .main {
-        background-color: #f5f5f5;
+        background-color: white;
     }
     .stApp {
-        background-color: #f5f5f5;
+        background-color: white;
     }
     
     /* Background do sidebar/menu */
@@ -164,9 +164,14 @@ st.markdown("""
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
-    /* Multiselect e selectboxes nos filtros */
+    /* Multiselect e selectboxes nos filtros - manter branco mas com borda azul se necessário */
     div[data-baseweb="select"] {
         background-color: white;
+    }
+    
+    /* Garantir que todos os selectboxes tenham borda azul */
+    div[data-baseweb="select"] > div {
+        border: 1.5px solid #005ca9 !important;
     }
     
     /* Labels dos filtros - mais discretos */
@@ -210,26 +215,33 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Campos de input - mais contraste com background branco e borda */
+    /* Campos de input - padrão azul com borda e background branco */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input {
         background-color: white !important;
-        border: 1.5px solid #b0b0b0 !important;
+        border: 1.5px solid #005ca9 !important;
         border-radius: 6px !important;
     }
     
+    .stTextInput>div>div>input:hover,
+    .stNumberInput>div>div>input:hover,
     .stTextInput>div>div>input:focus,
     .stNumberInput>div>div>input:focus {
-        border: 1.5px solid #005ca9 !important;
+        border: 1.5px solid #004a8a !important;
         box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox - mais contraste */
+    /* Selectbox - padrão azul */
     .stSelectbox>div>div>div,
     div[data-baseweb="select"] > div {
         background-color: white !important;
-        border: 1.5px solid #b0b0b0 !important;
+        border: 1.5px solid #005ca9 !important;
         border-radius: 6px !important;
+    }
+    
+    .stSelectbox>div>div>div:hover,
+    div[data-baseweb="select"] > div:hover {
+        border: 1.5px solid #004a8a !important;
     }
     
     /* Multiselect - tags azuis em vez de vermelhas */
@@ -297,31 +309,44 @@ st.markdown("""
         border-left: 4px solid #005ca9;
     }
     
-    /* Garantir contraste nos campos de formulário - background branco e borda */
+    /* Garantir que todos os campos tenham borda azul padrão */
     .stTextInput > div > div > input,
     .stNumberInput > div > div > input {
         background-color: white !important;
-        border: 1.5px solid #a0a0a0 !important;
+        border: 1.5px solid #005ca9 !important;
         border-radius: 6px !important;
     }
     
     .stTextInput > div > div > input:hover,
-    .stNumberInput > div > div > input:hover {
-        border: 1.5px solid #005ca9 !important;
+    .stNumberInput > div > div > input:hover,
+    .stTextInput > div > div > input:focus,
+    .stNumberInput > div > div > input:focus {
+        border: 1.5px solid #004a8a !important;
+        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox com melhor contraste */
+    /* Selectbox com borda azul padrão */
     .stSelectbox > div > div > div[data-baseweb="select"] {
         background-color: white !important;
-        border: 1.5px solid #a0a0a0 !important;
+        border: 1.5px solid #005ca9 !important;
         border-radius: 6px !important;
     }
     
-    /* Container dos inputs para garantir background branco */
+    .stSelectbox > div > div > div[data-baseweb="select"]:hover {
+        border: 1.5px solid #004a8a !important;
+    }
+    
+    /* Container dos inputs - transparente para não interferir */
     .stTextInput > div,
     .stNumberInput > div,
     .stSelectbox > div {
         background-color: transparent !important;
+    }
+    
+    /* Garantir que selectboxes também tenham borda azul */
+    div[data-baseweb="select"] {
+        border: 1.5px solid #005ca9 !important;
+        border-radius: 6px !important;
     }
     
     /* Override das tags vermelhas do Streamlit para azul */
