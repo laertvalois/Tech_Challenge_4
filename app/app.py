@@ -56,42 +56,46 @@ st.markdown("""
         background-color: #dcdcdc;
     }
     
-    /* Títulos das páginas - cor fria com fonte branca */
+    /* Títulos das páginas - menores e mais discretos */
     h1 {
         color: white !important;
         background-color: #005ca9e6 !important;
-        padding: 1rem 1.5rem !important;
-        border-radius: 10px !important;
-        margin-bottom: 1rem !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 6px !important;
+        margin-bottom: 0.75rem !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        font-size: 1.5rem !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
     }
     
-    /* Headers (h2) - cor fria com fonte branca */
+    /* Headers (h2) - menores e mais discretos */
     h2 {
         color: white !important;
         background-color: #005ca9e6 !important;
-        padding: 0.75rem 1.25rem !important;
-        border-radius: 8px !important;
-        margin-top: 1.5rem !important;
-        margin-bottom: 1rem !important;
+        padding: 0.4rem 0.8rem !important;
+        border-radius: 6px !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.75rem !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        font-size: 1.25rem !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
     }
     
     /* Aplicar estilo também para elementos específicos do Streamlit */
     [data-testid="stHeader"] h1 {
         color: white !important;
         background-color: #005ca9e6 !important;
-        padding: 1rem 1.5rem !important;
-        border-radius: 10px !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 6px !important;
+        font-size: 1.5rem !important;
     }
     
-    /* Subheaders (h3) - tom mais claro */
+    /* Subheaders (h3) - tom mais claro e discreto */
     h3 {
         color: #005ca9 !important;
         font-weight: 600 !important;
-        margin-top: 1rem !important;
+        margin-top: 0.75rem !important;
+        font-size: 1.1rem !important;
     }
     
     /* Filtros - estilo com cor fria */
@@ -101,58 +105,63 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Botões */
+    /* Botões - mais discretos */
     .stButton>button {
         background-color: #005ca9 !important;
         color: white !important;
-        border-radius: 8px;
-        padding: 0.5rem 2rem;
-        font-weight: 600;
+        border-radius: 6px;
+        padding: 0.4rem 1.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
         border: none;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .stButton>button:hover {
         background-color: #004a8a !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     
-    /* Cards de métricas */
+    /* Cards de métricas - mais discretos */
     .metric-card {
         background-color: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         margin: 0.5rem 0;
-        border-left: 4px solid #005ca9;
+        border-left: 3px solid #005ca9;
     }
     
-    /* Result box */
+    /* Result box - mais discreto */
     .result-box {
         background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
         color: white;
-        padding: 2rem;
-        border-radius: 15px;
+        padding: 1.5rem;
+        border-radius: 10px;
         text-align: center;
         margin: 1rem 0;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     
-    /* Info boxes */
+    /* Info boxes - mais discretos */
     .info-box {
-        background-color: #e3f2fd;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #005ca9;
-        margin: 1rem 0;
+        background-color: #e8f4f8;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #005ca9;
+        margin: 0.75rem 0;
     }
     
-    /* Logo/título do sidebar */
+    /* Logo/título do sidebar - mais discreto */
     .logo-title {
         background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
         color: white;
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 0.75rem;
+        border-radius: 8px;
         text-align: center;
-        font-size: 1.5rem;
-        font-weight: bold;
+        font-size: 1.25rem;
+        font-weight: 600;
         margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     /* Multiselect e selectboxes nos filtros */
@@ -160,18 +169,27 @@ st.markdown("""
         background-color: white;
     }
     
-    /* Labels dos filtros */
+    /* Labels dos filtros - mais discretos */
     .filter-container .stMultiSelect label,
     .filter-container .stSelectbox label,
     .filter-container .stSlider label {
         color: white !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
     }
     
     /* Slider nos filtros */
     .stSlider label {
         color: white !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Labels dentro do container azul */
+    div[style*="background-color: #005ca9e6"] label {
+        color: white !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
     }
     
     /* Ajustar cor dos textos dentro do container de filtros */
@@ -180,11 +198,21 @@ st.markdown("""
         color: white;
     }
     
-    /* Expanders */
+    /* Estilo mais discreto para os componentes de filtro */
+    div[style*="background-color: #005ca9e6"] {
+        padding: 1rem 1.25rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Expanders - mais discretos */
     .streamlit-expanderHeader {
         background-color: #e8f4f8;
         color: #005ca9;
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
     }
     
     /* Tabelas */
@@ -859,10 +887,10 @@ elif selected == "Insights e Métricas":
     df = load_data()
     
     if df is not None:
-        # Filtros no topo da página com estilo
+        # Filtros no topo da página com estilo mais discreto
         st.markdown("""
-        <div style="background-color: #005ca9e6; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
-            <h2 style="color: white; margin: 0 0 1rem 0; padding: 0; font-weight: 600;">🔍 Filtros</h2>
+        <div style="background-color: #005ca9e6; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
+            <h3 style="color: white; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem;">🔍 Filtros</h3>
         """, unsafe_allow_html=True)
         
         # Container para filtros
