@@ -755,31 +755,50 @@ elif selected == "Insights e Métricas":
     df = load_data()
     
     if df is not None:
-        # Sidebar com filtros
-        with st.sidebar:
-            st.header("🔍 Filtros")
+        # Filtros no topo da página
+        st.header("🔍 Filtros")
+        
+        # Container para filtros
+        filter_col1, filter_col2, filter_col3 = st.columns(3)
+        
+        with filter_col1:
+            # Filtro por gênero (traduzido)
+            gender_options_en = df['Gender'].unique()
+            gender_options_pt = ['Masculino' if g == 'Male' else 'Feminino' for g in gender_options_en]
+            gender_mapping = dict(zip(gender_options_pt, gender_options_en))
             
-            # Filtro por gênero
-            gender_filter = st.multiselect(
+            gender_filter_pt = st.multiselect(
                 "Gênero",
-                options=df['Gender'].unique(),
-                default=df['Gender'].unique()
+                options=gender_options_pt,
+                default=gender_options_pt
             )
+            # Converter de volta para inglês para filtro
+            gender_filter = [gender_mapping[g] for g in gender_filter_pt]
+        
+        with filter_col2:
+            # Filtro por nível de obesidade (traduzido)
+            obesity_options_en = df['Obesity'].unique()
+            obesity_options_pt = [OBESITY_LEVELS_PT.get(obs, obs) for obs in obesity_options_en]
+            obesity_mapping = dict(zip(obesity_options_pt, obesity_options_en))
             
-            # Filtro por nível de obesidade
-            obesity_filter = st.multiselect(
+            obesity_filter_pt = st.multiselect(
                 "Nível de Obesidade",
-                options=df['Obesity'].unique(),
-                default=df['Obesity'].unique()
+                options=obesity_options_pt,
+                default=obesity_options_pt
             )
-            
+            # Converter de volta para inglês para filtro
+            obesity_filter = [obesity_mapping[obs] for obs in obesity_filter_pt]
+        
+        with filter_col3:
             # Filtro por idade
             age_range = st.slider(
-                "Faixa etária",
+                "Faixa Etária (anos)",
                 min_value=int(df['Age'].min()),
                 max_value=int(df['Age'].max()),
                 value=(int(df['Age'].min()), int(df['Age'].max()))
             )
+        
+        st.markdown("---")
         
         # Aplicar filtros
         df_filtered = df[
@@ -788,6 +807,12 @@ elif selected == "Insights e Métricas":
             (df['Age'] >= age_range[0]) &
             (df['Age'] <= age_range[1])
         ]
+        
+        # Mostrar quantidade de registros filtrados
+        if len(df_filtered) < len(df):
+            st.info(f"📊 Mostrando {len(df_filtered)} de {len(df)} registros com os filtros aplicados.")
+        
+        st.markdown("---")
         
         # Métricas principais
         st.header("📈 Métricas Principais")
