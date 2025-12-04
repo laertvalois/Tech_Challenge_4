@@ -210,35 +210,55 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Campos de input - padronizados: azul claro acinzentado sem borda */
+    /* Campos de input - TODOS padronizados: azul claro acinzentado sem borda */
     .stTextInput>div>div>input,
-    .stNumberInput>div>div>input {
+    .stNumberInput>div>div>input,
+    .stTextInput input,
+    .stNumberInput input {
         background-color: #e8f0f5 !important;
         border: none !important;
         border-radius: 6px !important;
     }
     
     .stTextInput>div>div>input:hover,
-    .stNumberInput>div>div>input:hover {
+    .stNumberInput>div>div>input:hover,
+    .stTextInput input:hover,
+    .stNumberInput input:hover {
         background-color: #dde8f0 !important;
     }
     
     .stTextInput>div>div>input:focus,
-    .stNumberInput>div>div>input:focus {
+    .stNumberInput>div>div>input:focus,
+    .stTextInput input:focus,
+    .stNumberInput input:focus {
         background-color: #d3e0eb !important;
         box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox - padronizado: azul claro acinzentado sem borda */
+    /* Selectbox - TODOS padronizados: azul claro acinzentado sem borda */
     .stSelectbox>div>div>div,
-    div[data-baseweb="select"] > div {
+    .stSelectbox select,
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="select"] {
         background-color: #e8f0f5 !important;
         border: none !important;
         border-radius: 6px !important;
     }
     
     .stSelectbox>div>div>div:hover,
-    div[data-baseweb="select"] > div:hover {
+    .stSelectbox select:hover,
+    div[data-baseweb="select"] > div:hover,
+    div[data-baseweb="select"]:hover {
+        background-color: #dde8f0 !important;
+    }
+    
+    /* Garantir que o container interno do selectbox também tenha a cor */
+    .stSelectbox > div > div > div[data-baseweb="select"] {
+        background-color: #e8f0f5 !important;
+        border: none !important;
+    }
+    
+    .stSelectbox > div > div > div[data-baseweb="select"]:hover {
         background-color: #dde8f0 !important;
     }
     
@@ -307,33 +327,41 @@ st.markdown("""
         border-left: 4px solid #005ca9;
     }
     
-    /* Garantir que todos os campos estejam padronizados - azul claro acinzentado sem borda */
+    /* Regras adicionais para garantir padronização - TODOS os campos */
     .stTextInput > div > div > input,
-    .stNumberInput > div > div > input {
+    .stNumberInput > div > div > input,
+    .stTextInput input,
+    .stNumberInput input {
         background-color: #e8f0f5 !important;
         border: none !important;
         border-radius: 6px !important;
     }
     
     .stTextInput > div > div > input:hover,
-    .stNumberInput > div > div > input:hover {
+    .stNumberInput > div > div > input:hover,
+    .stTextInput input:hover,
+    .stNumberInput input:hover {
         background-color: #dde8f0 !important;
     }
     
     .stTextInput > div > div > input:focus,
-    .stNumberInput > div > div > input:focus {
+    .stNumberInput > div > div > input:focus,
+    .stTextInput input:focus,
+    .stNumberInput input:focus {
         background-color: #d3e0eb !important;
         box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox padronizado - azul claro acinzentado sem borda */
-    .stSelectbox > div > div > div[data-baseweb="select"] {
+    /* Selectbox padronizado - TODOS */
+    .stSelectbox > div > div > div[data-baseweb="select"],
+    .stSelectbox select {
         background-color: #e8f0f5 !important;
         border: none !important;
         border-radius: 6px !important;
     }
     
-    .stSelectbox > div > div > div[data-baseweb="select"]:hover {
+    .stSelectbox > div > div > div[data-baseweb="select"]:hover,
+    .stSelectbox select:hover {
         background-color: #dde8f0 !important;
     }
     
@@ -361,7 +389,8 @@ st.markdown("""
         background-color: #dde8f0 !important;
     }
     
-    /* Exceção: filtros não mudam no hover */
+    /* Exceção: filtros não mudam no hover - mantêm branco */
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div,
     div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div:hover {
         background-color: white !important;
     }
@@ -384,6 +413,24 @@ st.markdown("""
         color: white !important;
     }
     
+    /* REGRA FINAL: Forçar TODOS os campos de input a terem a mesma cor */
+    /* Aplicar com máxima especificidade para sobrescrever qualquer outro estilo */
+    div[data-testid="stApp"] .stTextInput > div > div > input,
+    div[data-testid="stApp"] .stNumberInput > div > div > input,
+    div[data-testid="stApp"] .stSelectbox > div > div > div,
+    div[data-testid="stApp"] div[data-baseweb="select"] > div {
+        background-color: #e8f0f5 !important;
+        border: none !important;
+    }
+    
+    /* Exceção absoluta: apenas campos dentro do container de filtros azuis */
+    div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
+    div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
+    div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div,
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
+        background-color: white !important;
+    }
+    
     /* Slider - override completo para azul */
     .stSlider div[data-baseweb="slider"] {
         color: #005ca9 !important;
@@ -393,6 +440,50 @@ st.markdown("""
     div[style*="005ca9e6"] h3,
     div[style*="005ca9e6"] * {
         color: white !important;
+    }
+    
+    /* REGRA FINAL COM MÁXIMA ESPECIFICIDADE: Forçar TODOS os campos a terem #e8f0f5 */
+    /* Esta regra deve vir por último para sobrescrever qualquer outra definição */
+    .main .stTextInput > div > div > input,
+    .main .stNumberInput > div > div > input,
+    .main .stSelectbox > div > div > div[data-baseweb="select"],
+    .main div[data-baseweb="select"] > div,
+    .stApp .stTextInput > div > div > input,
+    .stApp .stNumberInput > div > div > input,
+    .stApp .stSelectbox > div > div > div[data-baseweb="select"],
+    .stApp div[data-baseweb="select"] > div {
+        background-color: #e8f0f5 !important;
+        border: none !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Hover para todos os campos */
+    .main .stTextInput > div > div > input:hover,
+    .main .stNumberInput > div > div > input:hover,
+    .main .stSelectbox > div > div > div[data-baseweb="select"]:hover,
+    .main div[data-baseweb="select"] > div:hover,
+    .stApp .stTextInput > div > div > input:hover,
+    .stApp .stNumberInput > div > div > input:hover,
+    .stApp .stSelectbox > div > div > div[data-baseweb="select"]:hover,
+    .stApp div[data-baseweb="select"] > div:hover {
+        background-color: #dde8f0 !important;
+    }
+    
+    /* Focus para todos os campos */
+    .main .stTextInput > div > div > input:focus,
+    .main .stNumberInput > div > div > input:focus,
+    .stApp .stTextInput > div > div > input:focus,
+    .stApp .stNumberInput > div > div > input:focus {
+        background-color: #d3e0eb !important;
+        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
+    }
+    
+    /* EXCEÇÃO ABSOLUTA: Campos dentro dos filtros (container azul) mantêm branco */
+    div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
+    div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
+    div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div[data-baseweb="select"],
+    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
+        background-color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
