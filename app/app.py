@@ -205,6 +205,78 @@ st.markdown("""
         margin-bottom: 1rem !important;
     }
     
+    /* Garantir que o texto "Filtros" esteja branco */
+    div[style*="background-color: #005ca9e6"] h3 {
+        color: white !important;
+    }
+    
+    /* Campos de input - mais contraste com background branco e borda */
+    .stTextInput>div>div>input,
+    .stNumberInput>div>div>input {
+        background-color: white !important;
+        border: 1.5px solid #b0b0b0 !important;
+        border-radius: 6px !important;
+    }
+    
+    .stTextInput>div>div>input:focus,
+    .stNumberInput>div>div>input:focus {
+        border: 1.5px solid #005ca9 !important;
+        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
+    }
+    
+    /* Selectbox - mais contraste */
+    .stSelectbox>div>div>div,
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
+        border: 1.5px solid #b0b0b0 !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Multiselect - tags azuis em vez de vermelhas */
+    div[data-baseweb="tag"] {
+        background-color: #005ca9 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Container das tags do multiselect */
+    div[data-baseweb="popover"] div[data-baseweb="tag"] {
+        background-color: #005ca9 !important;
+        color: white !important;
+    }
+    
+    /* Slider - azul em vez de vermelho */
+    .stSlider > div > div > div {
+        background-color: #005ca9 !important;
+    }
+    
+    .stSlider > div > div > div > div {
+        background-color: #005ca9 !important;
+    }
+    
+    /* Track do slider */
+    .stSlider > div > div > div[data-baseweb="slider-track"] {
+        background-color: #005ca9 !important;
+    }
+    
+    /* Handle do slider */
+    .stSlider > div > div > div[data-baseweb="slider-handle"] {
+        background-color: #005ca9 !important;
+        border: 2px solid white !important;
+    }
+    
+    /* Valores do slider - azul */
+    .stSlider > div > div > span {
+        color: #005ca9 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Garantir que todos os textos dentro do container de filtros sejam brancos */
+    div[style*="background-color: #005ca9e6"] h3,
+    div[style*="background-color: #005ca9e6"] * {
+        color: white !important;
+    }
+    
     /* Expanders - mais discretos */
     .streamlit-expanderHeader {
         background-color: #e8f4f8;
@@ -223,6 +295,62 @@ st.markdown("""
     /* Markdown info/success/warning */
     .stAlert {
         border-left: 4px solid #005ca9;
+    }
+    
+    /* Garantir contraste nos campos de formulário - background branco e borda */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input {
+        background-color: white !important;
+        border: 1.5px solid #a0a0a0 !important;
+        border-radius: 6px !important;
+    }
+    
+    .stTextInput > div > div > input:hover,
+    .stNumberInput > div > div > input:hover {
+        border: 1.5px solid #005ca9 !important;
+    }
+    
+    /* Selectbox com melhor contraste */
+    .stSelectbox > div > div > div[data-baseweb="select"] {
+        background-color: white !important;
+        border: 1.5px solid #a0a0a0 !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Container dos inputs para garantir background branco */
+    .stTextInput > div,
+    .stNumberInput > div,
+    .stSelectbox > div {
+        background-color: transparent !important;
+    }
+    
+    /* Override das tags vermelhas do Streamlit para azul */
+    span[data-baseweb="tag"] {
+        background-color: #005ca9 !important;
+        color: white !important;
+    }
+    
+    /* Tags do multiselect */
+    div[data-baseweb="tag"] span {
+        color: white !important;
+    }
+    
+    /* Forçar cor azul nas tags selecionadas */
+    div[data-baseweb="popover"] div[data-baseweb="tag"],
+    div[data-baseweb="base-popover"] div[data-baseweb="tag"] {
+        background-color: #005ca9 !important;
+        color: white !important;
+    }
+    
+    /* Slider - override completo para azul */
+    .stSlider div[data-baseweb="slider"] {
+        color: #005ca9 !important;
+    }
+    
+    /* Garantir que o texto Filtros seja branco */
+    div[style*="005ca9e6"] h3,
+    div[style*="005ca9e6"] * {
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -890,7 +1018,7 @@ elif selected == "Insights e Métricas":
         # Filtros no topo da página com estilo mais discreto
         st.markdown("""
         <div style="background-color: #005ca9e6; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h3 style="color: white; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem;">🔍 Filtros</h3>
+            <h3 style="color: white !important; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem;">🔍 Filtros</h3>
         """, unsafe_allow_html=True)
         
         # Container para filtros
