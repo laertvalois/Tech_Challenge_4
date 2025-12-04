@@ -36,6 +36,13 @@ st.markdown("""
     .main {
         background-color: #f8f9fa;
     }
+    /* Aumentar largura do sidebar */
+    section[data-testid="stSidebar"] {
+        width: 350px !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+        width: 350px !important;
+    }
     .stButton>button {
         background-color: #4CAF50;
         color: white;
@@ -67,6 +74,16 @@ st.markdown("""
         border-radius: 8px;
         border-left: 4px solid #2196F3;
         margin: 1rem 0;
+    }
+    .logo-title {
+        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
     }
     h1 {
         color: #2c3e50;
@@ -212,11 +229,15 @@ def generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction,
     story.append(Paragraph("Relatório de Predição de Obesidade", title_style))
     story.append(Spacer(1, 0.2*inch))
     
-    # Informações do médico e paciente
+    # Informações do médico e paciente (tratar campos vazios)
+    profissional = medico_nome.strip() if medico_nome else "Não informado"
+    registro = medico_crm.strip() if medico_crm else "Não informado"
+    paciente = paciente_nome.strip() if paciente_nome else "Não informado"
+    
     info_data = [
-        ['Profissional:', medico_nome],
-        ['Registro do Conselho:', medico_crm],
-        ['Paciente:', paciente_nome],
+        ['Profissional:', profissional],
+        ['Registro do Conselho:', registro],
+        ['Paciente:', paciente],
         ['Data:', datetime.now().strftime('%d/%m/%Y %H:%M')]
     ]
     info_table = Table(info_data, colWidths=[2*inch, 4*inch])
@@ -272,12 +293,37 @@ def generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction,
     
     # Dados do paciente
     story.append(Paragraph("Dados do Paciente", heading_style))
+    
+    # Mapeamento de tradução dos campos
+    field_translations = {
+        'Gender': 'Gênero',
+        'Age': 'Idade',
+        'Height': 'Altura (m)',
+        'Weight': 'Peso (kg)',
+        'family_history': 'Histórico Familiar',
+        'FAVC': 'Alimentos Altamente Calóricos',
+        'FCVC': 'Frequência de Consumo de Vegetais',
+        'NCP': 'Número de Refeições Principais',
+        'CAEC': 'Come Entre Refeições',
+        'SMOKE': 'Fuma',
+        'CH2O': 'Consumo de Água',
+        'SCC': 'Monitora Calorias',
+        'FAF': 'Frequência de Atividade Física',
+        'TUE': 'Tempo em Dispositivos Tecnológicos',
+        'CALC': 'Frequência de Consumo de Álcool',
+        'MTRANS': 'Meio de Transporte'
+    }
+    
     patient_data = []
     for key, value in input_data.items():
+        # Traduzir nome do campo
+        field_name = field_translations.get(key, key.replace('_', ' ').title())
+        
         # Traduzir valores
         if key in TRANSLATIONS and value in TRANSLATIONS[key]:
             value = TRANSLATIONS[key][value]
-        patient_data.append([key.replace('_', ' ').title(), str(value)])
+        
+        patient_data.append([field_name, str(value)])
     
     patient_table = Table(patient_data, colWidths=[2.5*inch, 3.5*inch])
     patient_table.setStyle(TableStyle([
@@ -303,7 +349,12 @@ def generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction,
 
 # Menu lateral
 with st.sidebar:
-    st.image("https://via.placeholder.com/200x80/4CAF50/FFFFFF?text=Sistema+Obesidade", use_column_width=True)
+    # Logo/Título estilizado
+    st.markdown("""
+    <div class="logo-title">
+        🏥 Sistema Preditivo<br>de Obesidade
+    </div>
+    """, unsafe_allow_html=True)
     
     selected = option_menu(
         menu_title=None,
@@ -452,56 +503,73 @@ elif selected == "Predição de Obesidade":
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        medico_nome = st.text_input("Nome do Profissional", placeholder="Ex: Dr. João Silva")
+        medico_nome = st.text_input("Nome do Profissional (opcional)", placeholder="Ex: Dr. João Silva")
     
     with col2:
-        medico_crm = st.text_input("Registro do Conselho", placeholder="Ex: CRM 123456")
+        medico_crm = st.text_input("Registro do Conselho (opcional)", placeholder="Ex: CRM 123456")
     
     with col3:
-        paciente_nome = st.text_input("Nome do Paciente", placeholder="Ex: Maria Santos")
+        paciente_nome = st.text_input("Nome do Paciente (opcional)", placeholder="Ex: Maria Santos")
     
     st.markdown("---")
     
-    # Formulário de entrada
+    # Formulário de entrada - Reorganizado para melhor uso do espaço
     st.subheader("📝 Dados do Paciente")
     
-    col1, col2 = st.columns(2)
+    # Primeira linha: Dados Demográficos em 3 colunas
+    col1, col2, col3 = st.columns(3)
     
     with col1:
         st.markdown("#### 📊 Dados Demográficos")
         gender = st.selectbox("Gênero", ["Masculino", "Feminino"])
         age = st.number_input("Idade", min_value=1, max_value=120, value=30)
+    
+    with col2:
+        st.markdown("#### 📏 Medidas")
         height = st.number_input("Altura (metros)", min_value=0.5, max_value=2.5, value=1.70, step=0.01)
         weight = st.number_input("Peso (kg)", min_value=10.0, max_value=300.0, value=70.0, step=0.1)
         
         # Calcular IMC
         if height > 0:
             bmi = weight / (height ** 2)
-            st.info(f"**IMC Calculado:** {bmi:.2f}")
+            st.info(f"**IMC:** {bmi:.2f}")
     
-    with col2:
-        st.markdown("#### 🍽️ Hábitos Alimentares")
+    with col3:
+        st.markdown("#### 👨‍👩‍👧‍👦 Histórico")
         family_history = st.selectbox("Histórico familiar de excesso de peso", ["Sim", "Não"])
-        favc = st.selectbox("Come alimentos altamente calóricos com frequência?", ["Sim", "Não"])
-        fcvc = st.number_input("Frequência de consumo de vegetais (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
-        ncp = st.number_input("Número de refeições principais diárias (1-4)", min_value=1.0, max_value=4.0, value=3.0, step=0.1)
-        caec = st.selectbox("Come algo entre as refeições?", ["Não", "Às vezes", "Frequentemente", "Sempre"])
-        ch2o = st.number_input("Quantidade de água diária (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
-        scc = st.selectbox("Monitora as calorias ingeridas?", ["Sim", "Não"])
     
     st.markdown("---")
     
-    col3, col4 = st.columns(2)
-    
-    with col3:
-        st.markdown("#### 🏃 Estilo de Vida")
-        smoke = st.selectbox("Fuma?", ["Sim", "Não"])
-        faf = st.number_input("Frequência de atividade física (0-3)", min_value=0.0, max_value=3.0, value=1.0, step=0.1)
-        tue = st.number_input("Tempo em dispositivos tecnológicos (0-2)", min_value=0.0, max_value=2.0, value=1.0, step=0.1)
-        calc = st.selectbox("Frequência de consumo de álcool", ["Não", "Às vezes", "Frequentemente"])
+    # Segunda linha: Hábitos Alimentares em 3 colunas
+    col4, col5, col6 = st.columns(3)
     
     with col4:
-        st.markdown("#### 🚗 Transporte")
+        st.markdown("#### 🍽️ Alimentação")
+        favc = st.selectbox("Alimentos altamente calóricos?", ["Sim", "Não"])
+        fcvc = st.number_input("Consumo de vegetais (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
+        ncp = st.number_input("Refeições principais (1-4)", min_value=1.0, max_value=4.0, value=3.0, step=0.1)
+    
+    with col5:
+        st.markdown("#### 💧 Hidratação")
+        caec = st.selectbox("Come entre refeições?", ["Não", "Às vezes", "Frequentemente", "Sempre"])
+        ch2o = st.number_input("Consumo de água (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
+        scc = st.selectbox("Monitora calorias?", ["Sim", "Não"])
+    
+    with col6:
+        st.markdown("#### 🏃 Estilo de Vida")
+        smoke = st.selectbox("Fuma?", ["Sim", "Não"])
+        faf = st.number_input("Atividade física (0-3)", min_value=0.0, max_value=3.0, value=1.0, step=0.1)
+        tue = st.number_input("Tempo em dispositivos (0-2)", min_value=0.0, max_value=2.0, value=1.0, step=0.1)
+    
+    st.markdown("---")
+    
+    # Terceira linha: Outros hábitos
+    col7, col8 = st.columns(2)
+    
+    with col7:
+        calc = st.selectbox("Frequência de consumo de álcool", ["Não", "Às vezes", "Frequentemente"])
+    
+    with col8:
         mtrans = st.selectbox("Meio de transporte", [
             "Transporte Público",
             "Automóvel",
@@ -560,104 +628,107 @@ elif selected == "Predição de Obesidade":
     
     # Fazer predição
     if predict_button:
-        if not medico_nome or not medico_crm or not paciente_nome:
-            st.warning("⚠️ Por favor, preencha todas as informações do médico e paciente antes de fazer a predição.")
-        else:
-            with st.spinner("Processando predição..."):
-                prediction, probabilities, classes = make_prediction(input_data, model, preprocessor_data)
-                
-                if prediction is not None:
-                    st.markdown("---")
-                    st.header("📊 Resultado da Predição")
-                    
-                    # Resultado principal
-                    prediction_pt = OBESITY_LEVELS_PT.get(prediction, prediction)
-                    
-                    # Container para resultado
-                    st.markdown(f"""
-                    <div class="result-box">
-                        <h2 style="color: white; margin: 0;">🎯 Nível de Obesidade Previsto</h2>
-                        <h1 style="color: white; margin: 1rem 0;">{prediction_pt}</h1>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    # Probabilidade da classe predita
-                    pred_idx = list(classes).index(prediction)
-                    confidence = probabilities[pred_idx] * 100
-                    st.progress(confidence / 100)
-                    st.caption(f"**Confiança:** {confidence:.2f}%")
-                    
-                    # Probabilidades por classe
-                    st.markdown("---")
-                    st.subheader("📈 Probabilidades por Classe")
-                    
-                    # Criar DataFrame com probabilidades
-                    prob_df = pd.DataFrame({
-                        'Nível de Obesidade': [OBESITY_LEVELS_PT.get(c, c) for c in classes],
-                        'Probabilidade (%)': [p * 100 for p in probabilities]
-                    }).sort_values('Probabilidade (%)', ascending=False)
-                    
-                    # Gráfico de barras
-                    import plotly.express as px
-                    fig = px.bar(
-                        prob_df,
-                        x='Nível de Obesidade',
-                        y='Probabilidade (%)',
-                        color='Probabilidade (%)',
-                        color_continuous_scale='Blues',
-                        title='Probabilidades por Nível de Obesidade'
-                    )
-                    fig.update_layout(
-                        xaxis_tickangle=-45,
-                        height=400,
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        paper_bgcolor='rgba(0,0,0,0)'
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    # Tabela
-                    st.dataframe(prob_df, use_container_width=True, hide_index=True)
-                    
-                    # Recomendações
-                    st.markdown("---")
-                    st.subheader("💡 Recomendações")
-                    
-                    if 'Obesity' in prediction or 'Overweight' in prediction:
-                        st.warning("""
-                        **⚠️ Atenção:** O modelo indica risco de sobrepeso/obesidade. Recomenda-se:
-                        - Consultar um profissional de saúde
-                        - Avaliar hábitos alimentares
-                        - Aumentar atividade física regular
-                        - Monitorar peso e IMC periodicamente
-                        """)
-                    elif prediction == 'Normal_Weight':
-                        st.success("""
-                        **✅ Peso Normal:** Mantenha hábitos saudáveis:
-                        - Continue com alimentação balanceada
-                        - Mantenha atividade física regular
-                        - Monitore peso periodicamente
-                        """)
-                    else:
-                        st.info("""
-                        **ℹ️ Peso Insuficiente:** Consulte um nutricionista para:
-                        - Avaliar necessidades nutricionais
-                        - Desenvolver plano alimentar adequado
-                        - Monitorar ganho de peso saudável
-                        """)
-                    
-                    # Exportar PDF
-                    st.markdown("---")
-                    st.subheader("📄 Exportar Relatório")
-                    
-                    pdf_buffer = generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction, probabilities, classes)
-                    
-                    st.download_button(
-                        label="📥 Baixar Relatório em PDF",
-                        data=pdf_buffer,
-                        file_name=f"relatorio_obesidade_{paciente_nome.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                        mime="application/pdf",
-                        type="primary"
-                    )
+        with st.spinner("Processando predição..."):
+            prediction, probabilities, classes = make_prediction(input_data, model, preprocessor_data)
+        
+        if prediction is not None:
+            st.markdown("---")
+            st.header("📊 Resultado da Predição")
+            
+            # Resultado principal
+            prediction_pt = OBESITY_LEVELS_PT.get(prediction, prediction)
+            
+            # Container para resultado
+            st.markdown(f"""
+            <div class="result-box">
+                <h2 style="color: white; margin: 0;">🎯 Nível de Obesidade Previsto</h2>
+                <h1 style="color: white; margin: 1rem 0;">{prediction_pt}</h1>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Probabilidade da classe predita
+            pred_idx = list(classes).index(prediction)
+            confidence = probabilities[pred_idx] * 100
+            st.progress(confidence / 100)
+            st.caption(f"**Confiança:** {confidence:.2f}%")
+            
+            # Probabilidades por classe
+            st.markdown("---")
+            st.subheader("📈 Probabilidades por Classe")
+            
+            # Criar DataFrame com probabilidades
+            prob_df = pd.DataFrame({
+                'Nível de Obesidade': [OBESITY_LEVELS_PT.get(c, c) for c in classes],
+                'Probabilidade (%)': [p * 100 for p in probabilities]
+            }).sort_values('Probabilidade (%)', ascending=False)
+            
+            # Gráfico de barras
+            import plotly.express as px
+            fig = px.bar(
+                prob_df,
+                x='Nível de Obesidade',
+                y='Probabilidade (%)',
+                color='Probabilidade (%)',
+                color_continuous_scale='Blues',
+                title='Probabilidades por Nível de Obesidade'
+            )
+            fig.update_layout(
+                xaxis_tickangle=-45,
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Tabela
+            st.dataframe(prob_df, use_container_width=True, hide_index=True)
+            
+            # Recomendações
+            st.markdown("---")
+            st.subheader("💡 Recomendações")
+            
+            if 'Obesity' in prediction or 'Overweight' in prediction:
+                st.warning("""
+                **⚠️ Atenção:** O modelo indica risco de sobrepeso/obesidade. Recomenda-se:
+                - Consultar um profissional de saúde
+                - Avaliar hábitos alimentares
+                - Aumentar atividade física regular
+                - Monitorar peso e IMC periodicamente
+                """)
+            elif prediction == 'Normal_Weight':
+                st.success("""
+                **✅ Peso Normal:** Mantenha hábitos saudáveis:
+                - Continue com alimentação balanceada
+                - Mantenha atividade física regular
+                - Monitore peso periodicamente
+                """)
+            else:
+                st.info("""
+                **ℹ️ Peso Insuficiente:** Consulte um nutricionista para:
+                - Avaliar necessidades nutricionais
+                - Desenvolver plano alimentar adequado
+                - Monitorar ganho de peso saudável
+                """)
+            
+            # Exportar PDF
+            st.markdown("---")
+            st.subheader("📄 Exportar Relatório")
+            
+            pdf_buffer = generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction, probabilities, classes)
+            
+            # Nome do arquivo PDF
+            if paciente_nome and paciente_nome.strip():
+                file_name = f"relatorio_obesidade_{paciente_nome.strip().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            else:
+                file_name = f"relatorio_obesidade_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            
+            st.download_button(
+                label="📥 Baixar Relatório em PDF",
+                data=pdf_buffer,
+                file_name=file_name,
+                mime="application/pdf",
+                type="primary"
+            )
 
 # Página Insights e Métricas
 elif selected == "Insights e Métricas":
