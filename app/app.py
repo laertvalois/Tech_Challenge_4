@@ -215,33 +215,36 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Campos de input - padrão azul com borda e background branco */
+    /* Campos de input - padronizados: azul claro acinzentado sem borda */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input {
-        background-color: white !important;
-        border: 1.5px solid #005ca9 !important;
+        background-color: #e8f0f5 !important;
+        border: none !important;
         border-radius: 6px !important;
     }
     
     .stTextInput>div>div>input:hover,
-    .stNumberInput>div>div>input:hover,
+    .stNumberInput>div>div>input:hover {
+        background-color: #dde8f0 !important;
+    }
+    
     .stTextInput>div>div>input:focus,
     .stNumberInput>div>div>input:focus {
-        border: 1.5px solid #004a8a !important;
+        background-color: #d3e0eb !important;
         box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
     }
     
-    /* Selectbox - padrão azul */
+    /* Selectbox - padronizado: azul claro acinzentado sem borda */
     .stSelectbox>div>div>div,
     div[data-baseweb="select"] > div {
-        background-color: white !important;
-        border: 1.5px solid #005ca9 !important;
+        background-color: #e8f0f5 !important;
+        border: none !important;
         border-radius: 6px !important;
     }
     
     .stSelectbox>div>div>div:hover,
     div[data-baseweb="select"] > div:hover {
-        border: 1.5px solid #004a8a !important;
+        background-color: #dde8f0 !important;
     }
     
     /* Multiselect - tags azuis em vez de vermelhas */
