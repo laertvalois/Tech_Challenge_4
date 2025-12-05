@@ -98,6 +98,13 @@ st.markdown("""
         font-size: 1.1rem !important;
     }
     
+    /* H3 no sidebar - garantir cor visível (não branco) */
+    section[data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h3 {
+        color: #005ca9 !important;
+        -webkit-text-fill-color: #005ca9 !important;
+    }
+    
     /* Filtros - estilo com cor fria */
     div[style*="background-color: #005ca9e6"] label,
     div[style*="005ca9e6"] label {
@@ -212,13 +219,10 @@ st.markdown("""
         margin-bottom: 1rem !important;
     }
     
-    /* Garantir que o texto "Filtros" esteja branco - máxima especificidade */
+    /* Garantir que o texto "Filtros" esteja branco - APENAS dentro de containers azuis */
     div[style*="background-color: #005ca9e6"] h3,
     div[style*="005ca9e6"] h3,
-    h3[style*="color: white"],
-    div[style*="005ca9e6"] h3 *,
-    div[style*="005ca9e6"] h3 span,
-    h3 {
+    h3[style*="color: white"] {
         color: white !important;
         text-shadow: none !important;
         -webkit-text-fill-color: white !important;
@@ -233,6 +237,14 @@ st.markdown("""
     /* Garantir que todos os elementos dentro do container azul sejam brancos */
     div[style*="background-color: #005ca9e6"] *:not(input):not(select):not(button):not(.stCheckbox) {
         color: white !important;
+    }
+    
+    /* EXCEÇÃO: H3 no sidebar deve ser azul, não branco */
+    section[data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h3 * {
+        color: #005ca9 !important;
+        -webkit-text-fill-color: #005ca9 !important;
     }
     
     /* Exceção: inputs, selects e checkboxes mantêm suas cores */
@@ -771,7 +783,7 @@ st.markdown("""
     }
 })();
 
-// Forçar título "Filtros" a ser branco
+// Forçar título "Filtros" a ser branco (apenas em containers azuis)
 (function() {
     function fixFiltersTitle() {
         const filterDivs = document.querySelectorAll('div[style*="005ca9e6"]');
@@ -787,6 +799,20 @@ st.markdown("""
                 });
             }
         });
+        
+        // Garantir que h3 no sidebar seja azul (não branco)
+        const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+        if (sidebar) {
+            const sidebarH3 = sidebar.querySelectorAll('h3');
+            sidebarH3.forEach(function(h3) {
+                // Não aplicar se estiver dentro de um container azul
+                const isInBlueContainer = h3.closest('div[style*="005ca9e6"]');
+                if (!isInBlueContainer) {
+                    h3.style.setProperty('color', '#005ca9', 'important');
+                    h3.style.setProperty('-webkit-text-fill-color', '#005ca9', 'important');
+                }
+            });
+        }
     }
     
     fixFiltersTitle();
