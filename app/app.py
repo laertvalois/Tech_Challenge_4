@@ -263,15 +263,38 @@ st.markdown("""
         overflow: visible !important;
     }
     
-    /* Container do menu option_menu - transparente */
+    /* Container do menu option_menu - FORÇAR BACKGROUND CLARO (especialmente no Streamlit Cloud) */
     [data-testid="stSidebar"] div[class*="container-xxl"],
-    [data-testid="stSidebar"] div[class*="option-menu"] {
-        background: transparent !important;
+    [data-testid="stSidebar"] div[class*="option-menu"],
+    [data-testid="stSidebar"] div[class*="container-xxl"] > div,
+    [data-testid="stSidebar"] div[class*="container-xxl"] ul,
+    [data-testid="stSidebar"] div[class*="container-xxl"] li {
+        background: var(--bg-sidebar) !important;
+        background-color: var(--bg-sidebar) !important;
         visibility: visible !important;
         display: block !important;
         opacity: 1 !important;
         height: auto !important;
         overflow: visible !important;
+    }
+    
+    /* Forçar background claro no iframe do option_menu (Streamlit Cloud) */
+    [data-testid="stSidebar"] iframe body,
+    [data-testid="stSidebar"] iframe html,
+    [data-testid="stSidebar"] iframe body > div,
+    [data-testid="stSidebar"] iframe body > div > div {
+        background: var(--bg-sidebar) !important;
+        background-color: var(--bg-sidebar) !important;
+    }
+    
+    /* Forçar background claro em TODOS os elementos dentro do iframe do menu */
+    [data-testid="stSidebar"] iframe body div[class*="container-xxl"],
+    [data-testid="stSidebar"] iframe body div[class*="container"],
+    [data-testid="stSidebar"] iframe body ul[class*="nav-pills"],
+    [data-testid="stSidebar"] iframe body li[class*="nav-item"],
+    [data-testid="stSidebar"] iframe body a[class*="nav-link"] {
+        background: var(--bg-sidebar) !important;
+        background-color: var(--bg-sidebar) !important;
     }
     
     /* Elementos do menu - garantir visibilidade */
@@ -1066,6 +1089,41 @@ st.markdown("""
             container.style.setProperty('z-index', '1000', 'important');
             container.style.setProperty('position', 'relative', 'important');
             container.style.setProperty('overflow', 'visible', 'important');
+            // FORÇAR BACKGROUND CLARO (especialmente para Streamlit Cloud)
+            container.style.setProperty('background', 'var(--bg-sidebar)', 'important');
+            container.style.setProperty('background-color', 'var(--bg-sidebar)', 'important');
+        });
+        
+        // Forçar background claro em elementos filhos do container
+        containers.forEach(function(container) {
+            const children = container.querySelectorAll('div, ul, li');
+            children.forEach(function(child) {
+                child.style.setProperty('background', 'var(--bg-sidebar)', 'important');
+                child.style.setProperty('background-color', 'var(--bg-sidebar)', 'important');
+            });
+        });
+        
+        // Forçar background claro dentro do iframe do option_menu (Streamlit Cloud)
+        const iframes = document.querySelectorAll('[data-testid="stSidebar"] iframe');
+        iframes.forEach(function(iframe) {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (iframeDoc) {
+                    const iframeBody = iframeDoc.body;
+                    if (iframeBody) {
+                        iframeBody.style.setProperty('background', 'var(--bg-sidebar)', 'important');
+                        iframeBody.style.setProperty('background-color', 'var(--bg-sidebar)', 'important');
+                        
+                        const iframeContainers = iframeDoc.querySelectorAll('div[class*="container-xxl"], div[class*="container"], ul[class*="nav-pills"], li[class*="nav-item"]');
+                        iframeContainers.forEach(function(iframeContainer) {
+                            iframeContainer.style.setProperty('background', 'var(--bg-sidebar)', 'important');
+                            iframeContainer.style.setProperty('background-color', 'var(--bg-sidebar)', 'important');
+                        });
+                    }
+                }
+            } catch (e) {
+                // Cross-origin ou outro erro - ignorar
+            }
         });
         
         // Procurar elementos do menu - TODOS os elementos possíveis
@@ -1089,7 +1147,15 @@ st.markdown("""
             link.style.setProperty('display', 'block', 'important');
             link.style.setProperty('visibility', 'visible', 'important');
             link.style.setProperty('opacity', '1', 'important');
-            link.style.setProperty('color', '#1e293b', 'important');
+            // Aplicar cor baseada no estado (ativo ou não)
+            if (link.classList.contains('active') || link.getAttribute('class') && link.getAttribute('class').includes('active')) {
+                // Link ativo - manter background azul e texto branco
+            } else {
+                // Link não ativo - texto escuro e background claro
+                link.style.setProperty('color', '#1e293b', 'important');
+                link.style.setProperty('background', 'transparent', 'important');
+                link.style.setProperty('background-color', 'transparent', 'important');
+            }
             link.style.setProperty('height', 'auto', 'important');
             link.style.setProperty('width', '100%', 'important');
             link.style.setProperty('max-width', '100%', 'important');
@@ -1097,6 +1163,25 @@ st.markdown("""
             link.style.setProperty('white-space', 'normal', 'important');
             link.style.setProperty('text-overflow', 'clip', 'important');
             link.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Forçar cor do texto nos links não ativos dentro do iframe
+        iframes.forEach(function(iframe) {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (iframeDoc) {
+                    const iframeLinks = iframeDoc.querySelectorAll('a[class*="nav-link"], a[class*="nav"]');
+                    iframeLinks.forEach(function(iframeLink) {
+                        if (!iframeLink.classList.contains('active') && !iframeLink.getAttribute('class')?.includes('active')) {
+                            iframeLink.style.setProperty('color', '#1e293b', 'important');
+                            iframeLink.style.setProperty('background', 'transparent', 'important');
+                            iframeLink.style.setProperty('background-color', 'transparent', 'important');
+                        }
+                    });
+                }
+            } catch (e) {
+                // Cross-origin ou outro erro - ignorar
+            }
         });
         
         // Procurar spans e textos dentro do menu
