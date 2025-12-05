@@ -9,7 +9,7 @@ IMPORTANTE: Preencha os campos [INSERIR LINK...] antes da entrega!
 
 1. APLICAÇÃO STREAMLIT (Sistema Preditivo + Dashboard):
    [INSERIR LINK DO STREAMLIT CLOUD AQUI]
-   Exemplo: https://seu-usuario-tech-challenge.streamlit.app
+   Exemplo: https://techchallenge4-8xfxhplwctf2drfpkg7oq3.streamlit.app
    
    Nota: A aplicação contém tanto o sistema preditivo quanto o dashboard
    analítico integrados em uma única aplicação com menu lateral.
