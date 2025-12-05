@@ -216,51 +216,75 @@ st.markdown("""
         color: var(--text-primary) !important;
     }
     
-    /* Background do sidebar/menu - FORÇAR EM TODOS OS ELEMENTOS */
-    section[data-testid="stSidebar"],
-    section[data-testid="stSidebar"] > div,
-    section[data-testid="stSidebar"] > div > div,
-    section[data-testid="stSidebar"] > div > div > div {
+    /* ============================================
+       SIDEBAR - CSS SIMPLIFICADO E LIMPO
+       ============================================ */
+    
+    /* Background base do sidebar */
+    section[data-testid="stSidebar"] {
         background-color: var(--bg-sidebar) !important;
         width: 350px !important;
-        color: var(--text-primary) !important;
     }
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"],
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div,
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div > div {
-        width: 350px !important;
-        background-color: var(--bg-sidebar) !important;
-        color: var(--text-primary) !important;
+    
+    /* Elementos vazios do Streamlit - esconder */
+    [data-testid="stSidebar"] div.st-emotion-cache-yenxwz:empty,
+    [data-testid="stSidebar"] div.e6f82ta3:empty,
+    [data-testid="stSidebar"] div[class*="st-emotion-cache-yenxwz"]:empty,
+    [data-testid="stSidebar"] div[class*="e6f82ta3"]:empty {
+        display: none !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
-    [data-testid="stSidebar"] > div:first-child,
-    [data-testid="stSidebar"] > div:first-child > div,
-    [data-testid="stSidebar"] > div:first-child > div > div {
-        background-color: var(--bg-sidebar) !important;
-        color: var(--text-primary) !important;
+    
+    /* Elementos do Streamlit no sidebar - garantir visibilidade */
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"],
+    [data-testid="stSidebar"] [data-testid*="stVerticalBlock"],
+    [data-testid="stSidebar"] [data-testid*="stHorizontalBlock"] {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
     }
-    /* Forçar background em divs do sidebar, mas NÃO no container do menu */
-    [data-testid="stSidebar"] div:not([class*="container-xxl"]):not([class*="option-menu"]):not([class*="nav-pills"]):not([class*="nav-item"]):not([class*="nav-link"]) {
-        background-color: var(--bg-sidebar) !important;
+    
+    /* Iframe do option_menu - garantir visibilidade completa */
+    [data-testid="stSidebar"] iframe {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        min-height: 200px !important;
+        width: 100% !important;
+        border: none !important;
+        background: transparent !important;
+        z-index: 10 !important;
+        position: relative !important;
+        overflow: visible !important;
     }
-    /* Container do menu - transparente e visível */
+    
+    /* Container do menu option_menu - transparente */
     [data-testid="stSidebar"] div[class*="container-xxl"],
-    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]):not([data-testid]),
-    [data-testid="stSidebar"] div[class*="option-menu"],
-    [data-testid="stSidebar"] ul[class*="nav-pills"],
-    [data-testid="stSidebar"] li[class*="nav-item"] {
-        background-color: transparent !important;
+    [data-testid="stSidebar"] div[class*="option-menu"] {
         background: transparent !important;
         visibility: visible !important;
         display: block !important;
         opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
     }
     
-    /* Texto geral - mas não afetar elementos do menu option_menu */
-    p:not([class*="nav-link"]):not([class*="option-menu"]),
-    span:not([class*="nav-link"]):not([class*="option-menu"]),
-    div:not([class*="nav-link"]):not([class*="option-menu"]):not([class*="container-xxl"]):not([class*="nav-pills"]):not([class*="nav-item"]),
-    label:not([class*="nav-link"]):not([class*="option-menu"]) {
-        color: var(--text-primary) !important;
+    /* Elementos do menu - garantir visibilidade */
+    [data-testid="stSidebar"] ul[class*="nav-pills"],
+    [data-testid="stSidebar"] li[class*="nav-item"],
+    [data-testid="stSidebar"] a[class*="nav-link"] {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: clip !important;
     }
     
     h4, h5, h6 {
@@ -305,61 +329,59 @@ st.markdown("""
         letter-spacing: -0.01em !important;
     }
     
-    /* H3 no sidebar */
-    section[data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] h3 {
+    /* H3 no sidebar - garantir visibilidade */
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] h3 {
         color: var(--accent-blue) !important;
         font-weight: 600 !important;
-    }
-    
-    /* Texto no sidebar */
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] div {
-        color: var(--text-primary) !important;
-    }
-    
-    /* Container do menu - transparente (mas garantir que divs pais tenham background claro) */
-    [data-testid="stSidebar"] div[class*="container-xxl"] {
-        background-color: transparent !important;
-        background: transparent !important;
-    }
-    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]):not([data-testid]) {
-        background-color: transparent !important;
-        background: transparent !important;
-    }
-    [data-testid="stSidebar"] div[class*="option-menu"],
-    [data-testid="stSidebar"] ul[class*="nav-pills"] {
-        background-color: transparent !important;
-        background: transparent !important;
-    }
-    /* Garantir que divs do Streamlit no sidebar tenham background claro (exceto menu) */
-    [data-testid="stSidebar"] div[data-testid]:not([class*="container-xxl"]):not([class*="option-menu"]),
-    [data-testid="stSidebar"] div[class*="st"]:not([class*="container-xxl"]):not([class*="option-menu"]) {
-        background-color: var(--bg-sidebar) !important;
-    }
-    
-    /* Forçar background claro em divs do sidebar (exceto container do menu) */
-    [data-testid="stSidebar"] > div:not([class*="container-xxl"]):not([class*="option-menu"]),
-    [data-testid="stSidebar"] > div > div:not([class*="container-xxl"]):not([class*="option-menu"]):not([class*="nav-pills"]):not([class*="nav-item"]) {
-        background-color: var(--bg-sidebar) !important;
-    }
-    
-    /* Container do option-menu - garantir visibilidade */
-    [data-testid="stSidebar"] div[class*="container-xxl"],
-    [data-testid="stSidebar"] div[class*="container-xxl"] > div,
-    [data-testid="stSidebar"] div[class*="container-xxl"] ul,
-    [data-testid="stSidebar"] div[class*="container-xxl"] li,
-    [data-testid="stSidebar"] div[class*="container-xxl"] a {
-        background-color: transparent !important;
-        background: transparent !important;
         visibility: visible !important;
         display: block !important;
         opacity: 1 !important;
-        z-index: 999 !important;
+        height: auto !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 1.25rem !important;
+        overflow: visible !important;
+        white-space: normal !important;
     }
     
-    /* Menu navigation links - não ativos - usar cor do texto normal */
+    /* Markdowns no sidebar - garantir visibilidade completa */
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] ul,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] li,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] strong {
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        color: var(--text-primary) !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: clip !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] ul {
+        list-style-type: disc !important;
+        padding-left: 1.5rem !important;
+        margin: 0.5rem 0 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] li {
+        display: list-item !important;
+        margin: 0.25rem 0 !important;
+    }
+    
+    
+    /* Menu navigation links - não ativos - usar cor do texto normal e garantir visibilidade completa */
     [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]),
     [data-testid="stSidebar"] a[class*="nav-link"]:not([class*="active"]):not([class*="selected"]),
     [data-testid="stSidebar"] ul[class*="nav-pills"] a:not([class*="active"]),
@@ -368,6 +390,15 @@ st.markdown("""
         color: var(--text-primary) !important;
         background-color: transparent !important;
         transition: all 0.2s ease !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: clip !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     /* Remover cor branca dos links não ativos - máxima especificidade */
@@ -566,9 +597,31 @@ st.markdown("""
         margin: 0.75rem 0 !important;
     }
     
-    /* Logo/título do sidebar - máxima especificidade para sobrescrever regras do sidebar */
+    /* REGRA FINAL: Garantir que TODOS os elementos do sidebar sejam visíveis e não cortados */
+    [data-testid="stSidebar"] * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+    
+    /* Exceção: apenas elementos específicos podem ter overflow diferente */
+    [data-testid="stSidebar"] iframe {
+        overflow: visible !important;
+    }
+    
+    /* Garantir que elementos do Streamlit não sejam cortados */
+    [data-testid="stSidebar"] [data-testid*="st"] {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+        white-space: normal !important;
+    }
+    
+    /* Logo/título do sidebar - garantir visibilidade completa */
     [data-testid="stSidebar"] .logo-title,
-    .logo-title {
+    [data-testid="stSidebar"] div.logo-title,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] .logo-title {
         color: #ffffff !important;
         background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%) !important;
         padding: 0.75rem 1.25rem !important;
@@ -579,14 +632,27 @@ st.markdown("""
         margin-bottom: 1rem !important;
         letter-spacing: -0.02em !important;
         box-shadow: var(--shadow-md) !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        height: auto !important;
+        min-height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
     }
     
     [data-testid="stSidebar"] .logo-title *,
-    [data-testid="stSidebar"] .logo-title p,
-    [data-testid="stSidebar"] .logo-title span,
-    [data-testid="stSidebar"] .logo-title div,
-    .logo-title * {
+    [data-testid="stSidebar"] div.logo-title *,
+    [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] .logo-title * {
         color: #ffffff !important;
+        visibility: visible !important;
+        display: inline !important;
+        opacity: 1 !important;
+        white-space: normal !important;
     }
     
     /* Checkboxes */
@@ -921,11 +987,13 @@ st.markdown("""
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             setLanguage();
+            ensureMenuVisible();
             fixNavLinks();
             fixActiveIcons();
         });
     } else {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }
@@ -933,33 +1001,181 @@ st.markdown("""
     // Executar após delays para garantir
     setTimeout(function() {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }, 50);
     setTimeout(function() {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }, 100);
     setTimeout(function() {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }, 200);
     setTimeout(function() {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }, 500);
     setTimeout(function() {
         setLanguage();
+        ensureMenuVisible();
         fixNavLinks();
         fixActiveIcons();
     }, 1000);
+    setTimeout(function() {
+        ensureMenuVisible();
+    }, 2000);
+    
+    // Função para garantir que o menu option_menu seja visível
+    function ensureMenuVisible() {
+        // Procurar TODOS os iframes no sidebar
+        const iframes = document.querySelectorAll('[data-testid="stSidebar"] iframe');
+        iframes.forEach(function(iframe) {
+            // Se for iframe do option_menu ou qualquer iframe no sidebar
+            if (!iframe.src || iframe.src.includes('option_menu') || iframe.src.includes('streamlit_option_menu') || iframe.src.includes('component')) {
+                iframe.style.setProperty('display', 'block', 'important');
+                iframe.style.setProperty('visibility', 'visible', 'important');
+                iframe.style.setProperty('opacity', '1', 'important');
+                iframe.style.setProperty('height', 'auto', 'important');
+                iframe.style.setProperty('min-height', '200px', 'important');
+                iframe.style.setProperty('max-height', 'none', 'important');
+                iframe.style.setProperty('z-index', '1000', 'important');
+                iframe.style.setProperty('position', 'relative', 'important');
+                iframe.style.setProperty('width', '100%', 'important');
+                iframe.style.setProperty('border', 'none', 'important');
+                iframe.style.setProperty('background', 'transparent', 'important');
+            }
+        });
+        
+        // Procurar container do menu - TODOS os containers possíveis
+        const containers = document.querySelectorAll('[data-testid="stSidebar"] div[class*="container-xxl"], [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]), [data-testid="stSidebar"] div[class*="option-menu"]');
+        containers.forEach(function(container) {
+            container.style.setProperty('display', 'block', 'important');
+            container.style.setProperty('visibility', 'visible', 'important');
+            container.style.setProperty('opacity', '1', 'important');
+            container.style.setProperty('height', 'auto', 'important');
+            container.style.setProperty('min-height', 'auto', 'important');
+            container.style.setProperty('max-height', 'none', 'important');
+            container.style.setProperty('z-index', '1000', 'important');
+            container.style.setProperty('position', 'relative', 'important');
+            container.style.setProperty('overflow', 'visible', 'important');
+        });
+        
+        // Procurar elementos do menu - TODOS os elementos possíveis
+        const navPills = document.querySelectorAll('[data-testid="stSidebar"] ul[class*="nav-pills"], [data-testid="stSidebar"] ul[class*="nav"]');
+        navPills.forEach(function(ul) {
+            ul.style.setProperty('display', 'block', 'important');
+            ul.style.setProperty('visibility', 'visible', 'important');
+            ul.style.setProperty('opacity', '1', 'important');
+            ul.style.setProperty('height', 'auto', 'important');
+        });
+        
+        const navItems = document.querySelectorAll('[data-testid="stSidebar"] li[class*="nav-item"], [data-testid="stSidebar"] li[class*="nav"]');
+        navItems.forEach(function(li) {
+            li.style.setProperty('display', 'block', 'important');
+            li.style.setProperty('visibility', 'visible', 'important');
+            li.style.setProperty('opacity', '1', 'important');
+        });
+        
+        const navLinks = document.querySelectorAll('[data-testid="stSidebar"] a[class*="nav-link"], [data-testid="stSidebar"] a[class*="nav"]');
+        navLinks.forEach(function(link) {
+            link.style.setProperty('display', 'block', 'important');
+            link.style.setProperty('visibility', 'visible', 'important');
+            link.style.setProperty('opacity', '1', 'important');
+            link.style.setProperty('color', '#1e293b', 'important');
+            link.style.setProperty('height', 'auto', 'important');
+            link.style.setProperty('width', '100%', 'important');
+            link.style.setProperty('max-width', '100%', 'important');
+            link.style.setProperty('overflow', 'visible', 'important');
+            link.style.setProperty('white-space', 'normal', 'important');
+            link.style.setProperty('text-overflow', 'clip', 'important');
+            link.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Procurar spans e textos dentro do menu
+        const menuTexts = document.querySelectorAll('[data-testid="stSidebar"] span, [data-testid="stSidebar"] i[class*="bi-"], [data-testid="stSidebar"] i[class*="icon"]');
+        menuTexts.forEach(function(text) {
+            // Verificar se está dentro de um link do menu
+            const parentLink = text.closest('a[class*="nav-link"], a[class*="nav"]');
+            if (parentLink) {
+                text.style.setProperty('display', 'inline-block', 'important');
+                text.style.setProperty('visibility', 'visible', 'important');
+                text.style.setProperty('opacity', '1', 'important');
+            }
+        });
+        
+        // Garantir que o logo-title seja visível
+        const logoTitles = document.querySelectorAll('[data-testid="stSidebar"] .logo-title, [data-testid="stSidebar"] div.logo-title');
+        logoTitles.forEach(function(logo) {
+            logo.style.setProperty('display', 'block', 'important');
+            logo.style.setProperty('visibility', 'visible', 'important');
+            logo.style.setProperty('opacity', '1', 'important');
+            logo.style.setProperty('height', 'auto', 'important');
+            logo.style.setProperty('min-height', 'auto', 'important');
+            logo.style.setProperty('width', '100%', 'important');
+            logo.style.setProperty('overflow', 'visible', 'important');
+            logo.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Garantir que markdowns do Streamlit sejam visíveis (título e "Sobre o Sistema")
+        const markdownContainers = document.querySelectorAll('[data-testid="stSidebar"] [data-testid*="stMarkdownContainer"]');
+        markdownContainers.forEach(function(container) {
+            container.style.setProperty('display', 'block', 'important');
+            container.style.setProperty('visibility', 'visible', 'important');
+            container.style.setProperty('opacity', '1', 'important');
+            container.style.setProperty('height', 'auto', 'important');
+            container.style.setProperty('width', '100%', 'important');
+            container.style.setProperty('overflow', 'visible', 'important');
+            container.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Garantir que h3 (Sobre o Sistema) seja visível
+        const h3Elements = document.querySelectorAll('[data-testid="stSidebar"] h3');
+        h3Elements.forEach(function(h3) {
+            h3.style.setProperty('display', 'block', 'important');
+            h3.style.setProperty('visibility', 'visible', 'important');
+            h3.style.setProperty('opacity', '1', 'important');
+            h3.style.setProperty('color', '#0ea5e9', 'important');
+            h3.style.setProperty('height', 'auto', 'important');
+            h3.style.setProperty('width', '100%', 'important');
+            h3.style.setProperty('max-width', '100%', 'important');
+            h3.style.setProperty('overflow', 'visible', 'important');
+            h3.style.setProperty('white-space', 'normal', 'important');
+            h3.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+        
+        // Garantir que parágrafos e listas sejam visíveis
+        const paragraphs = document.querySelectorAll('[data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] p');
+        paragraphs.forEach(function(p) {
+            p.style.setProperty('display', 'block', 'important');
+            p.style.setProperty('visibility', 'visible', 'important');
+            p.style.setProperty('opacity', '1', 'important');
+            p.style.setProperty('color', '#1e293b', 'important');
+            p.style.setProperty('overflow', 'visible', 'important');
+            p.style.setProperty('white-space', 'normal', 'important');
+        });
+        
+        const lists = document.querySelectorAll('[data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] ul, [data-testid="stSidebar"] [data-testid*="stMarkdownContainer"] li');
+        lists.forEach(function(list) {
+            list.style.setProperty('display', 'block', 'important');
+            list.style.setProperty('visibility', 'visible', 'important');
+            list.style.setProperty('opacity', '1', 'important');
+            list.style.setProperty('overflow', 'visible', 'important');
+            list.style.setProperty('white-space', 'normal', 'important');
+        });
+    }
     
     // Observar mudanças no DOM
     const observer = new MutationObserver(function() {
         setLanguage(); // Garantir idioma em mudanças dinâmicas
+        ensureMenuVisible(); // Garantir que menu seja visível
         fixNavLinks();
         fixActiveIcons();
     });
