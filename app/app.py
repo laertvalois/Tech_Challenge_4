@@ -62,10 +62,12 @@ st.markdown("""
             --accent-blue: #4a9eff;
             --accent-blue-light: #6bb3ff;
             --accent-blue-dark: #2d7dd2;
-            --input-bg: #2a2a3a;
-            --input-bg-hover: #333344;
-            --input-bg-focus: #3a3a4a;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: #1a1a2a;
+            --input-bg-hover: #252538;
+            --input-bg-focus: #2d2d42;
+            --input-text: #ffffff;
+            --input-placeholder: #888888;
+            --border-color: rgba(255, 255, 255, 0.2);
         }
     }
     
@@ -79,10 +81,18 @@ st.markdown("""
         --accent-blue: #4a9eff;
         --accent-blue-light: #6bb3ff;
         --accent-blue-dark: #2d7dd2;
-        --input-bg: #2a2a3a;
-        --input-bg-hover: #333344;
-        --input-bg-focus: #3a3a4a;
-        --border-color: rgba(255, 255, 255, 0.1);
+        --input-bg: #1a1a2a;
+        --input-bg-hover: #252538;
+        --input-bg-focus: #2d2d42;
+        --input-text: #ffffff;
+        --input-placeholder: #888888;
+        --border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Light mode - garantir variáveis de input */
+    :root {
+        --input-text: var(--text-primary);
+        --input-placeholder: #999999;
     }
     
     /* Background das páginas - adaptável */
@@ -114,6 +124,29 @@ st.markdown("""
     /* Texto geral - adaptável */
     .main, .stApp, p, span, div {
         color: var(--text-primary) !important;
+    }
+    
+    /* Garantir que labels dos campos sejam sempre visíveis */
+    .stTextInput label,
+    .stNumberInput label,
+    .stSelectbox label {
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Dark mode - labels mais claros */
+    @media (prefers-color-scheme: dark) {
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label {
+            color: #e0e0e0 !important;
+        }
+    }
+    
+    [data-theme="dark"] .stTextInput label,
+    [data-theme="dark"] .stNumberInput label,
+    [data-theme="dark"] .stSelectbox label {
+        color: #e0e0e0 !important;
     }
     
     /* Títulos das páginas - adaptáveis */
@@ -170,6 +203,28 @@ st.markdown("""
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] div {
         color: var(--text-primary) !important;
+    }
+    
+    /* Menu navigation links - melhor contraste no modo claro */
+    [data-testid="stSidebar"] [class*="nav-link"] {
+        color: #1a1a1a !important;
+        font-weight: 500 !important;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        [data-testid="stSidebar"] [class*="nav-link"] {
+            color: #f0f0f0 !important;
+        }
+    }
+    
+    [data-theme="dark"] [data-testid="stSidebar"] [class*="nav-link"] {
+        color: #f0f0f0 !important;
+    }
+    
+    /* Link selecionado sempre branco */
+    [data-testid="stSidebar"] [class*="nav-link-selected"] {
+        color: white !important;
+        font-weight: 600 !important;
     }
     
     /* Filtros - estilo com cor fria */
@@ -388,15 +443,25 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Campos de input - adaptáveis */
+    /* Campos de input - adaptáveis com melhor contraste */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input,
     .stTextInput input,
     .stNumberInput input {
         background-color: var(--input-bg) !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border-color) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--border-color) !important;
         border-radius: 6px !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Placeholders - visíveis mas distintos */
+    .stTextInput>div>div>input::placeholder,
+    .stNumberInput>div>div>input::placeholder,
+    .stTextInput input::placeholder,
+    .stNumberInput input::placeholder {
+        color: var(--input-placeholder) !important;
+        opacity: 0.7 !important;
     }
     
     .stTextInput>div>div>input:hover,
@@ -413,18 +478,29 @@ st.markdown("""
     .stNumberInput input:focus {
         background-color: var(--input-bg-focus) !important;
         border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2) !important;
+        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.3) !important;
+        color: var(--input-text) !important;
     }
     
-    /* Selectbox - adaptáveis */
+    /* Garantir que texto digitado seja sempre visível */
+    .stTextInput>div>div>input:not(:placeholder-shown),
+    .stNumberInput>div>div>input:not(:placeholder-shown),
+    .stTextInput input:not(:placeholder-shown),
+    .stNumberInput input:not(:placeholder-shown) {
+        color: var(--input-text) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Selectbox - adaptáveis com melhor contraste */
     .stSelectbox>div>div>div,
     .stSelectbox select,
     div[data-baseweb="select"] > div,
     div[data-baseweb="select"] {
         background-color: var(--input-bg) !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border-color) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--border-color) !important;
         border-radius: 6px !important;
+        font-weight: 500 !important;
     }
     
     .stSelectbox>div>div>div:hover,
@@ -435,16 +511,29 @@ st.markdown("""
         border-color: var(--accent-blue) !important;
     }
     
+    /* Texto selecionado no selectbox */
+    div[data-baseweb="select"] span,
+    .stSelectbox span {
+        color: var(--input-text) !important;
+    }
+    
     /* Garantir que o container interno do selectbox também tenha a cor */
     .stSelectbox > div > div > div[data-baseweb="select"] {
         background-color: var(--input-bg) !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border-color) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--border-color) !important;
+        font-weight: 500 !important;
     }
     
     .stSelectbox > div > div > div[data-baseweb="select"]:hover {
         background-color: var(--input-bg-hover) !important;
         border-color: var(--accent-blue) !important;
+    }
+    
+    /* Texto dentro do selectbox */
+    .stSelectbox > div > div > div[data-baseweb="select"] > div,
+    .stSelectbox > div > div > div[data-baseweb="select"] span {
+        color: var(--input-text) !important;
     }
     
     /* Multiselect - tags adaptáveis */
@@ -679,7 +768,7 @@ st.markdown("""
         color: white !important;
     }
     
-    /* REGRA FINAL: Forçar TODOS os campos a usarem variáveis CSS */
+    /* REGRA FINAL: Forçar TODOS os campos a usarem variáveis CSS com melhor contraste */
     .main .stTextInput > div > div > input,
     .main .stNumberInput > div > div > input,
     .main .stSelectbox > div > div > div[data-baseweb="select"],
@@ -689,9 +778,19 @@ st.markdown("""
     .stApp .stSelectbox > div > div > div[data-baseweb="select"],
     .stApp div[data-baseweb="select"] > div {
         background-color: var(--input-bg) !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border-color) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--border-color) !important;
         border-radius: 6px !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Placeholders em todos os campos */
+    .main .stTextInput > div > div > input::placeholder,
+    .main .stNumberInput > div > div > input::placeholder,
+    .stApp .stTextInput > div > div > input::placeholder,
+    .stApp .stNumberInput > div > div > input::placeholder {
+        color: var(--input-placeholder) !important;
+        opacity: 0.7 !important;
     }
     
     /* Hover para todos os campos */
@@ -714,7 +813,17 @@ st.markdown("""
     .stApp .stNumberInput > div > div > input:focus {
         background-color: var(--input-bg-focus) !important;
         border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2) !important;
+        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.3) !important;
+        color: var(--input-text) !important;
+    }
+    
+    /* Texto digitado sempre visível */
+    .main .stTextInput > div > div > input:not(:placeholder-shown),
+    .main .stNumberInput > div > div > input:not(:placeholder-shown),
+    .stApp .stTextInput > div > div > input:not(:placeholder-shown),
+    .stApp .stNumberInput > div > div > input:not(:placeholder-shown) {
+        color: var(--input-text) !important;
+        font-weight: 500 !important;
     }
     
     /* EXCEÇÃO: Campos dentro dos filtros (container azul) mantêm branco */
@@ -723,7 +832,7 @@ st.markdown("""
     div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div[data-baseweb="select"],
     div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
         background-color: white !important;
-        color: var(--text-primary) !important;
+        color: #1a1a1a !important;
     }
     
     /* SLIDER - REGRAS FINAIS: Forçar handles e valores a serem azuis */
@@ -836,10 +945,12 @@ st.markdown("""
             root.style.setProperty('--accent-blue', '#4a9eff');
             root.style.setProperty('--accent-blue-light', '#6bb3ff');
             root.style.setProperty('--accent-blue-dark', '#2d7dd2');
-            root.style.setProperty('--input-bg', '#2a2a3a');
-            root.style.setProperty('--input-bg-hover', '#333344');
-            root.style.setProperty('--input-bg-focus', '#3a3a4a');
-            root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
+            root.style.setProperty('--input-bg', '#1a1a2a');
+            root.style.setProperty('--input-bg-hover', '#252538');
+            root.style.setProperty('--input-bg-focus', '#2d2d42');
+            root.style.setProperty('--input-text', '#ffffff');
+            root.style.setProperty('--input-placeholder', '#888888');
+            root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.2)');
         } else {
             root.style.setProperty('--bg-primary', 'white');
             root.style.setProperty('--bg-secondary', '#f5f5f5');
@@ -852,7 +963,9 @@ st.markdown("""
             root.style.setProperty('--input-bg', '#e8f0f5');
             root.style.setProperty('--input-bg-hover', '#dde8f0');
             root.style.setProperty('--input-bg-focus', '#d3e0eb');
-            root.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
+            root.style.setProperty('--input-text', '#1a1a1a');
+            root.style.setProperty('--input-placeholder', '#999999');
+            root.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.15)');
         }
     }
     
@@ -1025,6 +1138,43 @@ st.markdown("""
             subtree: true
         });
     }
+})();
+
+// Ajustar cores dos links do menu para melhor contraste
+(function() {
+    function fixMenuLinks() {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
+                      document.documentElement.getAttribute('data-theme') === 'dark';
+        const navLinks = document.querySelectorAll('[data-testid="stSidebar"] a, [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"])');
+        navLinks.forEach(function(link) {
+            // Não aplicar se já estiver selecionado
+            if (!link.classList.contains('nav-link-selected') && !link.closest('.nav-link-selected')) {
+                link.style.setProperty('color', isDark ? '#f0f0f0' : '#1a1a1a', 'important');
+                link.style.setProperty('font-weight', '500', 'important');
+            }
+        });
+    }
+    
+    fixMenuLinks();
+    setTimeout(fixMenuLinks, 100);
+    setTimeout(fixMenuLinks, 500);
+    
+    const observer = new MutationObserver(function() {
+        fixMenuLinks();
+    });
+    
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+    
+    // Observar mudanças no tema
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', fixMenuLinks);
 })();
 </script>
 """, unsafe_allow_html=True)
@@ -1302,13 +1452,15 @@ with st.sidebar:
                 "font-size": "16px",
                 "text-align": "left",
                 "margin": "0px",
-                "color": "var(--text-primary)",
+                "color": "#1a1a1a",
                 "--hover-color": "#b3d9f2",
                 "border-radius": "5px",
+                "font-weight": "500",
             },
             "nav-link-selected": {
                 "background-color": "var(--accent-blue)",
                 "color": "white",
+                "font-weight": "600",
             },
         }
     )
