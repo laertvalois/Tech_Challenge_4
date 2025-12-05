@@ -5,20 +5,25 @@ TECH CHALLENGE - SISTEMA PREDITIVO DE OBESIDADE
 LINKS DE ENTREGA
 ================================================================================
 
-1. APLICAÇÃO PREDITIVA (STREAMLIT):
+IMPORTANTE: Preencha os campos [INSERIR LINK...] antes da entrega!
+
+1. APLICAÇÃO STREAMLIT (Sistema Preditivo + Dashboard):
    [INSERIR LINK DO STREAMLIT CLOUD AQUI]
-   Exemplo: https://seu-usuario-obesity-app.streamlit.app
+   Exemplo: https://seu-usuario-tech-challenge.streamlit.app
+   
+   Nota: A aplicação contém tanto o sistema preditivo quanto o dashboard
+   analítico integrados em uma única aplicação com menu lateral.
 
-2. DASHBOARD ANALÍTICO:
-   [INSERIR LINK DO DASHBOARD AQUI]
-   Exemplo: https://seu-usuario-obesity-dashboard.streamlit.app
-
-3. REPOSITÓRIO GITHUB:
+2. REPOSITÓRIO GITHUB:
    https://github.com/laertvalois/Tech_Challenge_4
 
-4. VÍDEO DE APRESENTAÇÃO:
+3. VÍDEO DE APRESENTAÇÃO:
    [INSERIR LINK DO VÍDEO AQUI]
    Exemplo: https://youtube.com/watch?v=... ou link do Google Drive
+   
+   Duração recomendada: 4-10 minutos
+   Conteúdo: Estratégia, demonstração do sistema preditivo e dashboard,
+   visão de negócio
 
 ================================================================================
 INFORMAÇÕES DO PROJETO

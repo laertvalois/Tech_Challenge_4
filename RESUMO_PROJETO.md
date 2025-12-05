@@ -41,50 +41,53 @@ Todos os requisitos do Tech Challenge foram implementados com sucesso!
   ```
 
 ### ✅ 4. Dashboard Analítico
-- **Localização:** `dashboard/dashboard.py`
+- **Localização:** Integrado em `app/app.py` (página "Insights e Métricas")
 - **Visualizações:**
   - Distribuição de níveis de obesidade
   - Análise por gênero
-  - Análise por idade
+  - Análise por faixa etária
+  - Scatter plot: Idade vs IMC
   - Impacto de hábitos alimentares
   - Impacto de atividade física
-  - Relação entre variáveis
+  - Análise de correlação (heatmap)
+  - Boxplots por nível de obesidade
+  - Análise de distribuição (histogramas e estatísticas)
 - **Funcionalidades:**
-  - Filtros interativos
+  - Filtros interativos (Gênero, Nível de Obesidade, Faixa Etária)
   - Métricas principais
-  - Insights e recomendações
-  - Download de dados filtrados
+  - Insights e recomendações para equipe médica
+  - Download de dados filtrados (CSV)
+  - Estatísticas descritivas detalhadas
 - **Como executar:**
   ```bash
-  streamlit run dashboard/dashboard.py
-  # ou
-  python run_dashboard.py
+  streamlit run app/app.py
+  # Navegue para a página "Insights e Métricas" no menu lateral
   ```
 
 ### ✅ 5. Estrutura do Projeto
 ```
 tech_challenge/
 ├── data/                    # Dados
-│   ├── obesity.db           # Banco SQLite original
-│   └── obesity.csv          # Dados extraídos
-├── src/                     # Código fonte
-│   ├── data_preprocessing.py
-│   ├── train_model.py
-│   └── load_model.py
+│   └── obesity.csv          # Dataset principal
+├── src/                     # Código fonte (Pipeline ML)
+│   ├── data_preprocessing.py # Pré-processamento e feature engineering
+│   ├── train_model.py       # Treinamento de modelos
+│   ├── load_model.py        # Carregamento de modelos
+│   └── extract_data.py      # Utilitário de extração
 ├── notebooks/               # Análise exploratória
 │   └── 01_analise_exploratoria.py
-├── app/                     # Aplicação Streamlit
-│   └── app.py
-├── dashboard/               # Dashboard analítico
-│   ├── dashboard.py
-│   └── images/
+├── app/                     # Aplicação Streamlit (unificada)
+│   └── app.py              # App principal (predição + dashboard)
 ├── models/                  # Modelos treinados
 │   ├── obesity_model.joblib
 │   └── preprocessor.joblib
 ├── requirements.txt         # Dependências
-├── README.md               # Documentação
+├── README.md               # Documentação principal
 ├── ANALISE_REQUISITOS.md   # Análise detalhada
-├── LINKS_ENTREGA.txt       # Template para links
+├── RESUMO_PROJETO.md       # Resumo executivo
+├── ENTREGA_TECH_CHALLENGE.md # Documento de entrega
+├── LINKS_ENTREGA.txt       # Links de entrega
+├── run_app.py              # Script auxiliar para executar app
 └── .gitignore              # Configuração Git
 ```
 
@@ -116,7 +119,8 @@ tech_challenge/
 1. **Fazer deploy no Streamlit Cloud:**
    - Criar conta em https://streamlit.io/cloud
    - Conectar repositório GitHub
-   - Fazer deploy da aplicação e dashboard
+   - Fazer deploy da aplicação (app/app.py)
+   - A aplicação já contém predição e dashboard integrados
 
 2. **Criar repositório GitHub:**
    - Inicializar repositório

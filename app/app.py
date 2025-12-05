@@ -878,7 +878,8 @@ TRANSLATIONS = {
     'CALC': {
         'no': 'Não',
         'Sometimes': 'Às vezes',
-        'Frequently': 'Frequentemente'
+        'Frequently': 'Frequentemente',
+        'Always': 'Sempre'
     },
     'MTRANS': {
         'Public_Transportation': 'Transporte Público',
@@ -1048,7 +1049,7 @@ def generate_pdf(medico_nome, medico_crm, paciente_nome, input_data, prediction,
         'CH2O': 'Consumo de Água',
         'SCC': 'Monitora Calorias',
         'FAF': 'Frequência de Atividade Física',
-        'TUE': 'Tempo em Dispositivos Tecnológicos',
+        'TUE': 'Tempo Usando Dispositivos Eletrônicos',
         'CALC': 'Frequência de Consumo de Álcool',
         'MTRANS': 'Meio de Transporte'
     }
@@ -1289,20 +1290,20 @@ elif selected == "Predição de Obesidade":
     with col4:
         st.markdown("#### 🍽️ Alimentação")
         favc = st.selectbox("Alimentos altamente calóricos?", ["Sim", "Não"])
-        fcvc = st.number_input("Consumo de vegetais (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
-        ncp = st.number_input("Refeições principais (1-4)", min_value=1.0, max_value=4.0, value=3.0, step=0.1)
+        fcvc = st.number_input("Frequência de consumo de vegetais (1-3): 1=raramente, 2=às vezes, 3=sempre", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
+        ncp = st.number_input("Número de refeições principais (1-4): 1=uma, 2=duas, 3=três, 4=quatro ou mais", min_value=1.0, max_value=4.0, value=3.0, step=0.1)
     
     with col5:
         st.markdown("#### 💧 Hidratação")
         caec = st.selectbox("Come entre refeições?", ["Não", "Às vezes", "Frequentemente", "Sempre"])
-        ch2o = st.number_input("Consumo de água (1-3)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
-        scc = st.selectbox("Monitora calorias?", ["Sim", "Não"])
+        ch2o = st.number_input("Consumo diário de água (1-3): 1=<1L/dia, 2=1-2L/dia, 3=>2L/dia", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
+        scc = st.selectbox("Monitora ingestão calórica diária?", ["Sim", "Não"])
     
     with col6:
         st.markdown("#### 🏃 Estilo de Vida")
         smoke = st.selectbox("Fuma?", ["Sim", "Não"])
-        faf = st.number_input("Atividade física (0-3)", min_value=0.0, max_value=3.0, value=1.0, step=0.1)
-        tue = st.number_input("Tempo em dispositivos (0-2)", min_value=0.0, max_value=2.0, value=1.0, step=0.1)
+        faf = st.number_input("Frequência semanal de atividade física (0-3): 0=nenhuma, 1=1-2×/sem, 2=3-4×/sem, 3=5×/sem ou mais", min_value=0.0, max_value=3.0, value=1.0, step=0.1)
+        tue = st.number_input("Tempo diário usando dispositivos eletrônicos (0-2): 0=0-2h/dia, 1=3-5h/dia, 2=>5h/dia", min_value=0.0, max_value=2.0, value=1.0, step=0.1)
     
     st.markdown("---")
     
@@ -1310,7 +1311,7 @@ elif selected == "Predição de Obesidade":
     col7, col8 = st.columns(2)
     
     with col7:
-        calc = st.selectbox("Frequência de consumo de álcool", ["Não", "Às vezes", "Frequentemente"])
+        calc = st.selectbox("Frequência de consumo de álcool", ["Não", "Às vezes", "Frequentemente", "Sempre"])
     
     with col8:
         mtrans = st.selectbox("Meio de transporte", [
@@ -1331,7 +1332,7 @@ elif selected == "Predição de Obesidade":
     caec_map = {"Não": "no", "Às vezes": "Sometimes", "Frequentemente": "Frequently", "Sempre": "Always"}
     caec_en = caec_map[caec]
     
-    calc_map = {"Não": "no", "Às vezes": "Sometimes", "Frequentemente": "Frequently"}
+    calc_map = {"Não": "no", "Às vezes": "Sometimes", "Frequentemente": "Frequently", "Sempre": "Always"}
     calc_en = calc_map[calc]
     
     mtrans_map = {
@@ -1343,6 +1344,13 @@ elif selected == "Predição de Obesidade":
     }
     mtrans_en = mtrans_map[mtrans]
     
+    # Arredondar valores decimais para inteiros conforme dicionário
+    fcvc_rounded = round(fcvc)
+    ncp_rounded = round(ncp)
+    ch2o_rounded = round(ch2o)
+    faf_rounded = round(faf)
+    tue_rounded = round(tue)
+    
     input_data = {
         'Gender': gender_en,
         'Age': age,
@@ -1350,14 +1358,14 @@ elif selected == "Predição de Obesidade":
         'Weight': weight,
         'family_history': family_history_en,
         'FAVC': favc_en,
-        'FCVC': fcvc,
-        'NCP': ncp,
+        'FCVC': fcvc_rounded,
+        'NCP': ncp_rounded,
         'CAEC': caec_en,
         'SMOKE': smoke_en,
-        'CH2O': ch2o,
+        'CH2O': ch2o_rounded,
         'SCC': scc_en,
-        'FAF': faf,
-        'TUE': tue,
+        'FAF': faf_rounded,
+        'TUE': tue_rounded,
         'CALC': calc_en,
         'MTRANS': mtrans_en
     }

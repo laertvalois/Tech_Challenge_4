@@ -46,15 +46,14 @@ src/
 - Exibição da predição
 - Visualização dos resultados
 
-**Estrutura sugerida:**
+**Estrutura implementada:**
 ```
 app/
-├── app.py                  # Aplicação principal
-├── pages/
-│   ├── prediction.py       # Página de predição
-│   └── about.py            # Sobre o projeto
-└── utils/
-    └── load_model.py       # Carregar modelo salvo
+└── app.py                  # Aplicação principal unificada
+    - Menu lateral com 3 páginas:
+      * Início
+      * Predição de Obesidade
+      * Insights e Métricas (Dashboard)
 ```
 
 **Funcionalidades:**
@@ -72,14 +71,14 @@ app/
 - Análise de correlações
 - Distribuições das variáveis
 
-**Estrutura sugerida:**
+**Estrutura implementada:**
 ```
-dashboard/
-├── dashboard.py            # Dashboard principal
-└── charts/
-    ├── demographics.py     # Gráficos demográficos
-    ├── lifestyle.py        # Hábitos de vida
-    └── correlations.py     # Correlações
+app/
+└── app.py                  # Dashboard integrado na página "Insights e Métricas"
+    - Filtros interativos
+    - Visualizações Plotly
+    - Análises estatísticas
+    - Download de dados
 ```
 
 **Visualizações sugeridas:**
@@ -125,12 +124,12 @@ LINKS_ENTREGA.txt ou LINKS_ENTREGA.doc
 11. **CH2O** - Consumo de água (numérica/ordinal)
 12. **SCC** - Monitorar calorias (categórica)
 13. **FAF** - Frequência de atividade física (numérica/ordinal)
-14. **TER** - Tempo em dispositivos tecnológicos (numérica/ordinal)
-15. **CALC** - Frequência de consumo de álcool (categórica)
-16. **MTRANS** - Meio de transporte (categórica)
+14. **TUE** - Tempo usando dispositivos eletrônicos (numérica/ordinal: 0=0-2h/dia, 1=3-5h/dia, 2=>5h/dia)
+15. **CALC** - Frequência de consumo de álcool (categórica: no, Sometimes, Frequently, Always)
+16. **MTRANS** - Meio de transporte (categórica: Public_Transportation, Automobile, Walking, Motorbike, Bike)
 
 ### Variável Alvo:
-- **Obesity_level** - Nível de obesidade (categórica - multiclasse)
+- **Obesity** - Nível de obesidade (categórica - multiclasse: 7 classes)
 
 ## 🔄 Fluxo de Trabalho Sugerido
 

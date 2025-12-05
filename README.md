@@ -13,7 +13,7 @@ Este projeto foi desenvolvido como parte do Tech Challenge, com o objetivo de cr
 
 ## 📊 Dados
 
-O banco de dados SQLite (`data/obesity.db`) contém informações sobre:
+O arquivo CSV (`data/obesity.csv`) contém informações sobre:
 - Características demográficas (Gênero, Idade)
 - Medidas físicas (Altura, Peso)
 - Histórico familiar
@@ -21,6 +21,10 @@ O banco de dados SQLite (`data/obesity.db`) contém informações sobre:
 - Atividade física
 - Uso de tecnologia
 - Nível de obesidade (variável alvo)
+
+**Total de registros:** 2.111  
+**Variáveis de entrada:** 16  
+**Variável alvo:** Obesity (7 classes)
 
 ## 🏗️ Estrutura do Projeto
 
@@ -45,15 +49,14 @@ pip install -r requirements.txt
 
 ### Preparação dos Dados
 
-1. Extrair dados do SQLite (se necessário):
-```bash
-python src/extract_data.py
-```
+1. Os dados já estão disponíveis em `data/obesity.csv`
 
 2. Treinar o modelo:
 ```bash
 python src/train_model.py
 ```
+
+**Nota:** O modelo já está treinado e salvo em `models/`. Você pode usar diretamente a aplicação sem retreinar.
 
 ### Executar Aplicação Streamlit
 
@@ -88,18 +91,55 @@ streamlit run dashboard/dashboard.py
 - **Recall:** 98.58%
 - **Status:** ✅ Requisito atendido (acima de 75%)
 
+**Observação:** O modelo foi treinado com validação cruzada e está pronto para uso em produção.
+
 ## 📝 Requisitos Entregues
 
-- ✅ Pipeline completo de Machine Learning
-- ✅ Feature Engineering
-- ✅ Modelo com assertividade > 75%
-- ✅ Deploy no Streamlit (aplicação preditiva)
-- ✅ Dashboard analítico com insights
+- ✅ Pipeline completo de Machine Learning com feature engineering
+- ✅ Modelo com assertividade > 75% (98.58%)
+- ✅ Deploy no Streamlit (aplicação preditiva unificada)
+- ✅ Dashboard analítico com insights integrado na aplicação
 - ✅ Código no GitHub
+- ✅ Documentação completa
+
+## 📋 Estrutura da Aplicação Streamlit
+
+A aplicação (`app/app.py`) possui três páginas principais:
+
+1. **Início:** Apresentação do sistema, objetivos e informações técnicas
+2. **Predição de Obesidade:** Formulário completo para entrada de dados e predição em tempo real
+3. **Insights e Métricas:** Dashboard analítico com:
+   - Análise de correlação (heatmap)
+   - Boxplots por nível de obesidade
+   - Análise de distribuição
+   - Filtros interativos
+   - Métricas e estatísticas descritivas
+
+## 🎯 Funcionalidades Principais
+
+### Sistema Preditivo
+- Formulário completo com todas as 16 variáveis
+- Predição em tempo real
+- Exibição de probabilidades por classe
+- Exportação de relatório em PDF
+- Campos opcionais para profissional e paciente
+
+### Dashboard Analítico
+- Visualizações interativas (Plotly)
+- Filtros por gênero, nível de obesidade e faixa etária
+- Análises estatísticas detalhadas
+- Insights para equipe médica
+- Download de dados filtrados
+
+## 📚 Documentação Adicional
+
+- `ANALISE_REQUISITOS.md` - Análise detalhada dos requisitos
+- `RESUMO_PROJETO.md` - Resumo executivo do projeto
+- `LINKS_ENTREGA.txt` - Template para links de entrega
 
 ## 👥 Autores
 
-[Seu nome/equipe]
+Este projeto foi desenvolvido como parte do Tech Challenge - FIAP.
 
 ## 📄 Licença
 
