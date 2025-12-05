@@ -66,8 +66,9 @@ st.markdown("""
             --input-bg-hover: #252538;
             --input-bg-focus: #2d2d42;
             --input-text: #ffffff;
-            --input-placeholder: #888888;
+            --input-placeholder: #b0b0b0;
             --border-color: rgba(255, 255, 255, 0.2);
+            --menu-link-color: #ffffff;
         }
     }
     
@@ -85,8 +86,14 @@ st.markdown("""
         --input-bg-hover: #252538;
         --input-bg-focus: #2d2d42;
         --input-text: #ffffff;
-        --input-placeholder: #888888;
+        --input-placeholder: #b0b0b0;
         --border-color: rgba(255, 255, 255, 0.2);
+        --menu-link-color: #ffffff;
+    }
+    
+    /* Light mode - variável para menu */
+    :root {
+        --menu-link-color: #1a1a1a;
     }
     
     /* Light mode - garantir variáveis de input */
@@ -205,26 +212,54 @@ st.markdown("""
         color: var(--text-primary) !important;
     }
     
-    /* Menu navigation links - melhor contraste no modo claro */
-    [data-testid="stSidebar"] [class*="nav-link"] {
-        color: #1a1a1a !important;
+    /* Menu navigation links - melhor contraste */
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
+    [data-testid="stSidebar"] a:not([class*="selected"]) {
+        color: var(--menu-link-color) !important;
         font-weight: 500 !important;
     }
     
+    /* Light mode - links escuros */
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]) {
+        color: #1a1a1a !important;
+    }
+    
+    /* Dark mode - links brancos para máximo contraste */
     @media (prefers-color-scheme: dark) {
-        [data-testid="stSidebar"] [class*="nav-link"] {
-            color: #f0f0f0 !important;
+        [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
+        [data-testid="stSidebar"] a:not([class*="selected"]) {
+            color: #ffffff !important;
         }
     }
     
-    [data-theme="dark"] [data-testid="stSidebar"] [class*="nav-link"] {
-        color: #f0f0f0 !important;
+    [data-theme="dark"] [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
+    [data-theme="dark"] [data-testid="stSidebar"] a:not([class*="selected"]) {
+        color: #ffffff !important;
     }
     
     /* Link selecionado sempre branco */
-    [data-testid="stSidebar"] [class*="nav-link-selected"] {
+    [data-testid="stSidebar"] [class*="nav-link-selected"],
+    [data-testid="stSidebar"] a[class*="nav-link-selected"] {
         color: white !important;
         font-weight: 600 !important;
+    }
+    
+    /* Forçar cor nos elementos do option_menu */
+    [data-testid="stSidebar"] div[class*="option-menu"] a,
+    [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"] {
+        color: var(--menu-link-color) !important;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        [data-testid="stSidebar"] div[class*="option-menu"] a:not([class*="selected"]),
+        [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]:not([class*="selected"]) {
+            color: #ffffff !important;
+        }
+    }
+    
+    [data-theme="dark"] [data-testid="stSidebar"] div[class*="option-menu"] a:not([class*="selected"]),
+    [data-theme="dark"] [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]:not([class*="selected"]) {
+        color: #ffffff !important;
     }
     
     /* Filtros - estilo com cor fria */
@@ -461,7 +496,26 @@ st.markdown("""
     .stTextInput input::placeholder,
     .stNumberInput input::placeholder {
         color: var(--input-placeholder) !important;
-        opacity: 0.7 !important;
+        opacity: 1 !important;
+    }
+    
+    /* Dark mode - placeholders mais claros */
+    @media (prefers-color-scheme: dark) {
+        .stTextInput>div>div>input::placeholder,
+        .stNumberInput>div>div>input::placeholder,
+        .stTextInput input::placeholder,
+        .stNumberInput input::placeholder {
+            color: #b0b0b0 !important;
+            opacity: 1 !important;
+        }
+    }
+    
+    [data-theme="dark"] .stTextInput>div>div>input::placeholder,
+    [data-theme="dark"] .stNumberInput>div>div>input::placeholder,
+    [data-theme="dark"] .stTextInput input::placeholder,
+    [data-theme="dark"] .stNumberInput input::placeholder {
+        color: #b0b0b0 !important;
+        opacity: 1 !important;
     }
     
     .stTextInput>div>div>input:hover,
@@ -790,7 +844,26 @@ st.markdown("""
     .stApp .stTextInput > div > div > input::placeholder,
     .stApp .stNumberInput > div > div > input::placeholder {
         color: var(--input-placeholder) !important;
-        opacity: 0.7 !important;
+        opacity: 1 !important;
+    }
+    
+    /* Dark mode - placeholders mais claros em todos os campos */
+    @media (prefers-color-scheme: dark) {
+        .main .stTextInput > div > div > input::placeholder,
+        .main .stNumberInput > div > div > input::placeholder,
+        .stApp .stTextInput > div > div > input::placeholder,
+        .stApp .stNumberInput > div > div > input::placeholder {
+            color: #b0b0b0 !important;
+            opacity: 1 !important;
+        }
+    }
+    
+    [data-theme="dark"] .main .stTextInput > div > div > input::placeholder,
+    [data-theme="dark"] .main .stNumberInput > div > div > input::placeholder,
+    [data-theme="dark"] .stApp .stTextInput > div > div > input::placeholder,
+    [data-theme="dark"] .stApp .stNumberInput > div > div > input::placeholder {
+        color: #b0b0b0 !important;
+        opacity: 1 !important;
     }
     
     /* Hover para todos os campos */
@@ -949,8 +1022,9 @@ st.markdown("""
             root.style.setProperty('--input-bg-hover', '#252538');
             root.style.setProperty('--input-bg-focus', '#2d2d42');
             root.style.setProperty('--input-text', '#ffffff');
-            root.style.setProperty('--input-placeholder', '#888888');
+            root.style.setProperty('--input-placeholder', '#b0b0b0');
             root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.2)');
+            root.style.setProperty('--menu-link-color', '#ffffff');
         } else {
             root.style.setProperty('--bg-primary', 'white');
             root.style.setProperty('--bg-secondary', '#f5f5f5');
@@ -966,6 +1040,7 @@ st.markdown("""
             root.style.setProperty('--input-text', '#1a1a1a');
             root.style.setProperty('--input-placeholder', '#999999');
             root.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.15)');
+            root.style.setProperty('--menu-link-color', '#1a1a1a');
         }
     }
     
@@ -1145,12 +1220,18 @@ st.markdown("""
     function fixMenuLinks() {
         const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
                       document.documentElement.getAttribute('data-theme') === 'dark';
-        const navLinks = document.querySelectorAll('[data-testid="stSidebar"] a, [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"])');
+        const navLinks = document.querySelectorAll('[data-testid="stSidebar"] a, [data-testid="stSidebar"] [class*="nav-link"], [data-testid="stSidebar"] div[class*="option-menu"] a, [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]');
         navLinks.forEach(function(link) {
             // Não aplicar se já estiver selecionado
             if (!link.classList.contains('nav-link-selected') && !link.closest('.nav-link-selected')) {
-                link.style.setProperty('color', isDark ? '#f0f0f0' : '#1a1a1a', 'important');
+                const color = isDark ? '#ffffff' : '#1a1a1a';
+                link.style.setProperty('color', color, 'important');
                 link.style.setProperty('font-weight', '500', 'important');
+                // Forçar também nos spans dentro
+                const spans = link.querySelectorAll('span');
+                spans.forEach(function(span) {
+                    span.style.setProperty('color', color, 'important');
+                });
             }
         });
     }
@@ -1158,6 +1239,7 @@ st.markdown("""
     fixMenuLinks();
     setTimeout(fixMenuLinks, 100);
     setTimeout(fixMenuLinks, 500);
+    setTimeout(fixMenuLinks, 1000);
     
     const observer = new MutationObserver(function() {
         fixMenuLinks();
@@ -1168,13 +1250,88 @@ st.markdown("""
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['class']
+            attributeFilter: ['class', 'data-theme']
         });
     }
     
     // Observar mudanças no tema
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener('change', fixMenuLinks);
+    
+    // Observar mudanças no atributo data-theme
+    const themeObserver = new MutationObserver(function() {
+        fixMenuLinks();
+    });
+    if (document.documentElement) {
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    }
+})();
+
+// Forçar placeholders a serem visíveis no dark mode
+(function() {
+    function fixPlaceholders() {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
+                      document.documentElement.getAttribute('data-theme') === 'dark';
+        const placeholderColor = isDark ? '#b0b0b0' : '#999999';
+        
+        const inputs = document.querySelectorAll('.stTextInput input, .stNumberInput input');
+        inputs.forEach(function(input) {
+            // Aplicar cor do placeholder via estilo
+            input.style.setProperty('--placeholder-color', placeholderColor);
+            // Forçar placeholder a ser visível
+            if (input.placeholder) {
+                const style = window.getComputedStyle(input, '::placeholder');
+                input.style.setProperty('color', isDark ? '#ffffff' : '#1a1a1a', 'important');
+            }
+        });
+        
+        // Aplicar cor diretamente nos placeholders via CSS
+        const style = document.createElement('style');
+        style.id = 'placeholder-fix';
+        style.textContent = `
+            @media (prefers-color-scheme: dark) {
+                .stTextInput input::placeholder,
+                .stNumberInput input::placeholder {
+                    color: #b0b0b0 !important;
+                    opacity: 1 !important;
+                }
+            }
+            [data-theme="dark"] .stTextInput input::placeholder,
+            [data-theme="dark"] .stNumberInput input::placeholder {
+                color: #b0b0b0 !important;
+                opacity: 1 !important;
+            }
+        `;
+        const existingStyle = document.getElementById('placeholder-fix');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        document.head.appendChild(style);
+    }
+    
+    fixPlaceholders();
+    setTimeout(fixPlaceholders, 100);
+    setTimeout(fixPlaceholders, 500);
+    
+    const observer = new MutationObserver(function() {
+        fixPlaceholders();
+    });
+    
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    }
+    
+    // Observar mudanças no tema
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', fixPlaceholders);
 })();
 </script>
 """, unsafe_allow_html=True)
