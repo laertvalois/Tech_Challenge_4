@@ -169,27 +169,34 @@ st.markdown("""
         background-color: white !important;
     }
     
-    /* Labels dos filtros - mais discretos */
+    /* Labels dos filtros - menores e mais discretos */
     .filter-container .stMultiSelect label,
     .filter-container .stSelectbox label,
     .filter-container .stSlider label {
         color: white !important;
         font-weight: 500 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
     }
     
     /* Slider nos filtros */
     .stSlider label {
         color: white !important;
         font-weight: 500 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
     }
     
-    /* Labels dentro do container azul */
+    /* Labels dentro do container azul - menores */
     div[style*="background-color: #005ca9e6"] label {
         color: white !important;
         font-weight: 500 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    /* Garantir que o título "Filtros" esteja branco com máxima especificidade */
+    div[style*="background-color: #005ca9e6"] h3,
+    div[style*="005ca9e6"] h3 {
+        color: white !important;
+        text-shadow: none !important;
     }
     
     /* Ajustar cor dos textos dentro do container de filtros */
@@ -205,9 +212,56 @@ st.markdown("""
         margin-bottom: 1rem !important;
     }
     
-    /* Garantir que o texto "Filtros" esteja branco */
+    /* Garantir que o texto "Filtros" esteja branco - máxima especificidade */
+    div[style*="background-color: #005ca9e6"] h3,
+    div[style*="005ca9e6"] h3,
+    h3[style*="color: white"],
+    div[style*="005ca9e6"] h3 *,
+    div[style*="005ca9e6"] h3 span {
+        color: white !important;
+        text-shadow: none !important;
+        -webkit-text-fill-color: white !important;
+    }
+    
+    /* Forçar branco no ícone e texto do título Filtros */
+    div[style*="005ca9e6"] h3,
     div[style*="background-color: #005ca9e6"] h3 {
         color: white !important;
+    }
+    
+    /* Garantir que todos os elementos dentro do container azul sejam brancos */
+    div[style*="background-color: #005ca9e6"] *:not(input):not(select):not(button) {
+        color: white !important;
+    }
+    
+    /* Exceção: inputs e selects mantêm suas cores */
+    div[style*="background-color: #005ca9e6"] input,
+    div[style*="background-color: #005ca9e6"] select {
+        color: inherit !important;
+    }
+    
+    /* Estilo para checkboxes customizados dos níveis de obesidade */
+    .obesity-checkbox-container {
+        background-color: white;
+        padding: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #d0d0d0;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .obesity-checkbox-item {
+        padding: 0.25rem 0;
+        font-size: 0.85rem;
+    }
+    
+    /* Checkboxes menores */
+    .stCheckbox {
+        font-size: 0.85rem;
+    }
+    
+    .stCheckbox label {
+        font-size: 0.85rem !important;
     }
     
     /* Campos de input - TODOS padronizados: azul claro acinzentado sem borda */
@@ -1339,7 +1393,7 @@ elif selected == "Insights e Métricas":
         # Filtros no topo da página com estilo mais discreto
         st.markdown("""
         <div style="background-color: #005ca9e6; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h3 style="color: white !important; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem;">🔍 Filtros</h3>
+            <h3 style="color: white !important; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem; text-shadow: none !important; -webkit-text-fill-color: white !important;">🔍 <span style="color: white !important;">Filtros</span></h3>
         """, unsafe_allow_html=True)
         
         # Container para filtros
@@ -1360,18 +1414,53 @@ elif selected == "Insights e Métricas":
             gender_filter = [gender_mapping[g] for g in gender_filter_pt]
         
         with filter_col2:
-            # Filtro por nível de obesidade (traduzido)
+            # Filtro por nível de obesidade - usando checkboxes para mostrar todos sem scroll
+            st.markdown('<p style="color: white; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem;">Nível de Obesidade</p>', unsafe_allow_html=True)
+            
             obesity_options_en = df['Obesity'].unique()
             obesity_options_pt = [OBESITY_LEVELS_PT.get(obs, obs) for obs in obesity_options_en]
             obesity_mapping = dict(zip(obesity_options_pt, obesity_options_en))
             
-            obesity_filter_pt = st.multiselect(
-                "Nível de Obesidade",
-                options=obesity_options_pt,
-                default=obesity_options_pt
-            )
+            # Inicializar session_state se necessário
+            if 'obesity_filters' not in st.session_state:
+                st.session_state.obesity_filters = {obs: True for obs in obesity_options_pt}
+            
+            # Container para checkboxes com estilo
+            st.markdown("""
+            <div class="obesity-checkbox-container">
+            """, unsafe_allow_html=True)
+            
+            # Criar checkboxes em colunas para melhor organização
+            num_options = len(obesity_options_pt)
+            cols_per_row = 1  # Uma coluna para melhor visualização
+            
+            obesity_selected_pt = []
+            for i, obs_pt in enumerate(obesity_options_pt):
+                # Usar session_state para manter estado
+                if obs_pt not in st.session_state.obesity_filters:
+                    st.session_state.obesity_filters[obs_pt] = True
+                
+                checked = st.checkbox(
+                    obs_pt,
+                    value=st.session_state.obesity_filters[obs_pt],
+                    key=f"obesity_{obs_pt}"
+                )
+                st.session_state.obesity_filters[obs_pt] = checked
+                
+                if checked:
+                    obesity_selected_pt.append(obs_pt)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            # Se nenhum selecionado, selecionar todos (evitar lista vazia)
+            if not obesity_selected_pt:
+                obesity_selected_pt = obesity_options_pt
+                # Atualizar session_state
+                for obs_pt in obesity_options_pt:
+                    st.session_state.obesity_filters[obs_pt] = True
+            
             # Converter de volta para inglês para filtro
-            obesity_filter = [obesity_mapping[obs] for obs in obesity_filter_pt]
+            obesity_filter = [obesity_mapping[obs] for obs in obesity_selected_pt]
         
         with filter_col3:
             # Filtro por idade
