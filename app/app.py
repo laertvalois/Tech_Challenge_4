@@ -238,20 +238,28 @@ st.markdown("""
         background-color: var(--bg-sidebar) !important;
         color: var(--text-primary) !important;
     }
-    /* Forçar background em TODAS as divs do sidebar */
-    [data-testid="stSidebar"] div {
+    /* Forçar background em divs do sidebar, mas NÃO no container do menu */
+    [data-testid="stSidebar"] div:not([class*="container-xxl"]):not([class*="option-menu"]):not([class*="nav-pills"]):not([class*="nav-item"]):not([class*="nav-link"]) {
         background-color: var(--bg-sidebar) !important;
     }
-    /* Exceção: apenas o container do menu deve ser transparente */
+    /* Container do menu - transparente e visível */
     [data-testid="stSidebar"] div[class*="container-xxl"],
-    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]),
-    [data-testid="stSidebar"] div[class*="option-menu"] {
+    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]):not([data-testid]),
+    [data-testid="stSidebar"] div[class*="option-menu"],
+    [data-testid="stSidebar"] ul[class*="nav-pills"],
+    [data-testid="stSidebar"] li[class*="nav-item"] {
         background-color: transparent !important;
         background: transparent !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
     }
     
-    /* Texto geral */
-    p, span, div, label {
+    /* Texto geral - mas não afetar elementos do menu option_menu */
+    p:not([class*="nav-link"]):not([class*="option-menu"]),
+    span:not([class*="nav-link"]):not([class*="option-menu"]),
+    div:not([class*="nav-link"]):not([class*="option-menu"]):not([class*="container-xxl"]):not([class*="nav-pills"]):not([class*="nav-item"]),
+    label:not([class*="nav-link"]):not([class*="option-menu"]) {
         color: var(--text-primary) !important;
     }
     
@@ -325,28 +333,30 @@ st.markdown("""
         background-color: transparent !important;
         background: transparent !important;
     }
-    /* Garantir que divs do Streamlit no sidebar tenham background claro */
-    [data-testid="stSidebar"] div[data-testid],
-    [data-testid="stSidebar"] div[class*="st"] {
+    /* Garantir que divs do Streamlit no sidebar tenham background claro (exceto menu) */
+    [data-testid="stSidebar"] div[data-testid]:not([class*="container-xxl"]):not([class*="option-menu"]),
+    [data-testid="stSidebar"] div[class*="st"]:not([class*="container-xxl"]):not([class*="option-menu"]) {
         background-color: var(--bg-sidebar) !important;
     }
     
-    /* Forçar background claro em TODAS as divs do sidebar (exceto container do menu) */
-    [data-testid="stSidebar"] > div,
-    [data-testid="stSidebar"] > div > div,
-    [data-testid="stSidebar"] > div > div > div,
-    [data-testid="stSidebar"] > div > div > div > div {
+    /* Forçar background claro em divs do sidebar (exceto container do menu) */
+    [data-testid="stSidebar"] > div:not([class*="container-xxl"]):not([class*="option-menu"]),
+    [data-testid="stSidebar"] > div > div:not([class*="container-xxl"]):not([class*="option-menu"]):not([class*="nav-pills"]):not([class*="nav-item"]) {
         background-color: var(--bg-sidebar) !important;
     }
     
-    /* Exceção específica: apenas o container-xxl do option-menu deve ser transparente */
-    [data-testid="stSidebar"] div.container-xxl {
+    /* Container do option-menu - garantir visibilidade */
+    [data-testid="stSidebar"] div[class*="container-xxl"],
+    [data-testid="stSidebar"] div[class*="container-xxl"] > div,
+    [data-testid="stSidebar"] div[class*="container-xxl"] ul,
+    [data-testid="stSidebar"] div[class*="container-xxl"] li,
+    [data-testid="stSidebar"] div[class*="container-xxl"] a {
         background-color: transparent !important;
         background: transparent !important;
-    }
-    /* Mas garantir que divs dentro do container-xxl que não sejam o menu tenham background claro */
-    [data-testid="stSidebar"] div.container-xxl > div:not([class*="nav-pills"]):not([class*="nav-item"]) {
-        background-color: var(--bg-sidebar) !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        z-index: 999 !important;
     }
     
     /* Menu navigation links - não ativos - usar cor do texto normal */
