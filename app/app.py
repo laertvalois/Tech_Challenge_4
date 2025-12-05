@@ -284,21 +284,47 @@ st.markdown("""
         background-color: #005ca9 !important;
     }
     
-    /* Track do slider */
+    /* Track do slider - azul */
     .stSlider > div > div > div[data-baseweb="slider-track"] {
         background-color: #005ca9 !important;
     }
     
-    /* Handle do slider */
-    .stSlider > div > div > div[data-baseweb="slider-handle"] {
+    /* Handles do slider (extremes) - azul em vez de vermelho */
+    .stSlider > div > div > div[data-baseweb="slider-handle"],
+    .stSlider div[data-baseweb="slider-handle"],
+    .stSlider button[data-baseweb="slider-handle"],
+    .stSlider > div > div > div > div[data-baseweb="slider-handle"],
+    .stSlider [data-baseweb="slider-handle"] {
         background-color: #005ca9 !important;
         border: 2px solid white !important;
     }
     
-    /* Valores do slider - azul */
-    .stSlider > div > div > span {
+    /* Handles do slider - forçar azul com máxima especificidade */
+    .stSlider button[role="slider"],
+    .stSlider [role="slider"] {
+        background-color: #005ca9 !important;
+        border-color: white !important;
+    }
+    
+    /* Valores do slider (números acima dos handles) - azul em vez de vermelho */
+    .stSlider > div > div > span,
+    .stSlider span:not(label),
+    .stSlider > div > div > div > span,
+    .stSlider label + span,
+    .stSlider [data-testid="stSlider"] span,
+    .stSlider [data-testid="stSlider"] > div > span {
         color: #005ca9 !important;
         font-weight: 600 !important;
+    }
+    
+    /* Garantir que valores numéricos do slider sejam azuis */
+    .stSlider span[style*="color"] {
+        color: #005ca9 !important;
+    }
+    
+    /* Exceção: labels do slider mantêm cor original */
+    .stSlider label {
+        color: inherit !important;
     }
     
     /* Garantir que todos os textos dentro do container de filtros sejam brancos */
@@ -436,6 +462,19 @@ st.markdown("""
         color: #005ca9 !important;
     }
     
+    /* Handles do slider - forçar azul em todos os casos */
+    .stSlider [role="slider"],
+    .stSlider button[role="slider"] {
+        background-color: #005ca9 !important;
+        border-color: white !important;
+    }
+    
+    /* Valores numéricos do slider - azul */
+    .stSlider [data-testid="stSlider"] span,
+    .stSlider [data-testid="stSlider"] > div > span {
+        color: #005ca9 !important;
+    }
+    
     /* Garantir que o texto Filtros seja branco */
     div[style*="005ca9e6"] h3,
     div[style*="005ca9e6"] * {
@@ -484,6 +523,32 @@ st.markdown("""
     div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div[data-baseweb="select"],
     div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
         background-color: white !important;
+    }
+    
+    /* SLIDER - REGRAS FINAIS: Forçar handles e valores a serem azuis */
+    /* Handles (círculos nos extremos) */
+    .stSlider button,
+    .stSlider [role="slider"],
+    .stSlider [data-baseweb="slider-handle"],
+    .stSlider > div > div > div > button {
+        background-color: #005ca9 !important;
+        border-color: white !important;
+    }
+    
+    /* Valores numéricos (números acima dos handles) */
+    .stSlider > div > div > div > span,
+    .stSlider > div > div > span,
+    .stSlider span:not(.stSlider label span) {
+        color: #005ca9 !important;
+    }
+    
+    /* Override de qualquer cor vermelha no slider */
+    .stSlider [style*="color: red"],
+    .stSlider [style*="color: rgb(255"],
+    .stSlider [style*="background-color: red"],
+    .stSlider [style*="background-color: rgb(255"] {
+        color: #005ca9 !important;
+        background-color: #005ca9 !important;
     }
 </style>
 """, unsafe_allow_html=True)
