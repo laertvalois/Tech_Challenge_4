@@ -32,34 +32,94 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado com cores frias
+# CSS personalizado com suporte a dark mode
 st.markdown("""
 <style>
-    /* Background das páginas - branco */
-    .main {
-        background-color: white;
-    }
-    .stApp {
-        background-color: white;
+    /* Variáveis CSS para adaptação ao tema */
+    :root {
+        --bg-primary: white;
+        --bg-secondary: #f5f5f5;
+        --bg-sidebar: #dcdcdc;
+        --text-primary: #1e1e1e;
+        --text-secondary: #2c3e50;
+        --accent-blue: #005ca9;
+        --accent-blue-light: #0073c7;
+        --accent-blue-dark: #004a8a;
+        --input-bg: #e8f0f5;
+        --input-bg-hover: #dde8f0;
+        --input-bg-focus: #d3e0eb;
+        --border-color: rgba(0, 0, 0, 0.1);
     }
     
-    /* Background do sidebar/menu */
+    /* Dark mode - detectar via media query e classe do Streamlit */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-primary: #0e1117;
+            --bg-secondary: #1e1e1e;
+            --bg-sidebar: #262730;
+            --text-primary: #fafafa;
+            --text-secondary: #d0d0d0;
+            --accent-blue: #4a9eff;
+            --accent-blue-light: #6bb3ff;
+            --accent-blue-dark: #2d7dd2;
+            --input-bg: #2a2a3a;
+            --input-bg-hover: #333344;
+            --input-bg-focus: #3a3a4a;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    
+    /* Detectar tema do Streamlit */
+    [data-theme="dark"] {
+        --bg-primary: #0e1117;
+        --bg-secondary: #1e1e1e;
+        --bg-sidebar: #262730;
+        --text-primary: #fafafa;
+        --text-secondary: #d0d0d0;
+        --accent-blue: #4a9eff;
+        --accent-blue-light: #6bb3ff;
+        --accent-blue-dark: #2d7dd2;
+        --input-bg: #2a2a3a;
+        --input-bg-hover: #333344;
+        --input-bg-focus: #3a3a4a;
+        --border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Background das páginas - adaptável */
+    .main {
+        background-color: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+    }
+    .stApp {
+        background-color: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* Background do sidebar/menu - adaptável */
     section[data-testid="stSidebar"] {
-        background-color: #dcdcdc !important;
+        background-color: var(--bg-sidebar) !important;
         width: 350px !important;
+        color: var(--text-primary) !important;
     }
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
         width: 350px !important;
-        background-color: #dcdcdc;
+        background-color: var(--bg-sidebar) !important;
+        color: var(--text-primary) !important;
     }
     [data-testid="stSidebar"] > div:first-child {
-        background-color: #dcdcdc;
+        background-color: var(--bg-sidebar) !important;
+        color: var(--text-primary) !important;
     }
     
-    /* Títulos das páginas - menores e mais discretos */
+    /* Texto geral - adaptável */
+    .main, .stApp, p, span, div {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Títulos das páginas - adaptáveis */
     h1 {
         color: white !important;
-        background-color: #005ca9e6 !important;
+        background-color: var(--accent-blue) !important;
         padding: 0.5rem 1rem !important;
         border-radius: 6px !important;
         margin-bottom: 0.75rem !important;
@@ -68,10 +128,10 @@ st.markdown("""
         box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
     }
     
-    /* Headers (h2) - menores e mais discretos */
+    /* Headers (h2) - adaptáveis */
     h2 {
         color: white !important;
-        background-color: #005ca9e6 !important;
+        background-color: var(--accent-blue) !important;
         padding: 0.4rem 0.8rem !important;
         border-radius: 6px !important;
         margin-top: 1rem !important;
@@ -84,25 +144,32 @@ st.markdown("""
     /* Aplicar estilo também para elementos específicos do Streamlit */
     [data-testid="stHeader"] h1 {
         color: white !important;
-        background-color: #005ca9e6 !important;
+        background-color: var(--accent-blue) !important;
         padding: 0.5rem 1rem !important;
         border-radius: 6px !important;
         font-size: 1.5rem !important;
     }
     
-    /* Subheaders (h3) - tom mais claro e discreto */
+    /* Subheaders (h3) - adaptáveis */
     h3 {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
         font-weight: 600 !important;
         margin-top: 0.75rem !important;
         font-size: 1.1rem !important;
     }
     
-    /* H3 no sidebar - garantir cor visível (não branco) */
+    /* H3 no sidebar - adaptável */
     section[data-testid="stSidebar"] h3,
     [data-testid="stSidebar"] h3 {
-        color: #005ca9 !important;
-        -webkit-text-fill-color: #005ca9 !important;
+        color: var(--accent-blue) !important;
+        -webkit-text-fill-color: var(--accent-blue) !important;
+    }
+    
+    /* Texto no sidebar - adaptável */
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div {
+        color: var(--text-primary) !important;
     }
     
     /* Filtros - estilo com cor fria */
@@ -112,9 +179,9 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Botões - mais discretos */
+    /* Botões - adaptáveis */
     .stButton>button {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
         color: white !important;
         border-radius: 6px;
         padding: 0.4rem 1.5rem;
@@ -124,23 +191,24 @@ st.markdown("""
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .stButton>button:hover {
-        background-color: #004a8a !important;
+        background-color: var(--accent-blue-dark) !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     
-    /* Cards de métricas - mais discretos */
+    /* Cards de métricas - adaptáveis */
     .metric-card {
-        background-color: white;
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
         padding: 0.75rem;
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         margin: 0.5rem 0;
-        border-left: 3px solid #005ca9;
+        border-left: 3px solid var(--accent-blue);
     }
     
-    /* Result box - mais discreto */
+    /* Result box - adaptável */
     .result-box {
-        background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
         color: white;
         padding: 1.5rem;
         border-radius: 10px;
@@ -149,18 +217,19 @@ st.markdown("""
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     
-    /* Info boxes - mais discretos */
+    /* Info boxes - adaptáveis */
     .info-box {
-        background-color: #e8f4f8;
+        background-color: var(--input-bg) !important;
+        color: var(--text-primary) !important;
         padding: 0.75rem 1rem;
         border-radius: 6px;
-        border-left: 3px solid #005ca9;
+        border-left: 3px solid var(--accent-blue);
         margin: 0.75rem 0;
     }
     
-    /* Logo/título do sidebar - mais discreto */
+    /* Logo/título do sidebar - adaptável */
     .logo-title {
-        background: linear-gradient(135deg, #005ca9 0%, #0073c7 100%);
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
         color: white;
         padding: 0.75rem;
         border-radius: 8px;
@@ -253,31 +322,31 @@ st.markdown("""
         color: inherit !important;
     }
     
-    /* Checkboxes azuis - sobrescrever qualquer cor vermelha */
+    /* Checkboxes - adaptáveis */
     .stCheckbox input[type="checkbox"] {
-        accent-color: #005ca9 !important;
-        color: #005ca9 !important;
+        accent-color: var(--accent-blue) !important;
+        color: var(--accent-blue) !important;
     }
     
     .stCheckbox input[type="checkbox"]:checked {
-        background-color: #005ca9 !important;
-        border-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
+        border-color: var(--accent-blue) !important;
     }
     
-    /* Forçar azul nos checkmarks usando CSS */
+    /* Forçar cor adaptável nos checkmarks */
     input[type="checkbox"]:checked {
-        background-color: #005ca9 !important;
-        border-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
+        border-color: var(--accent-blue) !important;
     }
     
-    /* Labels dos checkboxes - cor normal (não branco) */
+    /* Labels dos checkboxes - adaptáveis */
     .stCheckbox label {
-        color: #2c3e50 !important;
+        color: var(--text-primary) !important;
     }
     
     /* Labels dentro do container azul - manter cor normal para checkboxes */
     div[style*="background-color: #005ca9e6"] .stCheckbox label {
-        color: #2c3e50 !important;
+        color: var(--text-primary) !important;
     }
     
     /* Estilo para checkboxes customizados dos níveis de obesidade - sem borda */
@@ -304,14 +373,14 @@ st.markdown("""
         color: #2c3e50 !important;
     }
     
-    /* Checkboxes azuis em vez de vermelhos */
+    /* Checkboxes - adaptáveis */
     .stCheckbox input[type="checkbox"]:checked {
-        background-color: #005ca9 !important;
-        border-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
+        border-color: var(--accent-blue) !important;
     }
     
     .stCheckbox input[type="checkbox"] {
-        accent-color: #005ca9 !important;
+        accent-color: var(--accent-blue) !important;
     }
     
     /* Forçar cor azul nos checkmarks */
@@ -319,13 +388,14 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Campos de input - TODOS padronizados: azul claro acinzentado sem borda */
+    /* Campos de input - adaptáveis */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input,
     .stTextInput input,
     .stNumberInput input {
-        background-color: #e8f0f5 !important;
-        border: none !important;
+        background-color: var(--input-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
         border-radius: 6px !important;
     }
     
@@ -333,24 +403,27 @@ st.markdown("""
     .stNumberInput>div>div>input:hover,
     .stTextInput input:hover,
     .stNumberInput input:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--accent-blue) !important;
     }
     
     .stTextInput>div>div>input:focus,
     .stNumberInput>div>div>input:focus,
     .stTextInput input:focus,
     .stNumberInput input:focus {
-        background-color: #d3e0eb !important;
-        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
+        background-color: var(--input-bg-focus) !important;
+        border-color: var(--accent-blue) !important;
+        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2) !important;
     }
     
-    /* Selectbox - TODOS padronizados: azul claro acinzentado sem borda */
+    /* Selectbox - adaptáveis */
     .stSelectbox>div>div>div,
     .stSelectbox select,
     div[data-baseweb="select"] > div,
     div[data-baseweb="select"] {
-        background-color: #e8f0f5 !important;
-        border: none !important;
+        background-color: var(--input-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
         border-radius: 6px !important;
     }
     
@@ -358,77 +431,80 @@ st.markdown("""
     .stSelectbox select:hover,
     div[data-baseweb="select"] > div:hover,
     div[data-baseweb="select"]:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--accent-blue) !important;
     }
     
     /* Garantir que o container interno do selectbox também tenha a cor */
     .stSelectbox > div > div > div[data-baseweb="select"] {
-        background-color: #e8f0f5 !important;
-        border: none !important;
+        background-color: var(--input-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
     }
     
     .stSelectbox > div > div > div[data-baseweb="select"]:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--accent-blue) !important;
     }
     
-    /* Multiselect - tags azuis em vez de vermelhas */
+    /* Multiselect - tags adaptáveis */
     div[data-baseweb="tag"] {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
         color: white !important;
         border: none !important;
     }
     
     /* Container das tags do multiselect */
     div[data-baseweb="popover"] div[data-baseweb="tag"] {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
         color: white !important;
     }
     
-    /* Slider - azul em vez de vermelho */
+    /* Slider - adaptável */
     .stSlider > div > div > div {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
     }
     
     .stSlider > div > div > div > div {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
     }
     
-    /* Track do slider - azul */
+    /* Track do slider - adaptável */
     .stSlider > div > div > div[data-baseweb="slider-track"] {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
     }
     
-    /* Handles do slider (extremes) - azul em vez de vermelho */
+    /* Handles do slider - adaptáveis */
     .stSlider > div > div > div[data-baseweb="slider-handle"],
     .stSlider div[data-baseweb="slider-handle"],
     .stSlider button[data-baseweb="slider-handle"],
     .stSlider > div > div > div > div[data-baseweb="slider-handle"],
     .stSlider [data-baseweb="slider-handle"] {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
         border: 2px solid white !important;
     }
     
-    /* Handles do slider - forçar azul com máxima especificidade */
+    /* Handles do slider - forçar cor adaptável */
     .stSlider button[role="slider"],
     .stSlider [role="slider"] {
-        background-color: #005ca9 !important;
+        background-color: var(--accent-blue) !important;
         border-color: white !important;
     }
     
-    /* Valores do slider (números acima dos handles) - azul em vez de vermelho */
+    /* Valores do slider - adaptáveis */
     .stSlider > div > div > span,
     .stSlider span:not(label),
     .stSlider > div > div > div > span,
     .stSlider label + span,
     .stSlider [data-testid="stSlider"] span,
     .stSlider [data-testid="stSlider"] > div > span {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
         font-weight: 600 !important;
     }
     
-    /* Garantir que valores numéricos do slider sejam azuis */
+    /* Garantir que valores numéricos do slider sejam adaptáveis */
     .stSlider span[style*="color"] {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
     /* Exceção: labels do slider mantêm cor original */
@@ -442,24 +518,37 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Expanders - mais discretos */
+    /* Expanders - adaptáveis */
     .streamlit-expanderHeader {
-        background-color: #e8f4f8;
-        color: #005ca9;
+        background-color: var(--input-bg) !important;
+        color: var(--accent-blue) !important;
         font-weight: 500;
         font-size: 0.95rem;
         padding: 0.5rem 0.75rem;
         border-radius: 4px;
     }
     
-    /* Tabelas */
+    /* Tabelas - adaptáveis */
     .dataframe {
-        background-color: white;
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
     }
     
-    /* Markdown info/success/warning */
+    /* Markdown info/success/warning - adaptáveis */
     .stAlert {
-        border-left: 4px solid #005ca9;
+        border-left: 4px solid var(--accent-blue);
+    }
+    
+    /* Texto geral - garantir contraste */
+    p, span, div, label {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Exceção: texto dentro de containers azuis */
+    div[style*="background-color: #005ca9e6"] p,
+    div[style*="background-color: #005ca9e6"] span,
+    div[style*="background-color: #005ca9e6"] div:not(.stCheckbox) {
+        color: white !important;
     }
     
     /* Regras adicionais para garantir padronização - TODOS os campos */
@@ -590,8 +679,7 @@ st.markdown("""
         color: white !important;
     }
     
-    /* REGRA FINAL COM MÁXIMA ESPECIFICIDADE: Forçar TODOS os campos a terem #e8f0f5 */
-    /* Esta regra deve vir por último para sobrescrever qualquer outra definição */
+    /* REGRA FINAL: Forçar TODOS os campos a usarem variáveis CSS */
     .main .stTextInput > div > div > input,
     .main .stNumberInput > div > div > input,
     .main .stSelectbox > div > div > div[data-baseweb="select"],
@@ -600,8 +688,9 @@ st.markdown("""
     .stApp .stNumberInput > div > div > input,
     .stApp .stSelectbox > div > div > div[data-baseweb="select"],
     .stApp div[data-baseweb="select"] > div {
-        background-color: #e8f0f5 !important;
-        border: none !important;
+        background-color: var(--input-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
         border-radius: 6px !important;
     }
     
@@ -614,7 +703,8 @@ st.markdown("""
     .stApp .stNumberInput > div > div > input:hover,
     .stApp .stSelectbox > div > div > div[data-baseweb="select"]:hover,
     .stApp div[data-baseweb="select"] > div:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--accent-blue) !important;
     }
     
     /* Focus para todos os campos */
@@ -622,16 +712,18 @@ st.markdown("""
     .main .stNumberInput > div > div > input:focus,
     .stApp .stTextInput > div > div > input:focus,
     .stApp .stNumberInput > div > div > input:focus {
-        background-color: #d3e0eb !important;
-        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
+        background-color: var(--input-bg-focus) !important;
+        border-color: var(--accent-blue) !important;
+        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2) !important;
     }
     
-    /* EXCEÇÃO ABSOLUTA: Campos dentro dos filtros (container azul) mantêm branco */
+    /* EXCEÇÃO: Campos dentro dos filtros (container azul) mantêm branco */
     div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
     div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
     div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div[data-baseweb="select"],
     div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
         background-color: white !important;
+        color: var(--text-primary) !important;
     }
     
     /* SLIDER - REGRAS FINAIS: Forçar handles e valores a serem azuis */
@@ -651,29 +743,28 @@ st.markdown("""
         color: #005ca9 !important;
     }
     
-    /* Override de qualquer cor vermelha no slider */
+    /* Override de qualquer cor vermelha no slider - usar variável */
     .stSlider [style*="color: red"],
     .stSlider [style*="color: rgb(255"],
     .stSlider [style*="background-color: red"],
     .stSlider [style*="background-color: rgb(255"] {
-        color: #005ca9 !important;
-        background-color: #005ca9 !important;
+        color: var(--accent-blue) !important;
+        background-color: var(--accent-blue) !important;
     }
     
-    /* VALORES FIXOS DO SLIDER - Forçar azul mesmo sem hover */
-    /* Valores que aparecem acima do track (fixos) */
+    /* VALORES FIXOS DO SLIDER - usar variável */
     .stSlider > div > div > div > div > span,
     .stSlider > div > div > div > span[style],
     .stSlider > div > div > span[style],
     .stSlider span[style*="color"] {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
-    /* Forçar azul em TODOS os spans do slider, exceto labels */
+    /* Forçar cor adaptável em TODOS os spans do slider, exceto labels */
     .stSlider > div > div > div > span:not(label span),
     .stSlider > div > div > span:not(label span),
     .stSlider div > div > span:not(label span) {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
         font-weight: 600 !important;
     }
     
@@ -681,48 +772,46 @@ st.markdown("""
     .stSlider [data-baseweb="slider"] ~ span,
     .stSlider [data-baseweb="slider-track"] ~ span,
     .stSlider [data-baseweb="slider-handle"] ~ span {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
-    /* Forçar azul em qualquer elemento com texto numérico no slider */
+    /* Forçar cor adaptável em qualquer elemento com texto numérico no slider */
     .stSlider > div > div > div > div > div > span,
     .stSlider > div > div > div > div > span {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
     /* Override absoluto: qualquer span dentro do slider que não seja label */
     .stSlider span:not(.stSlider label):not(.stSlider label span) {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
-    /* Glow/hover do handle - azul em vez de vermelho */
+    /* Glow/hover do handle - adaptável */
     .stSlider [data-baseweb="slider-handle"]:hover,
     .stSlider [data-baseweb="slider-handle"]:focus,
     .stSlider button[role="slider"]:hover,
     .stSlider button[role="slider"]:focus {
-        background-color: #005ca9 !important;
-        box-shadow: 0 0 0 4px rgba(0, 92, 169, 0.2) !important;
+        background-color: var(--accent-blue) !important;
+        box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2) !important;
     }
     
-    /* REGRA ULTRA ESPECÍFICA: Forçar valores fixos acima do track a serem azuis */
-    /* Sobrescrever qualquer estilo inline vermelho */
+    /* REGRA ULTRA ESPECÍFICA: Forçar valores fixos acima do track */
     .stSlider > div > div > div[style*="color"] span,
     .stSlider > div > div > div > div[style*="color"] span,
     .stSlider > div > div > div > span[style*="color"],
     .stSlider > div > div > span[style*="color"] {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
-    /* Forçar azul em TODOS os elementos filhos do slider que tenham cor */
-    /* Exceção: labels mantêm cor original */
+    /* Forçar cor adaptável em TODOS os elementos filhos do slider */
     .stSlider *:not(label):not(label *) {
-        color: #005ca9 !important;
+        color: var(--accent-blue) !important;
     }
     
     /* Exceção: labels mantêm cor original */
     .stSlider label,
     .stSlider label * {
-        color: inherit !important;
+        color: var(--text-primary) !important;
     }
     
     /* Exceção: valores dentro dos filtros (container azul) mantêm branco */
@@ -731,7 +820,78 @@ st.markdown("""
     }
 </style>
 <script>
-// JavaScript para forçar valores fixos do slider a serem azuis
+// Detectar e aplicar tema do sistema
+(function() {
+    function applyTheme() {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
+                      document.documentElement.getAttribute('data-theme') === 'dark';
+        
+        const root = document.documentElement;
+        if (isDark) {
+            root.style.setProperty('--bg-primary', '#0e1117');
+            root.style.setProperty('--bg-secondary', '#1e1e1e');
+            root.style.setProperty('--bg-sidebar', '#262730');
+            root.style.setProperty('--text-primary', '#fafafa');
+            root.style.setProperty('--text-secondary', '#d0d0d0');
+            root.style.setProperty('--accent-blue', '#4a9eff');
+            root.style.setProperty('--accent-blue-light', '#6bb3ff');
+            root.style.setProperty('--accent-blue-dark', '#2d7dd2');
+            root.style.setProperty('--input-bg', '#2a2a3a');
+            root.style.setProperty('--input-bg-hover', '#333344');
+            root.style.setProperty('--input-bg-focus', '#3a3a4a');
+            root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
+        } else {
+            root.style.setProperty('--bg-primary', 'white');
+            root.style.setProperty('--bg-secondary', '#f5f5f5');
+            root.style.setProperty('--bg-sidebar', '#dcdcdc');
+            root.style.setProperty('--text-primary', '#1e1e1e');
+            root.style.setProperty('--text-secondary', '#2c3e50');
+            root.style.setProperty('--accent-blue', '#005ca9');
+            root.style.setProperty('--accent-blue-light', '#0073c7');
+            root.style.setProperty('--accent-blue-dark', '#004a8a');
+            root.style.setProperty('--input-bg', '#e8f0f5');
+            root.style.setProperty('--input-bg-hover', '#dde8f0');
+            root.style.setProperty('--input-bg-focus', '#d3e0eb');
+            root.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
+        }
+    }
+    
+    // Aplicar tema imediatamente
+    applyTheme();
+    
+    // Observar mudanças no tema do sistema
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', applyTheme);
+    
+    // Observar mudanças no atributo data-theme do Streamlit
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                applyTheme();
+            }
+        });
+    });
+    
+    if (document.documentElement) {
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    }
+    
+    // Aplicar tema quando o DOM estiver pronto
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    } else {
+        applyTheme();
+    }
+    
+    // Reaplicar após delays para garantir
+    setTimeout(applyTheme, 100);
+    setTimeout(applyTheme, 500);
+})();
+
+// JavaScript para forçar valores fixos do slider a serem adaptáveis
 // Sobrescreve estilos inline vermelhos
 (function() {
     function fixSliderColors() {
@@ -742,16 +902,20 @@ st.markdown("""
             spans.forEach(function(span) {
                 const isLabel = span.closest('label') !== null;
                 const text = span.textContent ? span.textContent.trim() : '';
-                // Se contém apenas números e não é label, forçar azul
+                // Se contém apenas números e não é label, usar variável CSS
                 if (!isLabel && /^\d+$/.test(text)) {
-                    span.style.setProperty('color', '#005ca9', 'important');
+                    // Detectar tema e aplicar cor apropriada
+                    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
+                                  document.documentElement.getAttribute('data-theme') === 'dark';
+                    const color = isDark ? '#4a9eff' : '#005ca9';
+                    span.style.setProperty('color', color, 'important');
                     // Remover qualquer estilo inline vermelho
                     if (span.getAttribute('style')) {
                         let style = span.getAttribute('style');
                         style = style.replace(/color:\s*rgb?\([^)]*\)/gi, '');
                         style = style.replace(/color:\s*red/gi, '');
                         style = style.replace(/color:\s*#[fF]{2,6}/gi, '');
-                        span.setAttribute('style', style + '; color: #005ca9 !important;');
+                        span.setAttribute('style', style + '; color: ' + color + ' !important;');
                     }
                 }
             });
@@ -831,15 +995,18 @@ st.markdown("""
     }
 })();
 
-// Forçar checkboxes a serem azuis
+// Forçar checkboxes a usarem cor adaptável
 (function() {
     function fixCheckboxes() {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
+                      document.documentElement.getAttribute('data-theme') === 'dark';
+        const color = isDark ? '#4a9eff' : '#005ca9';
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(function(checkbox) {
-            checkbox.style.setProperty('accent-color', '#005ca9', 'important');
+            checkbox.style.setProperty('accent-color', color, 'important');
             if (checkbox.checked) {
-                checkbox.style.setProperty('background-color', '#005ca9', 'important');
-                checkbox.style.setProperty('border-color', '#005ca9', 'important');
+                checkbox.style.setProperty('background-color', color, 'important');
+                checkbox.style.setProperty('border-color', color, 'important');
             }
         });
     }
@@ -1129,18 +1296,18 @@ with st.sidebar:
         menu_icon="cast",
         default_index=0,
         styles={
-            "container": {"padding": "5!important", "background-color": "#dcdcdc"},
-            "icon": {"color": "#005ca9", "font-size": "18px"},
+            "container": {"padding": "5!important", "background-color": "var(--bg-sidebar)"},
+            "icon": {"color": "var(--accent-blue)", "font-size": "18px"},
             "nav-link": {
                 "font-size": "16px",
                 "text-align": "left",
                 "margin": "0px",
-                "color": "#2c3e50",
+                "color": "var(--text-primary)",
                 "--hover-color": "#b3d9f2",
                 "border-radius": "5px",
             },
             "nav-link-selected": {
-                "background-color": "#005ca9e6",
+                "background-color": "var(--accent-blue)",
                 "color": "white",
             },
         }
