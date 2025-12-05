@@ -550,7 +550,130 @@ st.markdown("""
         color: #005ca9 !important;
         background-color: #005ca9 !important;
     }
+    
+    /* VALORES FIXOS DO SLIDER - Forçar azul mesmo sem hover */
+    /* Valores que aparecem acima do track (fixos) */
+    .stSlider > div > div > div > div > span,
+    .stSlider > div > div > div > span[style],
+    .stSlider > div > div > span[style],
+    .stSlider span[style*="color"] {
+        color: #005ca9 !important;
+    }
+    
+    /* Forçar azul em TODOS os spans do slider, exceto labels */
+    .stSlider > div > div > div > span:not(label span),
+    .stSlider > div > div > span:not(label span),
+    .stSlider div > div > span:not(label span) {
+        color: #005ca9 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Override específico para valores fixos acima do track */
+    .stSlider [data-baseweb="slider"] ~ span,
+    .stSlider [data-baseweb="slider-track"] ~ span,
+    .stSlider [data-baseweb="slider-handle"] ~ span {
+        color: #005ca9 !important;
+    }
+    
+    /* Forçar azul em qualquer elemento com texto numérico no slider */
+    .stSlider > div > div > div > div > div > span,
+    .stSlider > div > div > div > div > span {
+        color: #005ca9 !important;
+    }
+    
+    /* Override absoluto: qualquer span dentro do slider que não seja label */
+    .stSlider span:not(.stSlider label):not(.stSlider label span) {
+        color: #005ca9 !important;
+    }
+    
+    /* Glow/hover do handle - azul em vez de vermelho */
+    .stSlider [data-baseweb="slider-handle"]:hover,
+    .stSlider [data-baseweb="slider-handle"]:focus,
+    .stSlider button[role="slider"]:hover,
+    .stSlider button[role="slider"]:focus {
+        background-color: #005ca9 !important;
+        box-shadow: 0 0 0 4px rgba(0, 92, 169, 0.2) !important;
+    }
+    
+    /* REGRA ULTRA ESPECÍFICA: Forçar valores fixos acima do track a serem azuis */
+    /* Sobrescrever qualquer estilo inline vermelho */
+    .stSlider > div > div > div[style*="color"] span,
+    .stSlider > div > div > div > div[style*="color"] span,
+    .stSlider > div > div > div > span[style*="color"],
+    .stSlider > div > div > span[style*="color"] {
+        color: #005ca9 !important;
+    }
+    
+    /* Forçar azul em TODOS os elementos filhos do slider que tenham cor */
+    /* Exceção: labels mantêm cor original */
+    .stSlider *:not(label):not(label *) {
+        color: #005ca9 !important;
+    }
+    
+    /* Exceção: labels mantêm cor original */
+    .stSlider label,
+    .stSlider label * {
+        color: inherit !important;
+    }
+    
+    /* Exceção: valores dentro dos filtros (container azul) mantêm branco */
+    div[style*="background-color: #005ca9e6"] .stSlider span:not(label span) {
+        color: white !important;
+    }
 </style>
+<script>
+// JavaScript para forçar valores fixos do slider a serem azuis
+// Sobrescreve estilos inline vermelhos
+(function() {
+    function fixSliderColors() {
+        const sliders = document.querySelectorAll('.stSlider');
+        sliders.forEach(function(slider) {
+            // Encontrar todos os spans que contêm números (valores do slider)
+            const spans = slider.querySelectorAll('span');
+            spans.forEach(function(span) {
+                const isLabel = span.closest('label') !== null;
+                const text = span.textContent ? span.textContent.trim() : '';
+                // Se contém apenas números e não é label, forçar azul
+                if (!isLabel && /^\d+$/.test(text)) {
+                    span.style.setProperty('color', '#005ca9', 'important');
+                    // Remover qualquer estilo inline vermelho
+                    if (span.getAttribute('style')) {
+                        let style = span.getAttribute('style');
+                        style = style.replace(/color:\s*rgb?\([^)]*\)/gi, '');
+                        style = style.replace(/color:\s*red/gi, '');
+                        style = style.replace(/color:\s*#[fF]{2,6}/gi, '');
+                        span.setAttribute('style', style + '; color: #005ca9 !important;');
+                    }
+                }
+            });
+        });
+    }
+    
+    // Executar imediatamente
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fixSliderColors);
+    } else {
+        fixSliderColors();
+    }
+    
+    // Executar após delays para garantir que o slider foi renderizado
+    setTimeout(fixSliderColors, 100);
+    setTimeout(fixSliderColors, 500);
+    setTimeout(fixSliderColors, 1000);
+    
+    // Observar mudanças no DOM
+    const observer = new MutationObserver(function() {
+        fixSliderColors();
+    });
+    
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+})();
+</script>
 """, unsafe_allow_html=True)
 
 # Mapeamento de níveis de obesidade para português
