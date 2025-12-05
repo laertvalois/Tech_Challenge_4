@@ -1507,8 +1507,8 @@ elif selected == "Insights e Métricas":
             color: white !important;
         }
         </style>
-        <div style="background-color: #005ca9e6; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h3 style="color: white !important; margin: 0 0 0.75rem 0; padding: 0; font-weight: 600; font-size: 1.1rem;">🔍 Filtros</h3>
+        <div style="background-color: #005ca9e6; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            <h3 style="color: white !important; margin: 0; padding: 0; font-weight: 600; font-size: 1rem;">🔍 Filtros</h3>
         """, unsafe_allow_html=True)
         
         # Container para filtros
@@ -1516,7 +1516,7 @@ elif selected == "Insights e Métricas":
         
         with filter_col1:
             # Filtro por gênero - usando checkboxes igual ao de obesidade
-            st.markdown('<p style="color: white; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem;">Gênero</p>', unsafe_allow_html=True)
+            st.markdown('<p style="color: #2c3e50; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem;">Gênero</p>', unsafe_allow_html=True)
             
             gender_options_en = df['Gender'].unique()
             gender_options_pt = ['Masculino' if g == 'Male' else 'Feminino' for g in gender_options_en]
@@ -1559,7 +1559,7 @@ elif selected == "Insights e Métricas":
         
         with filter_col2:
             # Filtro por nível de obesidade - usando checkboxes para mostrar todos sem scroll
-            st.markdown('<p style="color: white; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem;">Nível de Obesidade</p>', unsafe_allow_html=True)
+            st.markdown('<p style="color: #2c3e50; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem;">Nível de Obesidade</p>', unsafe_allow_html=True)
             
             obesity_options_en = df['Obesity'].unique()
             obesity_options_pt = [OBESITY_LEVELS_PT.get(obs, obs) for obs in obesity_options_en]
