@@ -173,26 +173,81 @@ st.markdown("""
     
     /* Background das páginas */
     .main,
-    .stApp {
+    .stApp,
+    .stApp > header,
+    .stApp > header > div,
+    header[data-testid="stHeader"],
+    header[data-testid="stHeader"] > div {
         background-color: var(--bg-primary) !important;
         color: var(--text-primary) !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
     }
     
-    /* Background do sidebar/menu */
-    section[data-testid="stSidebar"] {
+    /* Header do Streamlit (menu superior) - forçar background claro */
+    header[data-testid="stHeader"],
+    header[data-testid="stHeader"] > div,
+    header[data-testid="stHeader"] > div > div,
+    header[data-testid="stHeader"] > div > div > div,
+    div[data-testid="stHeader"],
+    .stApp > header,
+    .stApp > header > div,
+    .stApp > header > div > div {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* Botões e elementos do header */
+    header[data-testid="stHeader"] button,
+    header[data-testid="stHeader"] svg,
+    header[data-testid="stHeader"] a,
+    header[data-testid="stHeader"] span,
+    header[data-testid="stHeader"] div {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Toolbar do Streamlit (menu hamburger, settings, etc.) */
+    .stToolbar,
+    .stToolbar > div,
+    button[data-testid="baseButton-header"],
+    button[aria-label*="Settings"],
+    button[aria-label*="Menu"] {
+        background-color: #FFFFFF !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* Background do sidebar/menu - FORÇAR EM TODOS OS ELEMENTOS */
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] > div > div,
+    section[data-testid="stSidebar"] > div > div > div {
         background-color: var(--bg-sidebar) !important;
         width: 350px !important;
         color: var(--text-primary) !important;
     }
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"],
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div,
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div > div {
         width: 350px !important;
         background-color: var(--bg-sidebar) !important;
         color: var(--text-primary) !important;
     }
-    [data-testid="stSidebar"] > div:first-child {
+    [data-testid="stSidebar"] > div:first-child,
+    [data-testid="stSidebar"] > div:first-child > div,
+    [data-testid="stSidebar"] > div:first-child > div > div {
         background-color: var(--bg-sidebar) !important;
         color: var(--text-primary) !important;
+    }
+    /* Forçar background em TODAS as divs do sidebar */
+    [data-testid="stSidebar"] div {
+        background-color: var(--bg-sidebar) !important;
+    }
+    /* Exceção: apenas o container do menu deve ser transparente */
+    [data-testid="stSidebar"] div[class*="container-xxl"],
+    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]),
+    [data-testid="stSidebar"] div[class*="option-menu"] {
+        background-color: transparent !important;
+        background: transparent !important;
     }
     
     /* Texto geral */
@@ -256,13 +311,42 @@ st.markdown("""
         color: var(--text-primary) !important;
     }
     
-    /* Container do menu - transparente */
-    [data-testid="stSidebar"] div[class*="container-xxl"],
-    [data-testid="stSidebar"] div[class*="container"],
+    /* Container do menu - transparente (mas garantir que divs pais tenham background claro) */
+    [data-testid="stSidebar"] div[class*="container-xxl"] {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+    [data-testid="stSidebar"] div[class*="container"]:not([class*="st"]):not([data-testid]) {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
     [data-testid="stSidebar"] div[class*="option-menu"],
     [data-testid="stSidebar"] ul[class*="nav-pills"] {
         background-color: transparent !important;
         background: transparent !important;
+    }
+    /* Garantir que divs do Streamlit no sidebar tenham background claro */
+    [data-testid="stSidebar"] div[data-testid],
+    [data-testid="stSidebar"] div[class*="st"] {
+        background-color: var(--bg-sidebar) !important;
+    }
+    
+    /* Forçar background claro em TODAS as divs do sidebar (exceto container do menu) */
+    [data-testid="stSidebar"] > div,
+    [data-testid="stSidebar"] > div > div,
+    [data-testid="stSidebar"] > div > div > div,
+    [data-testid="stSidebar"] > div > div > div > div {
+        background-color: var(--bg-sidebar) !important;
+    }
+    
+    /* Exceção específica: apenas o container-xxl do option-menu deve ser transparente */
+    [data-testid="stSidebar"] div.container-xxl {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+    /* Mas garantir que divs dentro do container-xxl que não sejam o menu tenham background claro */
+    [data-testid="stSidebar"] div.container-xxl > div:not([class*="nav-pills"]):not([class*="nav-item"]) {
+        background-color: var(--bg-sidebar) !important;
     }
     
     /* Menu navigation links - não ativos - usar cor do texto normal */
