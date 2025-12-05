@@ -61,6 +61,8 @@ Todos os requisitos do Tech Challenge foram implementados com sucesso!
 - **Como executar:**
   ```bash
   streamlit run app/app.py
+  # ou
+  python run_app.py
   # Navegue para a página "Insights e Métricas" no menu lateral
   ```
 

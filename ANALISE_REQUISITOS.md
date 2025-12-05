@@ -134,7 +134,7 @@ LINKS_ENTREGA.txt ou LINKS_ENTREGA.doc
 ## 🔄 Fluxo de Trabalho Sugerido
 
 ### Fase 1: Análise Exploratória
-1. Extrair dados do SQLite
+1. Carregar dados do CSV
 2. Análise exploratória (EDA)
 3. Identificar missing values
 4. Análise de distribuições

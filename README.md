@@ -30,12 +30,19 @@ O arquivo CSV (`data/obesity.csv`) contém informações sobre:
 
 ```
 tech_challenge/
-├── data/               # Dados (SQLite e CSV)
+├── data/               # Dados
+│   └── obesity.csv     # Dataset principal
 ├── src/                # Código fonte (pipeline ML, feature engineering)
-├── notebooks/          # Análise exploratória e experimentação
-├── app/                # Aplicação Streamlit (sistema preditivo)
-├── dashboard/          # Dashboard analítico
+│   ├── data_preprocessing.py
+│   ├── train_model.py
+│   └── load_model.py
+├── notebooks/          # Análise exploratória
+│   └── 01_analise_exploratoria.py
+├── app/                # Aplicação Streamlit (unificada: predição + dashboard)
+│   └── app.py          # Aplicação principal com 3 páginas
 ├── models/             # Modelos treinados salvos
+│   ├── obesity_model.joblib
+│   └── preprocessor.joblib
 └── requirements.txt    # Dependências do projeto
 ```
 
@@ -70,17 +77,7 @@ python run_app.py
 streamlit run app/app.py
 ```
 
-### Executar Dashboard Analítico
-
-**Opção 1:** Usando script auxiliar
-```bash
-python run_dashboard.py
-```
-
-**Opção 2:** Diretamente
-```bash
-streamlit run dashboard/dashboard.py
-```
+**Nota:** O dashboard analítico está integrado na aplicação principal. Acesse a página "Insights e Métricas" no menu lateral.
 
 ## 📊 Resultados do Modelo
 
@@ -135,6 +132,8 @@ A aplicação (`app/app.py`) possui três páginas principais:
 
 - `ANALISE_REQUISITOS.md` - Análise detalhada dos requisitos
 - `RESUMO_PROJETO.md` - Resumo executivo do projeto
+- `ENTREGA_TECH_CHALLENGE.md` - Documento de entrega detalhado
+- `DOCUMENTO_ENTREGA_FINAL.md` - Documento consolidado de entrega
 - `LINKS_ENTREGA.txt` - Template para links de entrega
 
 ## 👥 Autores

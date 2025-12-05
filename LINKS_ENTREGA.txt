@@ -53,8 +53,9 @@ INSTRUÇÕES PARA DEPLOY
 
 2. Para executar localmente:
    - Instale as dependências: pip install -r requirements.txt
-   - Execute: streamlit run app/app.py (para aplicação)
-   - Execute: streamlit run dashboard/dashboard.py (para dashboard)
+   - Execute: streamlit run app/app.py
+   - A aplicação contém tanto o sistema preditivo quanto o dashboard analítico
+   - Navegue pelas páginas usando o menu lateral
 
 ================================================================================
 

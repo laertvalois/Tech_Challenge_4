@@ -32,87 +32,154 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado com suporte a dark mode
+# Adicionar meta tag para idioma português brasileiro
 st.markdown("""
+<meta name="language" content="pt-BR">
+<meta http-equiv="content-language" content="pt-BR">
+""", unsafe_allow_html=True)
+
+# CSS personalizado - Estilo Mananalu (design limpo, minimalista e estático)
+# Script para suprimir avisos do console - executar o mais cedo possível
+# Nota: Esses avisos são gerados pelo Streamlit internamente e são inofensivos
+st.markdown("""
+<script>
+// Executar IMEDIATAMENTE usando IIFE
+(function() {
+    'use strict';
+    
+    // Definir idioma da página como português brasileiro
+    if (document.documentElement) {
+        document.documentElement.setAttribute('lang', 'pt-BR');
+    }
+    // Também definir no body se existir
+    if (document.body) {
+        document.body.setAttribute('lang', 'pt-BR');
+    }
+    // Garantir que seja aplicado mesmo após carregamento
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.documentElement) {
+                document.documentElement.setAttribute('lang', 'pt-BR');
+            }
+        });
+    }
+    
+    // Capturar referências originais
+    const _originalError = window.console.error;
+    const _originalWarn = window.console.warn;
+    
+    // Função para verificar se deve suprimir
+    function shouldSuppress(msg) {
+        if (!msg) return false;
+        const s = String(msg).toLowerCase();
+        return s.includes('invalid color passed for widgetbackgroundcolor') ||
+               s.includes('invalid color passed for widgetbordercolor') ||
+               s.includes('invalid color passed for skeletonbackgroundcolor');
+    }
+    
+    // Sobrescrever console.error de forma mais agressiva
+    try {
+        window.console.error = function(...args) {
+            const msg = args[0];
+            if (shouldSuppress(msg)) return;
+            _originalError.apply(console, args);
+        };
+    } catch(e) {}
+    
+    // Sobrescrever console.warn
+    try {
+        window.console.warn = function(...args) {
+            const msg = args[0];
+            if (shouldSuppress(msg)) return;
+            _originalWarn.apply(console, args);
+        };
+    } catch(e) {}
+    
+    // Reaplicar após um delay para garantir que sobrescreve qualquer código posterior
+    setTimeout(function() {
+        try {
+            window.console.error = function(...args) {
+                const msg = args[0];
+                if (shouldSuppress(msg)) return;
+                _originalError.apply(console, args);
+            };
+            window.console.warn = function(...args) {
+                const msg = args[0];
+                if (shouldSuppress(msg)) return;
+                _originalWarn.apply(console, args);
+            };
+        } catch(e) {}
+    }, 0);
+})();
+</script>
 <style>
-    /* Variáveis CSS para adaptação ao tema */
+    /* ============================================
+       ESTILO MANANALU - Design Limpo e Minimalista
+       Inspirado em: https://mananalu.boomerangwater.com/
+       ============================================ */
+    
+    /* ============================================
+       PALETA DE CORES - Estático (sem dark mode)
+       ============================================ */
     :root {
-        --bg-primary: white;
-        --bg-secondary: #f5f5f5;
-        --bg-sidebar: #dcdcdc;
-        --text-primary: #1e1e1e;
-        --text-secondary: #2c3e50;
-        --accent-blue: #005ca9;
-        --accent-blue-light: #0073c7;
-        --accent-blue-dark: #004a8a;
-        --input-bg: #e8f0f5;
-        --input-bg-hover: #dde8f0;
-        --input-bg-focus: #d3e0eb;
-        --border-color: rgba(0, 0, 0, 0.1);
+        /* Backgrounds - tons neutros claros e limpos */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-sidebar: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-hover: #f8fafc;
+        
+        /* Textos - tons escuros suaves e legíveis */
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --text-light: #94a3b8;
+        
+        /* Azuis - inspirados em água/oceano (tema sustentabilidade) */
+        --accent-blue: #0ea5e9;
+        --accent-blue-light: #38bdf8;
+        --accent-blue-dark: #0284c7;
+        --accent-blue-soft: #e0f2fe;
+        --accent-blue-softer: #f0f9ff;
+        
+        /* Inputs - fundos brancos com bordas suaves */
+        --input-bg: #ffffff;
+        --input-bg-hover: #f8fafc;
+        --input-bg-focus: #f1f5f9;
+        --input-border: #e2e8f0;
+        --input-border-hover: #cbd5e1;
+        --input-border-focus: #0ea5e9;
+        --input-text: #1e293b;
+        --input-placeholder: #94a3b8;
+        
+        /* Menu */
+        --menu-bg: #f1f5f9;
+        --menu-link: #475569;
+        --menu-link-hover: #0ea5e9;
+        --menu-link-active-bg: #0ea5e9;
+        --menu-link-active-text: #ffffff;
+        
+        /* Filtros */
+        --filter-bg: #0ea5e9;
+        --filter-text: #ffffff;
+        
+        /* Bordas e sombras */
+        --border-color: #e2e8f0;
+        --border-light: #f1f5f9;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
     
-    /* Dark mode - detectar via media query e classe do Streamlit */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg-primary: #0e1117;
-            --bg-secondary: #1e1e1e;
-            --bg-sidebar: #262730;
-            --text-primary: #fafafa;
-            --text-secondary: #d0d0d0;
-            --accent-blue: #4a9eff;
-            --accent-blue-light: #6bb3ff;
-            --accent-blue-dark: #2d7dd2;
-            --input-bg: #1a1a2a;
-            --input-bg-hover: #252538;
-            --input-bg-focus: #2d2d42;
-            --input-text: #ffffff;
-            --input-placeholder: #b0b0b0;
-            --border-color: rgba(255, 255, 255, 0.2);
-            --menu-link-color: #ffffff;
-        }
-    }
-    
-    /* Detectar tema do Streamlit */
-    [data-theme="dark"] {
-        --bg-primary: #0e1117;
-        --bg-secondary: #1e1e1e;
-        --bg-sidebar: #262730;
-        --text-primary: #fafafa;
-        --text-secondary: #d0d0d0;
-        --accent-blue: #4a9eff;
-        --accent-blue-light: #6bb3ff;
-        --accent-blue-dark: #2d7dd2;
-        --input-bg: #1a1a2a;
-        --input-bg-hover: #252538;
-        --input-bg-focus: #2d2d42;
-        --input-text: #ffffff;
-        --input-placeholder: #b0b0b0;
-        --border-color: rgba(255, 255, 255, 0.2);
-        --menu-link-color: #ffffff;
-    }
-    
-    /* Light mode - variável para menu */
-    :root {
-        --menu-link-color: #1a1a1a;
-    }
-    
-    /* Light mode - garantir variáveis de input */
-    :root {
-        --input-text: var(--text-primary);
-        --input-placeholder: #999999;
-    }
-    
-    /* Background das páginas - adaptável */
-    .main {
-        background-color: var(--bg-primary) !important;
-        color: var(--text-primary) !important;
-    }
+    /* Background das páginas */
+    .main,
     .stApp {
         background-color: var(--bg-primary) !important;
         color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
     }
     
-    /* Background do sidebar/menu - adaptável */
+    /* Background do sidebar/menu */
     section[data-testid="stSidebar"] {
         background-color: var(--bg-sidebar) !important;
         width: 350px !important;
@@ -128,294 +195,309 @@ st.markdown("""
         color: var(--text-primary) !important;
     }
     
-    /* Texto geral - adaptável */
-    .main, .stApp, p, span, div {
+    /* Texto geral */
+    p, span, div, label {
         color: var(--text-primary) !important;
     }
     
-    /* Garantir que labels dos campos sejam sempre visíveis */
-    .stTextInput label,
-    .stNumberInput label,
-    .stSelectbox label {
+    h4, h5, h6 {
         color: var(--text-primary) !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
     }
     
-    /* Dark mode - labels mais claros */
-    @media (prefers-color-scheme: dark) {
-        .stTextInput label,
-        .stNumberInput label,
-        .stSelectbox label {
-            color: #e0e0e0 !important;
-        }
-    }
-    
-    [data-theme="dark"] .stTextInput label,
-    [data-theme="dark"] .stNumberInput label,
-    [data-theme="dark"] .stSelectbox label {
-        color: #e0e0e0 !important;
-    }
-    
-    /* Títulos das páginas - adaptáveis */
+    /* Títulos das páginas */
     h1 {
-        color: white !important;
-        background-color: var(--accent-blue) !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 6px !important;
-        margin-bottom: 0.75rem !important;
-        font-weight: 600 !important;
-        font-size: 1.5rem !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        color: #ffffff !important;
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%) !important;
+        padding: 0.75rem 1.25rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 1rem !important;
+        font-weight: 700 !important;
+        font-size: 1.75rem !important;
+        letter-spacing: -0.02em !important;
+        box-shadow: var(--shadow-md) !important;
     }
     
-    /* Headers (h2) - adaptáveis */
+    /* Headers (h2) */
     h2 {
-        color: white !important;
-        background-color: var(--accent-blue) !important;
-        padding: 0.4rem 0.8rem !important;
-        border-radius: 6px !important;
-        margin-top: 1rem !important;
-        margin-bottom: 0.75rem !important;
+        color: #ffffff !important;
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%) !important;
+        padding: 0.625rem 1rem !important;
+        border-radius: 8px !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1rem !important;
         font-weight: 600 !important;
-        font-size: 1.25rem !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-    }
-    
-    /* Aplicar estilo também para elementos específicos do Streamlit */
-    [data-testid="stHeader"] h1 {
-        color: white !important;
-        background-color: var(--accent-blue) !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 6px !important;
         font-size: 1.5rem !important;
+        letter-spacing: -0.01em !important;
+        box-shadow: var(--shadow-sm) !important;
     }
     
-    /* Subheaders (h3) - adaptáveis */
+    /* Subheaders (h3) */
     h3 {
         color: var(--accent-blue) !important;
         font-weight: 600 !important;
-        margin-top: 0.75rem !important;
-        font-size: 1.1rem !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 1.25rem !important;
+        letter-spacing: -0.01em !important;
     }
     
-    /* H3 no sidebar - adaptável */
+    /* H3 no sidebar */
     section[data-testid="stSidebar"] h3,
     [data-testid="stSidebar"] h3 {
         color: var(--accent-blue) !important;
-        -webkit-text-fill-color: var(--accent-blue) !important;
+        font-weight: 600 !important;
     }
     
-    /* Texto no sidebar - adaptável */
+    /* Texto no sidebar */
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] div {
         color: var(--text-primary) !important;
     }
     
-    /* Menu navigation links - melhor contraste */
-    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
-    [data-testid="stSidebar"] a:not([class*="selected"]) {
-        color: var(--menu-link-color) !important;
-        font-weight: 500 !important;
+    /* Container do menu - transparente */
+    [data-testid="stSidebar"] div[class*="container-xxl"],
+    [data-testid="stSidebar"] div[class*="container"],
+    [data-testid="stSidebar"] div[class*="option-menu"],
+    [data-testid="stSidebar"] ul[class*="nav-pills"] {
+        background-color: transparent !important;
+        background: transparent !important;
     }
     
-    /* Light mode - links escuros */
-    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]) {
-        color: #1a1a1a !important;
-    }
-    
-    /* Dark mode - links brancos para máximo contraste */
-    @media (prefers-color-scheme: dark) {
-        [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
-        [data-testid="stSidebar"] a:not([class*="selected"]) {
-            color: #ffffff !important;
-        }
-    }
-    
-    [data-theme="dark"] [data-testid="stSidebar"] [class*="nav-link"]:not([class*="selected"]),
-    [data-theme="dark"] [data-testid="stSidebar"] a:not([class*="selected"]) {
-        color: #ffffff !important;
-    }
-    
-    /* Link selecionado sempre branco */
-    [data-testid="stSidebar"] [class*="nav-link-selected"],
-    [data-testid="stSidebar"] a[class*="nav-link-selected"] {
-        color: white !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Forçar cor nos elementos do option_menu */
-    [data-testid="stSidebar"] div[class*="option-menu"] a,
-    [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"] {
-        color: var(--menu-link-color) !important;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        [data-testid="stSidebar"] div[class*="option-menu"] a:not([class*="selected"]),
-        [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]:not([class*="selected"]) {
-            color: #ffffff !important;
-        }
-    }
-    
-    [data-theme="dark"] [data-testid="stSidebar"] div[class*="option-menu"] a:not([class*="selected"]),
-    [data-theme="dark"] [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]:not([class*="selected"]) {
-        color: #ffffff !important;
-    }
-    
-    /* Filtros - estilo com cor fria */
-    div[style*="background-color: #005ca9e6"] label,
-    div[style*="005ca9e6"] label {
-        color: white !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Botões - adaptáveis */
-    .stButton>button {
-        background-color: var(--accent-blue) !important;
-        color: white !important;
-        border-radius: 6px;
-        padding: 0.4rem 1.5rem;
-        font-weight: 500;
-        font-size: 0.95rem;
-        border: none;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .stButton>button:hover {
-        background-color: var(--accent-blue-dark) !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-    
-    /* Cards de métricas - adaptáveis */
-    .metric-card {
-        background-color: var(--bg-secondary) !important;
+    /* Menu navigation links - não ativos - usar cor do texto normal */
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]),
+    [data-testid="stSidebar"] a[class*="nav-link"]:not([class*="active"]):not([class*="selected"]),
+    [data-testid="stSidebar"] ul[class*="nav-pills"] a:not([class*="active"]),
+    [data-testid="stSidebar"] li[class*="nav-item"] a:not([class*="active"]),
+    [data-testid="stSidebar"] a.nav-link:not(.active) {
         color: var(--text-primary) !important;
-        padding: 0.75rem;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        margin: 0.5rem 0;
-        border-left: 3px solid var(--accent-blue);
+        background-color: transparent !important;
+        transition: all 0.2s ease !important;
     }
     
-    /* Result box - adaptável */
-    .result-box {
-        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        text-align: center;
-        margin: 1rem 0;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    
-    /* Info boxes - adaptáveis */
-    .info-box {
-        background-color: var(--input-bg) !important;
+    /* Remover cor branca dos links não ativos - máxima especificidade */
+    [data-testid="stSidebar"] a.nav-link:not(.active),
+    [data-testid="stSidebar"] a.nav-link:not(.active)[style*="color: rgb(255, 255, 255)"],
+    [data-testid="stSidebar"] a.nav-link:not(.active)[style*="color: white"] {
         color: var(--text-primary) !important;
-        padding: 0.75rem 1rem;
-        border-radius: 6px;
-        border-left: 3px solid var(--accent-blue);
-        margin: 0.75rem 0;
     }
     
-    /* Logo/título do sidebar - adaptável */
-    .logo-title {
-        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
-        color: white;
-        padding: 0.75rem;
-        border-radius: 8px;
-        text-align: center;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    /* Ícones e elementos filhos dos links não ativos - mesma cor do texto */
+    [data-testid="stSidebar"] a.nav-link:not(.active) *,
+    [data-testid="stSidebar"] a.nav-link:not(.active) span,
+    [data-testid="stSidebar"] a.nav-link:not(.active) i,
+    [data-testid="stSidebar"] a.nav-link:not(.active) svg,
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]) i,
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]) * {
+        color: var(--text-primary) !important;
     }
     
-    /* Multiselect e selectboxes nos filtros - manter branco (filtros têm estilo próprio) */
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] {
-        background-color: white !important;
+    /* Links não ativos - hover */
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]):hover,
+    [data-testid="stSidebar"] a[class*="nav-link"]:not([class*="active"]):not([class*="selected"]):hover {
+        color: var(--menu-link-hover) !important;
+        background-color: var(--bg-hover) !important;
     }
     
-    /* Labels dos filtros - menores e mais discretos */
-    .filter-container .stMultiSelect label,
-    .filter-container .stSelectbox label,
-    .filter-container .stSlider label {
-        color: white !important;
-        font-weight: 500 !important;
-        font-size: 0.85rem !important;
-    }
-    
-    /* Slider nos filtros */
-    .stSlider label {
-        color: white !important;
-        font-weight: 500 !important;
-        font-size: 0.85rem !important;
-    }
-    
-    /* Labels dentro do container azul - menores */
-    div[style*="background-color: #005ca9e6"] label {
-        color: white !important;
-        font-weight: 500 !important;
-        font-size: 0.85rem !important;
-    }
-    
-    /* Garantir que o título "Filtros" esteja branco com máxima especificidade */
-    div[style*="background-color: #005ca9e6"] h3,
-    div[style*="005ca9e6"] h3 {
-        color: white !important;
-        text-shadow: none !important;
-    }
-    
-    /* Ajustar cor dos textos dentro do container de filtros */
-    .filter-container p,
-    .filter-container div {
-        color: white;
-    }
-    
-    /* Estilo mais discreto para os componentes de filtro */
-    div[style*="background-color: #005ca9e6"] {
-        padding: 1rem 1.25rem !important;
-        border-radius: 8px !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    /* Garantir que o texto "Filtros" esteja branco - APENAS dentro de containers azuis */
-    div[style*="background-color: #005ca9e6"] h3,
-    div[style*="005ca9e6"] h3,
-    h3[style*="color: white"] {
-        color: white !important;
-        text-shadow: none !important;
-        -webkit-text-fill-color: white !important;
-    }
-    
-    /* Forçar branco no ícone e texto do título Filtros - override total */
-    div[style*="005ca9e6"] h3,
-    div[style*="background-color: #005ca9e6"] h3 {
-        color: white !important;
-    }
-    
-    /* Garantir que todos os elementos dentro do container azul sejam brancos */
-    div[style*="background-color: #005ca9e6"] *:not(input):not(select):not(button):not(.stCheckbox) {
-        color: white !important;
-    }
-    
-    /* EXCEÇÃO: H3 no sidebar deve ser azul, não branco */
-    section[data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] h3 * {
-        color: #005ca9 !important;
-        -webkit-text-fill-color: #005ca9 !important;
-    }
-    
-    /* Exceção: inputs, selects e checkboxes mantêm suas cores */
-    div[style*="background-color: #005ca9e6"] input,
-    div[style*="background-color: #005ca9e6"] select {
+    /* Links não ativos - forçar cor em todos os elementos filhos */
+    [data-testid="stSidebar"] [class*="nav-link"]:not([class*="active"]):not([class*="selected"]) *,
+    [data-testid="stSidebar"] a[class*="nav-link"]:not([class*="active"]):not([class*="selected"]) *,
+    [data-testid="stSidebar"] ul[class*="nav-pills"] a:not([class*="active"]) *,
+    [data-testid="stSidebar"] li[class*="nav-item"] a:not([class*="active"]) * {
         color: inherit !important;
     }
     
-    /* Checkboxes - adaptáveis */
+    /* Link ativo/selecionado */
+    [data-testid="stSidebar"] [class*="nav-link"][class*="active"],
+    [data-testid="stSidebar"] [class*="nav-link-selected"],
+    [data-testid="stSidebar"] a[class*="nav-link"][class*="active"],
+    [data-testid="stSidebar"] a[class*="nav-link-selected"],
+    [data-testid="stSidebar"] ul[class*="nav-pills"] a[class*="active"],
+    [data-testid="stSidebar"] a.nav-link.active {
+        background-color: rgba(0, 92, 169, 0.9) !important;
+        color: var(--menu-link-active-text) !important;
+        font-weight: 600 !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Link ativo - hover (manter texto e hover como estão) */
+    [data-testid="stSidebar"] a.nav-link.active:hover,
+    [data-testid="stSidebar"] [class*="nav-link"][class*="active"]:hover {
+        background-color: rgba(0, 92, 169, 0.9) !important;
+        color: var(--menu-link-active-text) !important;
+    }
+    
+    [data-testid="stSidebar"] [class*="nav-link"][class*="active"] *:not(i.icon.bi-house):not(i.icon.bi-activity):not(i.icon.bi-graph-up):not(i.bi-house):not(i.bi-activity):not(i.bi-graph-up):not(i.icon),
+    [data-testid="stSidebar"] [class*="nav-link-selected"] *:not(i.icon.bi-house):not(i.icon.bi-activity):not(i.icon.bi-graph-up):not(i.bi-house):not(i.bi-activity):not(i.bi-graph-up):not(i.icon),
+    [data-testid="stSidebar"] a.nav-link.active *:not(i.icon.bi-house):not(i.icon.bi-activity):not(i.icon.bi-graph-up):not(i.bi-house):not(i.bi-activity):not(i.bi-graph-up):not(i.icon) {
+        color: var(--menu-link-active-text) !important;
+    }
+    
+    /* Ícones Bootstrap Icons - brancos apenas quando link ativo - REGRA FINAL COM MÁXIMA ESPECIFICIDADE */
+    /* Esta regra DEVE vir por último para sobrescrever TODOS os outros estilos */
+    /* Usando seletores com máxima especificidade possível */
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-house,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-activity,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-graph-up,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-house,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-activity,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-graph-up,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-house,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-activity,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-graph-up,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-house,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-activity,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-graph-up,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-house,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-activity,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-graph-up,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-house,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-activity,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-graph-up,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        fill: #ffffff !important;
+    }
+    
+    /* Pseudo-elementos ::before dos ícones em links ativos - REGRA FINAL COM MÁXIMA ESPECIFICIDADE */
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-house::before,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-activity::before,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a.nav-link.active i.icon.bi-graph-up::before,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-house::before,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-activity::before,
+    html body [data-testid="stSidebar"] div.container-xxl ul.nav-pills li.nav-item a[class*="nav-link"][class*="active"] i.icon.bi-graph-up::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-house::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-activity::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.icon.bi-graph-up::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-house::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-activity::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link"][class*="active"] i.icon.bi-graph-up::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-house::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-activity::before,
+    html body [data-testid="stSidebar"] a[class*="nav-link-selected"] i.icon.bi-graph-up::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-house::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-activity::before,
+    html body [data-testid="stSidebar"] a.nav-link.active i.bi-graph-up::before {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        fill: #ffffff !important;
+    }
+    
+    /* Filtros */
+    div[style*="background-color: #005ca9e6"],
+    div[style*="background-color: #0ea5e9"] {
+        background-color: var(--filter-bg) !important;
+        padding: 1rem 1.25rem !important;
+        border-radius: 8px !important;
+        margin-bottom: 1rem !important;
+        box-shadow: var(--shadow-sm) !important;
+    }
+    
+    div[style*="background-color: #005ca9e6"] h2,
+    div[style*="background-color: #005ca9e6"] h3,
+    div[style*="background-color: #0ea5e9"] h2,
+    div[style*="background-color: #0ea5e9"] h3 {
+        color: var(--filter-text) !important;
+        font-weight: 600 !important;
+        margin: 0 0 0.75rem 0 !important;
+    }
+    
+    div[style*="background-color: #005ca9e6"] label,
+    div[style*="background-color: #0ea5e9"] label {
+        color: var(--filter-text) !important;
+    }
+    
+    div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
+    div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
+    div[style*="background-color: #0ea5e9"] .stTextInput > div > div > input,
+    div[style*="background-color: #0ea5e9"] .stNumberInput > div > div > input {
+        background-color: #ffffff !important;
+        color: var(--input-text) !important;
+    }
+    
+    /* Botões - primary e secondary com mesmo estilo */
+    .stButton > button,
+    button[data-testid="baseButton-primary"],
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="stBaseButton-primary"],
+    button[data-testid="stBaseButton-secondary"] {
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        box-shadow: var(--shadow-md) !important;
+        transition: all 0.2s ease !important;
+    }
+    .stButton > button:hover,
+    button[data-testid="baseButton-primary"]:hover,
+    button[data-testid="baseButton-secondary"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover,
+    button[data-testid="stBaseButton-secondary"]:hover {
+        background: linear-gradient(135deg, var(--accent-blue-dark) 0%, var(--accent-blue) 100%) !important;
+        box-shadow: var(--shadow-lg) !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    /* Cards de métricas */
+    .metric-card {
+        background-color: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        box-shadow: var(--shadow-sm) !important;
+        margin: 0.5rem 0 !important;
+    }
+    
+    /* Result box */
+    .result-box {
+        background-color: #005ca9e6 !important;
+        color: #ffffff !important;
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+        box-shadow: var(--shadow-lg) !important;
+        margin: 1rem 0 !important;
+    }
+    
+    /* Info boxes */
+    .info-box {
+        background-color: var(--accent-blue-softer) !important;
+        border-left: 4px solid var(--accent-blue) !important;
+        border-radius: 6px !important;
+        padding: 1rem !important;
+        margin: 0.75rem 0 !important;
+    }
+    
+    /* Logo/título do sidebar - máxima especificidade para sobrescrever regras do sidebar */
+    [data-testid="stSidebar"] .logo-title,
+    .logo-title {
+        color: #ffffff !important;
+        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%) !important;
+        padding: 0.75rem 1.25rem !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        font-size: 1.75rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 1rem !important;
+        letter-spacing: -0.02em !important;
+        box-shadow: var(--shadow-md) !important;
+    }
+    
+    [data-testid="stSidebar"] .logo-title *,
+    [data-testid="stSidebar"] .logo-title p,
+    [data-testid="stSidebar"] .logo-title span,
+    [data-testid="stSidebar"] .logo-title div,
+    .logo-title * {
+        color: #ffffff !important;
+    }
+    
+    /* Checkboxes */
     .stCheckbox input[type="checkbox"] {
         accent-color: var(--accent-blue) !important;
-        color: var(--accent-blue) !important;
     }
     
     .stCheckbox input[type="checkbox"]:checked {
@@ -423,826 +505,369 @@ st.markdown("""
         border-color: var(--accent-blue) !important;
     }
     
-    /* Forçar cor adaptável nos checkmarks */
-    input[type="checkbox"]:checked {
-        background-color: var(--accent-blue) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    /* Labels dos checkboxes - adaptáveis */
     .stCheckbox label {
         color: var(--text-primary) !important;
+        font-weight: 400 !important;
     }
     
-    /* Labels dentro do container azul - manter cor normal para checkboxes */
-    div[style*="background-color: #005ca9e6"] .stCheckbox label {
-        color: var(--text-primary) !important;
-    }
-    
-    /* Estilo para checkboxes customizados dos níveis de obesidade - sem borda */
-    .obesity-checkbox-container {
-        background-color: transparent;
-        padding: 0;
-        border: none;
-        max-height: 250px;
-        overflow-y: auto;
-    }
-    
-    .obesity-checkbox-item {
-        padding: 0.25rem 0;
-        font-size: 0.85rem;
-    }
-    
-    /* Checkboxes menores e azuis */
-    .stCheckbox {
-        font-size: 0.85rem;
-    }
-    
-    .stCheckbox label {
-        font-size: 0.85rem !important;
-        color: #2c3e50 !important;
-    }
-    
-    /* Checkboxes - adaptáveis */
-    .stCheckbox input[type="checkbox"]:checked {
-        background-color: var(--accent-blue) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    .stCheckbox input[type="checkbox"] {
-        accent-color: var(--accent-blue) !important;
-    }
-    
-    /* Forçar cor azul nos checkmarks */
-    .stCheckbox input[type="checkbox"]:checked::before {
-        color: white !important;
-    }
-    
-    /* Campos de input - adaptáveis com melhor contraste */
-    .stTextInput>div>div>input,
-    .stNumberInput>div>div>input,
+    /* Campos de input */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input,
     .stTextInput input,
     .stNumberInput input {
         background-color: var(--input-bg) !important;
         color: var(--input-text) !important;
-        border: 1.5px solid var(--border-color) !important;
-        border-radius: 6px !important;
-        font-weight: 500 !important;
+        border: 1.5px solid var(--input-border) !important;
+        border-radius: 8px !important;
+        padding: 0.625rem 0.875rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
+        transition: all 0.2s ease !important;
     }
     
-    /* Placeholders - visíveis mas distintos */
-    .stTextInput>div>div>input::placeholder,
-    .stNumberInput>div>div>input::placeholder,
+    .stTextInput > div > div > input::placeholder,
+    .stNumberInput > div > div > input::placeholder,
     .stTextInput input::placeholder,
     .stNumberInput input::placeholder {
         color: var(--input-placeholder) !important;
         opacity: 1 !important;
     }
     
-    /* Dark mode - placeholders mais claros */
-    @media (prefers-color-scheme: dark) {
-        .stTextInput>div>div>input::placeholder,
-        .stNumberInput>div>div>input::placeholder,
-        .stTextInput input::placeholder,
-        .stNumberInput input::placeholder {
-            color: #b0b0b0 !important;
-            opacity: 1 !important;
-        }
-    }
-    
-    [data-theme="dark"] .stTextInput>div>div>input::placeholder,
-    [data-theme="dark"] .stNumberInput>div>div>input::placeholder,
-    [data-theme="dark"] .stTextInput input::placeholder,
-    [data-theme="dark"] .stNumberInput input::placeholder {
-        color: #b0b0b0 !important;
-        opacity: 1 !important;
-    }
-    
-    .stTextInput>div>div>input:hover,
-    .stNumberInput>div>div>input:hover,
-    .stTextInput input:hover,
-    .stNumberInput input:hover {
-        background-color: var(--input-bg-hover) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    .stTextInput>div>div>input:focus,
-    .stNumberInput>div>div>input:focus,
-    .stTextInput input:focus,
-    .stNumberInput input:focus {
-        background-color: var(--input-bg-focus) !important;
-        border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.3) !important;
-        color: var(--input-text) !important;
-    }
-    
-    /* Garantir que texto digitado seja sempre visível */
-    .stTextInput>div>div>input:not(:placeholder-shown),
-    .stNumberInput>div>div>input:not(:placeholder-shown),
-    .stTextInput input:not(:placeholder-shown),
-    .stNumberInput input:not(:placeholder-shown) {
-        color: var(--input-text) !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Selectbox - adaptáveis com melhor contraste */
-    .stSelectbox>div>div>div,
-    .stSelectbox select,
-    div[data-baseweb="select"] > div,
-    div[data-baseweb="select"] {
-        background-color: var(--input-bg) !important;
-        color: var(--input-text) !important;
-        border: 1.5px solid var(--border-color) !important;
-        border-radius: 6px !important;
-        font-weight: 500 !important;
-    }
-    
-    .stSelectbox>div>div>div:hover,
-    .stSelectbox select:hover,
-    div[data-baseweb="select"] > div:hover,
-    div[data-baseweb="select"]:hover {
-        background-color: var(--input-bg-hover) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    /* Texto selecionado no selectbox */
-    div[data-baseweb="select"] span,
-    .stSelectbox span {
-        color: var(--input-text) !important;
-    }
-    
-    /* Garantir que o container interno do selectbox também tenha a cor */
-    .stSelectbox > div > div > div[data-baseweb="select"] {
-        background-color: var(--input-bg) !important;
-        color: var(--input-text) !important;
-        border: 1.5px solid var(--border-color) !important;
-        font-weight: 500 !important;
-    }
-    
-    .stSelectbox > div > div > div[data-baseweb="select"]:hover {
-        background-color: var(--input-bg-hover) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    /* Texto dentro do selectbox */
-    .stSelectbox > div > div > div[data-baseweb="select"] > div,
-    .stSelectbox > div > div > div[data-baseweb="select"] span {
-        color: var(--input-text) !important;
-    }
-    
-    /* Multiselect - tags adaptáveis */
-    div[data-baseweb="tag"] {
-        background-color: var(--accent-blue) !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Container das tags do multiselect */
-    div[data-baseweb="popover"] div[data-baseweb="tag"] {
-        background-color: var(--accent-blue) !important;
-        color: white !important;
-    }
-    
-    /* Slider - adaptável */
-    .stSlider > div > div > div {
-        background-color: var(--accent-blue) !important;
-    }
-    
-    .stSlider > div > div > div > div {
-        background-color: var(--accent-blue) !important;
-    }
-    
-    /* Track do slider - adaptável */
-    .stSlider > div > div > div[data-baseweb="slider-track"] {
-        background-color: var(--accent-blue) !important;
-    }
-    
-    /* Handles do slider - adaptáveis */
-    .stSlider > div > div > div[data-baseweb="slider-handle"],
-    .stSlider div[data-baseweb="slider-handle"],
-    .stSlider button[data-baseweb="slider-handle"],
-    .stSlider > div > div > div > div[data-baseweb="slider-handle"],
-    .stSlider [data-baseweb="slider-handle"] {
-        background-color: var(--accent-blue) !important;
-        border: 2px solid white !important;
-    }
-    
-    /* Handles do slider - forçar cor adaptável */
-    .stSlider button[role="slider"],
-    .stSlider [role="slider"] {
-        background-color: var(--accent-blue) !important;
-        border-color: white !important;
-    }
-    
-    /* Valores do slider - adaptáveis */
-    .stSlider > div > div > span,
-    .stSlider span:not(label),
-    .stSlider > div > div > div > span,
-    .stSlider label + span,
-    .stSlider [data-testid="stSlider"] span,
-    .stSlider [data-testid="stSlider"] > div > span {
-        color: var(--accent-blue) !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Garantir que valores numéricos do slider sejam adaptáveis */
-    .stSlider span[style*="color"] {
-        color: var(--accent-blue) !important;
-    }
-    
-    /* Exceção: labels do slider mantêm cor original */
-    .stSlider label {
-        color: inherit !important;
-    }
-    
-    /* Garantir que todos os textos dentro do container de filtros sejam brancos */
-    div[style*="background-color: #005ca9e6"] h3,
-    div[style*="background-color: #005ca9e6"] * {
-        color: white !important;
-    }
-    
-    /* Expanders - adaptáveis */
-    .streamlit-expanderHeader {
-        background-color: var(--input-bg) !important;
-        color: var(--accent-blue) !important;
-        font-weight: 500;
-        font-size: 0.95rem;
-        padding: 0.5rem 0.75rem;
-        border-radius: 4px;
-    }
-    
-    /* Tabelas - adaptáveis */
-    .dataframe {
-        background-color: var(--bg-secondary) !important;
-        color: var(--text-primary) !important;
-    }
-    
-    /* Markdown info/success/warning - adaptáveis */
-    .stAlert {
-        border-left: 4px solid var(--accent-blue);
-    }
-    
-    /* Texto geral - garantir contraste */
-    p, span, div, label {
-        color: var(--text-primary) !important;
-    }
-    
-    /* Exceção: texto dentro de containers azuis */
-    div[style*="background-color: #005ca9e6"] p,
-    div[style*="background-color: #005ca9e6"] span,
-    div[style*="background-color: #005ca9e6"] div:not(.stCheckbox) {
-        color: white !important;
-    }
-    
-    /* Regras adicionais para garantir padronização - TODOS os campos */
-    .stTextInput > div > div > input,
-    .stNumberInput > div > div > input,
-    .stTextInput input,
-    .stNumberInput input {
-        background-color: #e8f0f5 !important;
-        border: none !important;
-        border-radius: 6px !important;
-    }
-    
     .stTextInput > div > div > input:hover,
     .stNumberInput > div > div > input:hover,
     .stTextInput input:hover,
     .stNumberInput input:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--input-border-hover) !important;
     }
     
     .stTextInput > div > div > input:focus,
     .stNumberInput > div > div > input:focus,
     .stTextInput input:focus,
     .stNumberInput input:focus {
-        background-color: #d3e0eb !important;
-        box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.1) !important;
+        background-color: var(--input-bg-focus) !important;
+        border-color: var(--input-border-focus) !important;
+        box-shadow: 0 0 0 3px var(--accent-blue-soft) !important;
+        outline: none !important;
     }
     
-    /* Selectbox padronizado - TODOS */
+    .stTextInput > div > div > input:not(:placeholder-shown),
+    .stNumberInput > div > div > input:not(:placeholder-shown),
+    .stTextInput input:not(:placeholder-shown),
+    .stNumberInput input:not(:placeholder-shown) {
+        color: var(--input-text) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Labels */
+    .stTextInput label,
+    .stNumberInput label,
+    .stSelectbox label {
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Selectbox */
     .stSelectbox > div > div > div[data-baseweb="select"],
-    .stSelectbox select {
-        background-color: #e8f0f5 !important;
-        border: none !important;
-        border-radius: 6px !important;
+    .stSelectbox > div > div > div,
+    div[data-baseweb="select"] > div {
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--input-border) !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
+        transition: all 0.2s ease !important;
     }
     
     .stSelectbox > div > div > div[data-baseweb="select"]:hover,
-    .stSelectbox select:hover {
-        background-color: #dde8f0 !important;
-    }
-    
-    /* Container dos inputs - transparente para não interferir */
-    .stTextInput > div,
-    .stNumberInput > div,
-    .stSelectbox > div {
-        background-color: transparent !important;
-    }
-    
-    /* Garantir que selectboxes também estejam padronizados - sem borda */
-    /* Aplicar apenas nos campos do formulário, não nos filtros */
-    div[data-baseweb="select"] > div {
-        border: none !important;
-        background-color: #e8f0f5 !important;
-        border-radius: 6px !important;
-    }
-    
-    /* Exceção: filtros mantêm background branco */
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
-        background-color: white !important;
-    }
-    
     div[data-baseweb="select"] > div:hover {
-        background-color: #dde8f0 !important;
+        background-color: var(--input-bg-hover) !important;
+        border-color: var(--input-border-hover) !important;
     }
     
-    /* Exceção: filtros não mudam no hover - mantêm branco */
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div,
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div:hover {
-        background-color: white !important;
+    div[data-baseweb="select"] span,
+    .stSelectbox span {
+        color: var(--input-text) !important;
     }
     
-    /* Override das tags vermelhas do Streamlit para azul */
+    /* Multiselect - tags */
+    div[data-baseweb="tag"],
     span[data-baseweb="tag"] {
-        background-color: #005ca9 !important;
-        color: white !important;
-    }
-    
-    /* Tags do multiselect */
-    div[data-baseweb="tag"] span {
-        color: white !important;
-    }
-    
-    /* Forçar cor azul nas tags selecionadas */
-    div[data-baseweb="popover"] div[data-baseweb="tag"],
-    div[data-baseweb="base-popover"] div[data-baseweb="tag"] {
-        background-color: #005ca9 !important;
-        color: white !important;
-    }
-    
-    /* REGRA FINAL: Forçar TODOS os campos de input a terem a mesma cor */
-    /* Aplicar com máxima especificidade para sobrescrever qualquer outro estilo */
-    div[data-testid="stApp"] .stTextInput > div > div > input,
-    div[data-testid="stApp"] .stNumberInput > div > div > input,
-    div[data-testid="stApp"] .stSelectbox > div > div > div,
-    div[data-testid="stApp"] div[data-baseweb="select"] > div {
-        background-color: #e8f0f5 !important;
+        background-color: rgba(0, 92, 169, 0.9) !important;
+        color: rgb(255, 255, 255) !important;
         border: none !important;
     }
     
-    /* Exceção absoluta: apenas campos dentro do container de filtros azuis */
-    div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
-    div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
-    div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div,
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
-        background-color: white !important;
+    /* Texto dentro das tags */
+    span[data-baseweb="tag"] span,
+    span[data-baseweb="tag"] span[title] {
+        color: rgb(255, 255, 255) !important;
     }
     
-    /* Slider - override completo para azul */
-    .stSlider div[data-baseweb="slider"] {
-        color: #005ca9 !important;
+    /* Ícone de fechar nas tags */
+    span[data-baseweb="tag"] svg,
+    span[data-baseweb="tag"] path {
+        fill: rgb(255, 255, 255) !important;
+        stroke: rgb(255, 255, 255) !important;
     }
     
-    /* Handles do slider - forçar azul em todos os casos */
-    .stSlider [role="slider"],
-    .stSlider button[role="slider"] {
-        background-color: #005ca9 !important;
-        border-color: white !important;
-    }
-    
-    /* Valores numéricos do slider - azul */
-    .stSlider [data-testid="stSlider"] span,
-    .stSlider [data-testid="stSlider"] > div > span {
-        color: #005ca9 !important;
-    }
-    
-    /* Garantir que o texto Filtros seja branco */
-    div[style*="005ca9e6"] h3,
-    div[style*="005ca9e6"] * {
-        color: white !important;
-    }
-    
-    /* REGRA FINAL: Forçar TODOS os campos a usarem variáveis CSS com melhor contraste */
-    .main .stTextInput > div > div > input,
-    .main .stNumberInput > div > div > input,
-    .main .stSelectbox > div > div > div[data-baseweb="select"],
-    .main div[data-baseweb="select"] > div,
-    .stApp .stTextInput > div > div > input,
-    .stApp .stNumberInput > div > div > input,
-    .stApp .stSelectbox > div > div > div[data-baseweb="select"],
-    .stApp div[data-baseweb="select"] > div {
-        background-color: var(--input-bg) !important;
-        color: var(--input-text) !important;
-        border: 1.5px solid var(--border-color) !important;
-        border-radius: 6px !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Placeholders em todos os campos */
-    .main .stTextInput > div > div > input::placeholder,
-    .main .stNumberInput > div > div > input::placeholder,
-    .stApp .stTextInput > div > div > input::placeholder,
-    .stApp .stNumberInput > div > div > input::placeholder {
-        color: var(--input-placeholder) !important;
-        opacity: 1 !important;
-    }
-    
-    /* Dark mode - placeholders mais claros em todos os campos */
-    @media (prefers-color-scheme: dark) {
-        .main .stTextInput > div > div > input::placeholder,
-        .main .stNumberInput > div > div > input::placeholder,
-        .stApp .stTextInput > div > div > input::placeholder,
-        .stApp .stNumberInput > div > div > input::placeholder {
-            color: #b0b0b0 !important;
-            opacity: 1 !important;
-        }
-    }
-    
-    [data-theme="dark"] .main .stTextInput > div > div > input::placeholder,
-    [data-theme="dark"] .main .stNumberInput > div > div > input::placeholder,
-    [data-theme="dark"] .stApp .stTextInput > div > div > input::placeholder,
-    [data-theme="dark"] .stApp .stNumberInput > div > div > input::placeholder {
-        color: #b0b0b0 !important;
-        opacity: 1 !important;
-    }
-    
-    /* Hover para todos os campos */
-    .main .stTextInput > div > div > input:hover,
-    .main .stNumberInput > div > div > input:hover,
-    .main .stSelectbox > div > div > div[data-baseweb="select"]:hover,
-    .main div[data-baseweb="select"] > div:hover,
-    .stApp .stTextInput > div > div > input:hover,
-    .stApp .stNumberInput > div > div > input:hover,
-    .stApp .stSelectbox > div > div > div[data-baseweb="select"]:hover,
-    .stApp div[data-baseweb="select"] > div:hover {
-        background-color: var(--input-bg-hover) !important;
-        border-color: var(--accent-blue) !important;
-    }
-    
-    /* Focus para todos os campos */
-    .main .stTextInput > div > div > input:focus,
-    .main .stNumberInput > div > div > input:focus,
-    .stApp .stTextInput > div > div > input:focus,
-    .stApp .stNumberInput > div > div > input:focus {
-        background-color: var(--input-bg-focus) !important;
-        border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.3) !important;
-        color: var(--input-text) !important;
-    }
-    
-    /* Texto digitado sempre visível */
-    .main .stTextInput > div > div > input:not(:placeholder-shown),
-    .main .stNumberInput > div > div > input:not(:placeholder-shown),
-    .stApp .stTextInput > div > div > input:not(:placeholder-shown),
-    .stApp .stNumberInput > div > div > input:not(:placeholder-shown) {
-        color: var(--input-text) !important;
-        font-weight: 500 !important;
-    }
-    
-    /* EXCEÇÃO: Campos dentro dos filtros (container azul) mantêm branco */
-    div[style*="background-color: #005ca9e6"] .stTextInput > div > div > input,
-    div[style*="background-color: #005ca9e6"] .stNumberInput > div > div > input,
-    div[style*="background-color: #005ca9e6"] .stSelectbox > div > div > div[data-baseweb="select"],
-    div[style*="background-color: #005ca9e6"] div[data-baseweb="select"] > div {
-        background-color: white !important;
-        color: #1a1a1a !important;
-    }
-    
-    /* SLIDER - REGRAS FINAIS: Forçar handles e valores a serem azuis */
-    /* Handles (círculos nos extremos) */
-    .stSlider button,
-    .stSlider [role="slider"],
-    .stSlider [data-baseweb="slider-handle"],
-    .stSlider > div > div > div > button {
-        background-color: #005ca9 !important;
-        border-color: white !important;
-    }
-    
-    /* Valores numéricos (números acima dos handles) */
-    .stSlider > div > div > div > span,
-    .stSlider > div > div > span,
-    .stSlider span:not(.stSlider label span) {
-        color: #005ca9 !important;
-    }
-    
-    /* Override de qualquer cor vermelha no slider - usar variável */
-    .stSlider [style*="color: red"],
-    .stSlider [style*="color: rgb(255"],
-    .stSlider [style*="background-color: red"],
-    .stSlider [style*="background-color: rgb(255"] {
-        color: var(--accent-blue) !important;
+    /* Slider */
+    .stSlider > div > div > div {
         background-color: var(--accent-blue) !important;
     }
     
-    /* VALORES FIXOS DO SLIDER - usar variável */
-    .stSlider > div > div > div > div > span,
-    .stSlider > div > div > div > span[style],
-    .stSlider > div > div > span[style],
-    .stSlider span[style*="color"] {
-        color: var(--accent-blue) !important;
+    .stSlider [data-baseweb="slider-handle"],
+    .stSlider button[role="slider"] {
+        background-color: var(--accent-blue) !important;
+        border: 2px solid #ffffff !important;
     }
     
-    /* Forçar cor adaptável em TODOS os spans do slider, exceto labels */
-    .stSlider > div > div > div > span:not(label span),
-    .stSlider > div > div > span:not(label span),
-    .stSlider div > div > span:not(label span) {
+    .stSlider > div > div > span,
+    .stSlider span:not(label span) {
         color: var(--accent-blue) !important;
         font-weight: 600 !important;
     }
     
-    /* Override específico para valores fixos acima do track */
-    .stSlider [data-baseweb="slider"] ~ span,
-    .stSlider [data-baseweb="slider-track"] ~ span,
-    .stSlider [data-baseweb="slider-handle"] ~ span {
+    /* Expanders */
+    .streamlit-expanderHeader {
+        background-color: var(--accent-blue-softer) !important;
         color: var(--accent-blue) !important;
+        border-radius: 6px !important;
+        padding: 0.75rem 1rem !important;
+        font-weight: 500 !important;
     }
     
-    /* Forçar cor adaptável em qualquer elemento com texto numérico no slider */
-    .stSlider > div > div > div > div > div > span,
-    .stSlider > div > div > div > div > span {
-        color: var(--accent-blue) !important;
+    /* Tabelas */
+    .dataframe {
+        background-color: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
     }
     
-    /* Override absoluto: qualquer span dentro do slider que não seja label */
-    .stSlider span:not(.stSlider label):not(.stSlider label span) {
-        color: var(--accent-blue) !important;
+    /* Alerts */
+    .stAlert {
+        border-left: 4px solid var(--accent-blue) !important;
+        border-radius: 6px !important;
     }
     
-    /* Glow/hover do handle - adaptável */
-    .stSlider [data-baseweb="slider-handle"]:hover,
-    .stSlider [data-baseweb="slider-handle"]:focus,
-    .stSlider button[role="slider"]:hover,
-    .stSlider button[role="slider"]:focus {
-        background-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.2) !important;
+    /* Regras finais - máxima especificidade */
+    .main .stTextInput > div > div > input,
+    .main .stNumberInput > div > div > input,
+    .stApp .stTextInput > div > div > input,
+    .stApp .stNumberInput > div > div > input {
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--input-border) !important;
     }
     
-    /* REGRA ULTRA ESPECÍFICA: Forçar valores fixos acima do track */
-    .stSlider > div > div > div[style*="color"] span,
-    .stSlider > div > div > div > div[style*="color"] span,
-    .stSlider > div > div > div > span[style*="color"],
-    .stSlider > div > div > span[style*="color"] {
-        color: var(--accent-blue) !important;
+    .main .stSelectbox > div > div > div[data-baseweb="select"],
+    .stApp .stSelectbox > div > div > div[data-baseweb="select"] {
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border: 1.5px solid var(--input-border) !important;
     }
     
-    /* Forçar cor adaptável em TODOS os elementos filhos do slider */
-    .stSlider *:not(label):not(label *) {
-        color: var(--accent-blue) !important;
+    /* Sobrescrever border-color do elemento st-emotion-cache-upotea */
+    .st-emotion-cache-upotea {
+        border-color: #e2e8f0 !important;
     }
     
-    /* Exceção: labels mantêm cor original */
-    .stSlider label,
-    .stSlider label * {
-        color: var(--text-primary) !important;
-    }
-    
-    /* Exceção: valores dentro dos filtros (container azul) mantêm branco */
-    div[style*="background-color: #005ca9e6"] .stSlider span:not(label span) {
-        color: white !important;
+    /* Texto dos botões - cor branca */
+    .stDownloadButton button p,
+    .stDownloadButton button span,
+    .stDownloadButton p,
+    .stDownloadButton span,
+    .stButton button p,
+    .stButton button span,
+    button[data-testid="baseButton-secondary"] p,
+    button[data-testid="baseButton-secondary"] span,
+    button[data-testid="baseButton-secondary"] *,
+    button[data-testid="baseButton-primary"] p,
+    button[data-testid="baseButton-primary"] span,
+    button[data-testid="baseButton-primary"] *,
+    button[type="submit"] p,
+    button[type="submit"] span {
+        color: #ffffff !important;
     }
 </style>
 <script>
-// Detectar e aplicar tema do sistema
 (function() {
-    function applyTheme() {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
-                      document.documentElement.getAttribute('data-theme') === 'dark';
+    // Função para forçar ícones Bootstrap Icons a ficarem brancos em links ativos
+    function fixActiveIcons() {
+        const activeLinks = document.querySelectorAll(
+            '[data-testid="stSidebar"] a.nav-link.active, ' +
+            '[data-testid="stSidebar"] a[class*="nav-link"][class*="active"], ' +
+            '[data-testid="stSidebar"] a[class*="nav-link-selected"]'
+        );
         
-        const root = document.documentElement;
-        if (isDark) {
-            root.style.setProperty('--bg-primary', '#0e1117');
-            root.style.setProperty('--bg-secondary', '#1e1e1e');
-            root.style.setProperty('--bg-sidebar', '#262730');
-            root.style.setProperty('--text-primary', '#fafafa');
-            root.style.setProperty('--text-secondary', '#d0d0d0');
-            root.style.setProperty('--accent-blue', '#4a9eff');
-            root.style.setProperty('--accent-blue-light', '#6bb3ff');
-            root.style.setProperty('--accent-blue-dark', '#2d7dd2');
-            root.style.setProperty('--input-bg', '#1a1a2a');
-            root.style.setProperty('--input-bg-hover', '#252538');
-            root.style.setProperty('--input-bg-focus', '#2d2d42');
-            root.style.setProperty('--input-text', '#ffffff');
-            root.style.setProperty('--input-placeholder', '#b0b0b0');
-            root.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.2)');
-            root.style.setProperty('--menu-link-color', '#ffffff');
-        } else {
-            root.style.setProperty('--bg-primary', 'white');
-            root.style.setProperty('--bg-secondary', '#f5f5f5');
-            root.style.setProperty('--bg-sidebar', '#dcdcdc');
-            root.style.setProperty('--text-primary', '#1e1e1e');
-            root.style.setProperty('--text-secondary', '#2c3e50');
-            root.style.setProperty('--accent-blue', '#005ca9');
-            root.style.setProperty('--accent-blue-light', '#0073c7');
-            root.style.setProperty('--accent-blue-dark', '#004a8a');
-            root.style.setProperty('--input-bg', '#e8f0f5');
-            root.style.setProperty('--input-bg-hover', '#dde8f0');
-            root.style.setProperty('--input-bg-focus', '#d3e0eb');
-            root.style.setProperty('--input-text', '#1a1a1a');
-            root.style.setProperty('--input-placeholder', '#999999');
-            root.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.15)');
-            root.style.setProperty('--menu-link-color', '#1a1a1a');
-        }
-    }
-    
-    // Aplicar tema imediatamente
-    applyTheme();
-    
-    // Observar mudanças no tema do sistema
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', applyTheme);
-    
-    // Observar mudanças no atributo data-theme do Streamlit
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-                applyTheme();
-            }
-        });
-    });
-    
-    if (document.documentElement) {
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
-    }
-    
-    // Aplicar tema quando o DOM estiver pronto
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyTheme);
-    } else {
-        applyTheme();
-    }
-    
-    // Reaplicar após delays para garantir
-    setTimeout(applyTheme, 100);
-    setTimeout(applyTheme, 500);
-})();
-
-// JavaScript para forçar valores fixos do slider a serem adaptáveis
-// Sobrescreve estilos inline vermelhos
-(function() {
-    function fixSliderColors() {
-        const sliders = document.querySelectorAll('.stSlider');
-        sliders.forEach(function(slider) {
-            // Encontrar todos os spans que contêm números (valores do slider)
-            const spans = slider.querySelectorAll('span');
-            spans.forEach(function(span) {
-                const isLabel = span.closest('label') !== null;
-                const text = span.textContent ? span.textContent.trim() : '';
-                // Se contém apenas números e não é label, usar variável CSS
-                if (!isLabel && /^\d+$/.test(text)) {
-                    // Detectar tema e aplicar cor apropriada
-                    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
-                                  document.documentElement.getAttribute('data-theme') === 'dark';
-                    const color = isDark ? '#4a9eff' : '#005ca9';
-                    span.style.setProperty('color', color, 'important');
-                    // Remover qualquer estilo inline vermelho
-                    if (span.getAttribute('style')) {
-                        let style = span.getAttribute('style');
-                        style = style.replace(/color:\s*rgb?\([^)]*\)/gi, '');
-                        style = style.replace(/color:\s*red/gi, '');
-                        style = style.replace(/color:\s*#[fF]{2,6}/gi, '');
-                        span.setAttribute('style', style + '; color: ' + color + ' !important;');
+        activeLinks.forEach(function(link) {
+            // Buscar TODOS os ícones possíveis, incluindo i.icon.bi-*
+            const icons = link.querySelectorAll('i.bi-house, i.bi-activity, i.bi-graph-up, i.icon, i.icon.bi-house, i.icon.bi-activity, i.icon.bi-graph-up, i[class*="bi-"], i');
+            icons.forEach(function(icon) {
+                // Verificar se é um ícone Bootstrap (incluindo i.icon.bi-*)
+                const hasBiClass = Array.from(icon.classList).some(cls => cls.startsWith('bi-'));
+                const hasIconClass = icon.classList.contains('icon');
+                if (hasBiClass || hasIconClass) {
+                    // MÉTODO 1: Remover completamente o atributo style
+                    icon.removeAttribute('style');
+                    
+                    // MÉTODO 2: Forçar cor branca usando setProperty com important
+                    icon.style.setProperty('color', '#ffffff', 'important');
+                    icon.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+                    icon.style.setProperty('fill', '#ffffff', 'important');
+                    
+                    // MÉTODO 3: Usar setAttribute diretamente (sobrescreve tudo)
+                    icon.setAttribute('style', 'color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; fill: #ffffff !important;');
+                    
+                    // MÉTODO 4: Criar uma classe CSS dinâmica e aplicá-la
+                    if (!document.getElementById('force-white-icons')) {
+                        const style = document.createElement('style');
+                        style.id = 'force-white-icons';
+                        style.textContent = `
+                            [data-testid="stSidebar"] a.nav-link.active i.icon.bi-house,
+                            [data-testid="stSidebar"] a.nav-link.active i.icon.bi-activity,
+                            [data-testid="stSidebar"] a.nav-link.active i.icon.bi-graph-up {
+                                color: #ffffff !important;
+                                -webkit-text-fill-color: #ffffff !important;
+                                fill: #ffffff !important;
+                            }
+                        `;
+                        document.head.appendChild(style);
                     }
                 }
             });
         });
+        
+        // Criar estilo global para pseudo-elementos ::before dos ícones ativos
+        let styleId = 'bootstrap-icons-active-fix';
+        let style = document.getElementById(styleId);
+        if (!style) {
+            style = document.createElement('style');
+            style.id = styleId;
+            document.head.appendChild(style);
+        }
+        
+        // Adicionar regras para todos os ícones Bootstrap em links ativos (incluindo i.icon.bi-*)
+        // Usando seletores com máxima especificidade para sobrescrever estilos herdados
+        style.textContent = `
+            [data-testid="stSidebar"] a.nav-link.active[class*="nav-link"] i.icon.bi-house::before,
+            [data-testid="stSidebar"] a.nav-link.active[class*="nav-link"] i.icon.bi-activity::before,
+            [data-testid="stSidebar"] a.nav-link.active[class*="nav-link"] i.icon.bi-graph-up::before,
+            [data-testid="stSidebar"] a[class*="nav-link"][class*="active"][class*="nav-link"] i.icon.bi-house::before,
+            [data-testid="stSidebar"] a[class*="nav-link"][class*="active"][class*="nav-link"] i.icon.bi-activity::before,
+            [data-testid="stSidebar"] a[class*="nav-link"][class*="active"][class*="nav-link"] i.icon.bi-graph-up::before,
+            [data-testid="stSidebar"] a[class*="nav-link-selected"][class*="nav-link"] i.icon.bi-house::before,
+            [data-testid="stSidebar"] a[class*="nav-link-selected"][class*="nav-link"] i.icon.bi-activity::before,
+            [data-testid="stSidebar"] a[class*="nav-link-selected"][class*="nav-link"] i.icon.bi-graph-up::before,
+            [data-testid="stSidebar"] ul.nav-pills a.nav-link.active i.icon.bi-house::before,
+            [data-testid="stSidebar"] ul.nav-pills a.nav-link.active i.icon.bi-activity::before,
+            [data-testid="stSidebar"] ul.nav-pills a.nav-link.active i.icon.bi-graph-up::before,
+            [data-testid="stSidebar"] li.nav-item a.nav-link.active i.icon.bi-house::before,
+            [data-testid="stSidebar"] li.nav-item a.nav-link.active i.icon.bi-activity::before,
+            [data-testid="stSidebar"] li.nav-item a.nav-link.active i.icon.bi-graph-up::before,
+            [data-testid="stSidebar"] a.nav-link.active i.bi-house::before,
+            [data-testid="stSidebar"] a.nav-link.active i.bi-activity::before,
+            [data-testid="stSidebar"] a.nav-link.active i.bi-graph-up::before {
+                color: #ffffff !important;
+                -webkit-text-fill-color: #ffffff !important;
+            }
+        `;
     }
     
-    // Executar imediatamente
+    function fixNavLinks() {
+        // Remover cor branca dos links não ativos e aplicar cor do texto normal
+        const nonActiveLinks = document.querySelectorAll('[data-testid="stSidebar"] a.nav-link:not(.active)');
+        const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#1e293b';
+        
+        nonActiveLinks.forEach(function(link) {
+            // Forçar cor do texto normal no link
+            if (link.style.color === 'rgb(255, 255, 255)' || link.style.color === 'white' || link.style.color === '#ffffff') {
+                link.style.setProperty('color', textColor, 'important');
+            }
+            
+            // Forçar cor do texto normal em todos os filhos (ícones, spans, etc.)
+            const children = link.querySelectorAll('*');
+            children.forEach(function(child) {
+                if (child.style.color === 'rgb(255, 255, 255)' || child.style.color === 'white' || child.style.color === '#ffffff') {
+                    child.style.setProperty('color', textColor, 'important');
+                }
+            });
+        });
+        
+        // Fix ícones ativos
+        fixActiveIcons();
+    }
+    
+    // Garantir que o idioma seja definido
+    function setLanguage() {
+        if (document.documentElement) {
+            document.documentElement.setAttribute('lang', 'pt-BR');
+        }
+        if (document.body) {
+            document.body.setAttribute('lang', 'pt-BR');
+        }
+        // Adicionar meta tag se não existir
+        if (!document.querySelector('meta[name="language"]')) {
+            const metaLang = document.createElement('meta');
+            metaLang.setAttribute('name', 'language');
+            metaLang.setAttribute('content', 'pt-BR');
+            document.head.appendChild(metaLang);
+        }
+        if (!document.querySelector('meta[http-equiv="content-language"]')) {
+            const metaContentLang = document.createElement('meta');
+            metaContentLang.setAttribute('http-equiv', 'content-language');
+            metaContentLang.setAttribute('content', 'pt-BR');
+            document.head.appendChild(metaContentLang);
+        }
+    }
+    
+    // Executar quando o DOM estiver pronto
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', fixSliderColors);
+        document.addEventListener('DOMContentLoaded', function() {
+            setLanguage();
+            fixNavLinks();
+            fixActiveIcons();
+        });
     } else {
-        fixSliderColors();
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
     }
     
-    // Executar após delays para garantir que o slider foi renderizado
-    setTimeout(fixSliderColors, 100);
-    setTimeout(fixSliderColors, 500);
-    setTimeout(fixSliderColors, 1000);
+    // Executar após delays para garantir
+    setTimeout(function() {
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
+    }, 50);
+    setTimeout(function() {
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
+    }, 100);
+    setTimeout(function() {
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
+    }, 200);
+    setTimeout(function() {
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
+    }, 500);
+    setTimeout(function() {
+        setLanguage();
+        fixNavLinks();
+        fixActiveIcons();
+    }, 1000);
     
     // Observar mudanças no DOM
     const observer = new MutationObserver(function() {
-        fixSliderColors();
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-})();
-
-// Forçar título "Filtros" a ser branco (apenas em containers azuis)
-(function() {
-    function fixFiltersTitle() {
-        const filterDivs = document.querySelectorAll('div[style*="005ca9e6"]');
-        filterDivs.forEach(function(div) {
-            const h3 = div.querySelector('h3');
-            if (h3) {
-                h3.style.setProperty('color', 'white', 'important');
-                h3.style.setProperty('-webkit-text-fill-color', 'white', 'important');
-                // Forçar todos os filhos também
-                const spans = h3.querySelectorAll('*');
-                spans.forEach(function(span) {
-                    span.style.setProperty('color', 'white', 'important');
-                });
-            }
-        });
-        
-        // Garantir que h3 no sidebar seja azul (não branco)
-        const sidebar = document.querySelector('section[data-testid="stSidebar"]');
-        if (sidebar) {
-            const sidebarH3 = sidebar.querySelectorAll('h3');
-            sidebarH3.forEach(function(h3) {
-                // Não aplicar se estiver dentro de um container azul
-                const isInBlueContainer = h3.closest('div[style*="005ca9e6"]');
-                if (!isInBlueContainer) {
-                    h3.style.setProperty('color', '#005ca9', 'important');
-                    h3.style.setProperty('-webkit-text-fill-color', '#005ca9', 'important');
-                }
-            });
-        }
-    }
-    
-    fixFiltersTitle();
-    setTimeout(fixFiltersTitle, 100);
-    setTimeout(fixFiltersTitle, 500);
-    
-    const observer = new MutationObserver(function() {
-        fixFiltersTitle();
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-})();
-
-// Forçar checkboxes a usarem cor adaptável
-(function() {
-    function fixCheckboxes() {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
-                      document.documentElement.getAttribute('data-theme') === 'dark';
-        const color = isDark ? '#4a9eff' : '#005ca9';
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(function(checkbox) {
-            checkbox.style.setProperty('accent-color', color, 'important');
-            if (checkbox.checked) {
-                checkbox.style.setProperty('background-color', color, 'important');
-                checkbox.style.setProperty('border-color', color, 'important');
-            }
-        });
-    }
-    
-    fixCheckboxes();
-    setTimeout(fixCheckboxes, 100);
-    setTimeout(fixCheckboxes, 500);
-    
-    const observer = new MutationObserver(function() {
-        fixCheckboxes();
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-})();
-
-// Ajustar cores dos links do menu para melhor contraste
-(function() {
-    function fixMenuLinks() {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
-                      document.documentElement.getAttribute('data-theme') === 'dark';
-        const navLinks = document.querySelectorAll('[data-testid="stSidebar"] a, [data-testid="stSidebar"] [class*="nav-link"], [data-testid="stSidebar"] div[class*="option-menu"] a, [data-testid="stSidebar"] div[class*="option-menu"] [class*="nav-link"]');
-        navLinks.forEach(function(link) {
-            // Não aplicar se já estiver selecionado
-            if (!link.classList.contains('nav-link-selected') && !link.closest('.nav-link-selected')) {
-                const color = isDark ? '#ffffff' : '#1a1a1a';
-                link.style.setProperty('color', color, 'important');
-                link.style.setProperty('font-weight', '500', 'important');
-                // Forçar também nos spans dentro
-                const spans = link.querySelectorAll('span');
-                spans.forEach(function(span) {
-                    span.style.setProperty('color', color, 'important');
-                });
-            }
-        });
-    }
-    
-    fixMenuLinks();
-    setTimeout(fixMenuLinks, 100);
-    setTimeout(fixMenuLinks, 500);
-    setTimeout(fixMenuLinks, 1000);
-    
-    const observer = new MutationObserver(function() {
-        fixMenuLinks();
+        setLanguage(); // Garantir idioma em mudanças dinâmicas
+        fixNavLinks();
+        fixActiveIcons();
     });
     
     if (document.body) {
@@ -1250,88 +875,9 @@ st.markdown("""
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['class', 'data-theme']
+            attributeFilter: ['class']
         });
     }
-    
-    // Observar mudanças no tema
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', fixMenuLinks);
-    
-    // Observar mudanças no atributo data-theme
-    const themeObserver = new MutationObserver(function() {
-        fixMenuLinks();
-    });
-    if (document.documentElement) {
-        themeObserver.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
-    }
-})();
-
-// Forçar placeholders a serem visíveis no dark mode
-(function() {
-    function fixPlaceholders() {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches || 
-                      document.documentElement.getAttribute('data-theme') === 'dark';
-        const placeholderColor = isDark ? '#b0b0b0' : '#999999';
-        
-        const inputs = document.querySelectorAll('.stTextInput input, .stNumberInput input');
-        inputs.forEach(function(input) {
-            // Aplicar cor do placeholder via estilo
-            input.style.setProperty('--placeholder-color', placeholderColor);
-            // Forçar placeholder a ser visível
-            if (input.placeholder) {
-                const style = window.getComputedStyle(input, '::placeholder');
-                input.style.setProperty('color', isDark ? '#ffffff' : '#1a1a1a', 'important');
-            }
-        });
-        
-        // Aplicar cor diretamente nos placeholders via CSS
-        const style = document.createElement('style');
-        style.id = 'placeholder-fix';
-        style.textContent = `
-            @media (prefers-color-scheme: dark) {
-                .stTextInput input::placeholder,
-                .stNumberInput input::placeholder {
-                    color: #b0b0b0 !important;
-                    opacity: 1 !important;
-                }
-            }
-            [data-theme="dark"] .stTextInput input::placeholder,
-            [data-theme="dark"] .stNumberInput input::placeholder {
-                color: #b0b0b0 !important;
-                opacity: 1 !important;
-            }
-        `;
-        const existingStyle = document.getElementById('placeholder-fix');
-        if (existingStyle) {
-            existingStyle.remove();
-        }
-        document.head.appendChild(style);
-    }
-    
-    fixPlaceholders();
-    setTimeout(fixPlaceholders, 100);
-    setTimeout(fixPlaceholders, 500);
-    
-    const observer = new MutationObserver(function() {
-        fixPlaceholders();
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
-    }
-    
-    // Observar mudanças no tema
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', fixPlaceholders);
 })();
 </script>
 """, unsafe_allow_html=True)
@@ -1603,20 +1149,21 @@ with st.sidebar:
         menu_icon="cast",
         default_index=0,
         styles={
-            "container": {"padding": "5!important", "background-color": "var(--bg-sidebar)"},
-            "icon": {"color": "var(--accent-blue)", "font-size": "18px"},
+            "container": {"padding": "5!important", "background-color": "transparent"},
+            "icon": {"color": "#1e293b", "font-size": "18px"},
             "nav-link": {
                 "font-size": "16px",
                 "text-align": "left",
                 "margin": "0px",
-                "color": "#1a1a1a",
+                "color": "#1e293b",
+                "background-color": "transparent",
                 "--hover-color": "#b3d9f2",
                 "border-radius": "5px",
                 "font-weight": "500",
             },
             "nav-link-selected": {
-                "background-color": "var(--accent-blue)",
-                "color": "white",
+                "background-color": "rgba(0, 92, 169, 0.9)",
+                "color": "#ffffff",
                 "font-weight": "600",
             },
         }
@@ -2006,20 +1553,8 @@ elif selected == "Insights e Métricas":
     df = load_data()
     
     if df is not None:
-        # Filtros no topo da página com estilo mais discreto
-        st.markdown("""
-        <style>
-        div[style*="background-color: #005ca9e6"] h3,
-        div[style*="005ca9e6"] h3 {
-            color: white !important;
-        }
-        div[style*="005ca9e6"] h3 * {
-            color: white !important;
-        }
-        </style>
-        <div style="background-color: #005ca9e6; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h3 style="color: white !important; margin: 0; padding: 0; font-weight: 600; font-size: 1rem;">🔍 Filtros</h3>
-        """, unsafe_allow_html=True)
+        # Filtros no topo da página
+        st.header("🔍 Filtros", anchor="filtros")
         
         # Container para filtros
         filter_col1, filter_col2, filter_col3 = st.columns(3)
@@ -2118,7 +1653,6 @@ elif selected == "Insights e Métricas":
                 value=(int(df['Age'].min()), int(df['Age'].max()))
             )
         
-        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("---")
         
         # Aplicar filtros

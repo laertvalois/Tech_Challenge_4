@@ -9,11 +9,9 @@ def verificar_arquivos():
     """Verifica se todos os arquivos necessários existem"""
     arquivos_necessarios = [
         'data/obesity.csv',
-        'data/obesity.db',
         'models/obesity_model.joblib',
         'models/preprocessor.joblib',
         'app/app.py',
-        'dashboard/dashboard.py',
         'src/data_preprocessing.py',
         'src/train_model.py',
         'src/load_model.py',
@@ -123,7 +121,7 @@ def main():
         print("✅ TUDO PRONTO! O projeto está configurado corretamente.")
         print("\nPróximos passos:")
         print("1. Execute: streamlit run app/app.py (para aplicação)")
-        print("2. Execute: streamlit run dashboard/dashboard.py (para dashboard)")
+        print("2. O dashboard está integrado na aplicação principal (página 'Insights e Métricas')")
         return True
     else:
         print("❌ ALGUNS PROBLEMAS ENCONTRADOS")
