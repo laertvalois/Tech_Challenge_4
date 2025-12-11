@@ -87,7 +87,7 @@ tech_challenge/
 ├── README.md               # Documentação principal
 ├── ANALISE_REQUISITOS.md   # Análise detalhada
 ├── RESUMO_PROJETO.md       # Resumo executivo
-├── ENTREGA_TECH_CHALLENGE.md # Documento de entrega
+├── DOCUMENTO_ENTREGA_FINAL.md # Documento de entrega completo
 ├── LINKS_ENTREGA.txt       # Links de entrega
 ├── run_app.py              # Script auxiliar para executar app
 └── .gitignore              # Configuração Git

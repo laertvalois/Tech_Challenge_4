@@ -132,8 +132,7 @@ A aplicação (`app/app.py`) possui três páginas principais:
 
 - `ANALISE_REQUISITOS.md` - Análise detalhada dos requisitos
 - `RESUMO_PROJETO.md` - Resumo executivo do projeto
-- `ENTREGA_TECH_CHALLENGE.md` - Documento de entrega detalhado
-- `DOCUMENTO_ENTREGA_FINAL.md` - Documento consolidado de entrega
+- `DOCUMENTO_ENTREGA_FINAL.md` - Documento completo de entrega
 - `LINKS_ENTREGA.txt` - Template para links de entrega
 
 ## 👥 Autores

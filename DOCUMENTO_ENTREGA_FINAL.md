@@ -79,7 +79,6 @@
   - `README.md` - Documentação principal
   - `ANALISE_REQUISITOS.md` - Análise detalhada dos requisitos
   - `RESUMO_PROJETO.md` - Resumo executivo
-  - `ENTREGA_TECH_CHALLENGE.md` - Documento de entrega detalhado
   - `DOCUMENTO_ENTREGA_FINAL.md` - Este documento consolidado
 
 ### 6. 📹 Vídeo de Apresentação
@@ -135,8 +134,7 @@ tech_challenge/
 ├── README.md               # Documentação principal
 ├── ANALISE_REQUISITOS.md   # Análise detalhada
 ├── RESUMO_PROJETO.md       # Resumo executivo
-├── ENTREGA_TECH_CHALLENGE.md # Documento de entrega
-├── DOCUMENTO_ENTREGA_FINAL.md # Este documento
+├── DOCUMENTO_ENTREGA_FINAL.md # Documento de entrega completo
 ├── LINKS_ENTREGA.txt       # Links de entrega
 ├── run_app.py              # Script auxiliar para executar app
 └── .gitignore              # Configuração Git
@@ -313,3 +311,10 @@ A aplicação abrirá automaticamente no navegador em `http://localhost:8501`
 **Status do Projeto:** ✅ COMPLETO E PRONTO PARA ENTREGA
 
 **Última atualização:** Dezembro 2024
+
+**Autores:**
+- Alysson Tenório (alyssonr@bnb.gov.br)
+- Erico Leopoldino Mota (erico_mota@hotmail.com)
+- Henrique Bruno Oliveira Lima (henriquebol@bnb.gov.br)
+- Joao Paulo Pinheiro Aguiar (joaopaulop.aguiar@gmail.com)
+- Laert Valois Rios Carneiro (laertvalois@bnb.gov.br)
