@@ -58,3 +58,37 @@ Thumbs.db
 # Logs
 *.log
 
+# Arquivos auxiliares/checklist (não necessários para o Tech Challenge)
+CHECKLIST_ENTREGA.md
+CHECKLIST_FINAL_ENTREGA.md
+VERIFICACAO_FINAL.md
+OPCOES_GRAFICO_ATIVIDADE_FISICA.md
+ALTERNATIVAS_GRAFICO_ATIVIDADE_FISICA.py
+RESUMO_REVISAO.md
+verificar_setup.py
+
+# Scripts duplicados de push (manter apenas push_completo_github.ps1)
+push_github.ps1
+push_now.ps1
+push_to_github.ps1
+
+# Imagens de teste/screenshots (assets)
+assets/
+
+# Arquivos auxiliares/checklist (não necessários para o Tech Challenge)
+CHECKLIST_ENTREGA.md
+CHECKLIST_FINAL_ENTREGA.md
+VERIFICACAO_FINAL.md
+OPCOES_GRAFICO_ATIVIDADE_FISICA.md
+ALTERNATIVAS_GRAFICO_ATIVIDADE_FISICA.py
+RESUMO_REVISAO.md
+verificar_setup.py
+
+# Scripts duplicados de push (manter apenas push_completo_github.ps1)
+push_github.ps1
+push_now.ps1
+push_to_github.ps1
+
+# Imagens de teste/screenshots (assets)
+assets/
+

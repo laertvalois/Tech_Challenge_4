@@ -2233,89 +2233,173 @@ elif selected == "Insights e Métricas":
         # Análise de Hábitos
         st.header("🍽️ Análise de Hábitos e Estilo de Vida")
         
-        # Atividade Física
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            faf_obesity = pd.crosstab(df_filtered['FAF'], df_filtered['Obesity'])
-            faf_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in faf_obesity.columns]
+        try:
+            # Atividade Física
+            col1, col2 = st.columns(2)
             
-            fig_faf = px.bar(
-                faf_obesity,
-                barmode='group',
-                title='Impacto da Atividade Física na Obesidade',
-                labels={'value': 'Frequência', 'FAF': 'Frequência de Atividade Física'},
-                color_discrete_sequence=px.colors.qualitative.Pastel
-            )
-            fig_faf.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_tickangle=-45
-            )
-            st.plotly_chart(fig_faf, use_container_width=True)
+            with col1:
+                # Arredondar FAF para valores inteiros (0, 1, 2, 3) para evitar muitas barras
+                df_faf_rounded = df_filtered.copy()
+                df_faf_rounded['FAF_rounded'] = df_faf_rounded['FAF'].round().astype(int).clip(0, 3)
+                
+                # Criar crosstab com valores arredondados
+                faf_obesity = pd.crosstab(df_faf_rounded['FAF_rounded'], df_faf_rounded['Obesity'])
+                faf_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in faf_obesity.columns]
+                
+                # Calcular percentuais para melhor visualização
+                faf_obesity_pct = faf_obesity.div(faf_obesity.sum(axis=1), axis=0) * 100
+                
+                # Mapear níveis de atividade física para labels descritivos
+                faf_labels = {
+                    0: 'Nenhuma (0)',
+                    1: 'Baixa (1-2×/sem)',
+                    2: 'Moderada (3-4×/sem)',
+                    3: 'Alta (5+×/sem)'
+                }
+                faf_obesity_pct.index = [faf_labels.get(idx, f'{idx}') for idx in faf_obesity_pct.index]
+                
+                # Reordenar colunas para ordem lógica (do mais saudável ao menos saudável)
+                ordem_colunas = ['Peso Insuficiente', 'Peso Normal', 'Sobrepeso Nível I', 
+                                'Sobrepeso Nível II', 'Obesidade Tipo I', 'Obesidade Tipo II', 'Obesidade Tipo III']
+                ordem_colunas = [col for col in ordem_colunas if col in faf_obesity_pct.columns]
+                faf_obesity_pct = faf_obesity_pct[ordem_colunas]
+                
+                # Criar gráfico de barras empilhadas com percentuais (otimizado)
+                fig_faf = px.bar(
+                    faf_obesity_pct,
+                    barmode='stack',
+                    title='📊 Impacto da Atividade Física na Obesidade',
+                    labels={
+                        'value': 'Percentual (%)',
+                        'index': 'Frequência de Atividade Física',
+                        'variable': 'Nível de Obesidade'
+                    },
+                    color_discrete_sequence=[
+                        '#10b981',  # Verde - Peso Insuficiente
+                        '#3b82f6',  # Azul - Peso Normal
+                        '#f59e0b',  # Amarelo - Sobrepeso I
+                        '#f97316',  # Laranja - Sobrepeso II
+                        '#ef4444',  # Vermelho claro - Obesidade I
+                        '#dc2626',  # Vermelho - Obesidade II
+                        '#991b1b'   # Vermelho escuro - Obesidade III
+                    ]
+                )
+                
+                fig_faf.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    xaxis_tickangle=0,
+                    height=500,
+                    legend=dict(
+                        orientation="v",
+                        yanchor="top",
+                        y=1,
+                        xanchor="left",
+                        x=1.02,
+                        title_text="Nível de Obesidade",
+                        font=dict(size=10),
+                        bgcolor='rgba(255,255,255,0.8)',
+                        bordercolor='rgba(0,0,0,0.2)',
+                        borderwidth=1
+                    ),
+                    xaxis=dict(
+                        title='Frequência de Atividade Física', 
+                        title_font=dict(size=12),
+                        tickmode='linear',
+                        tick0=0,
+                        dtick=1
+                    ),
+                    yaxis=dict(
+                        title='Percentual (%)', 
+                        title_font=dict(size=12),
+                        range=[0, 100],  # FORÇAR limite de 0 a 100%
+                        tickmode='linear',
+                        tick0=0,
+                        dtick=20
+                    ),
+                    title_font=dict(size=16, color='#1e293b'),
+                    hovermode='x unified',
+                    bargap=0.3  # Espaçamento entre barras para melhor visualização
+                )
+                
+                # Atualizar hovertemplate para mostrar percentuais
+                for trace in fig_faf.data:
+                    trace.hovertemplate = '<b>%{fullData.name}</b><br>' + \
+                                         'Frequência de Atividade Física: %{x}<br>' + \
+                                         'Percentual: %{y:.1f}%<br>' + \
+                                         '<extra></extra>'
+                
+                st.plotly_chart(fig_faf, use_container_width=True)
+                
+                # Adicionar insights abaixo do gráfico
+                st.caption("💡 **Insight:** Quanto maior a frequência de atividade física, menor a proporção de casos de obesidade.")
         
-        with col2:
-            # Histórico familiar
-            family_obesity = pd.crosstab(df_filtered['family_history'], df_filtered['Obesity'])
-            family_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in family_obesity.columns]
-            family_obesity.index = ['Sim' if idx == 'yes' else 'Não' for idx in family_obesity.index]
+            with col2:
+                # Histórico familiar
+                family_obesity = pd.crosstab(df_filtered['family_history'], df_filtered['Obesity'])
+                family_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in family_obesity.columns]
+                family_obesity.index = ['Sim' if idx == 'yes' else 'Não' for idx in family_obesity.index]
+                
+                fig_family = px.bar(
+                    family_obesity,
+                    barmode='group',
+                    title='Impacto do Histórico Familiar',
+                    labels={'value': 'Frequência', 'family_history': 'Histórico Familiar'},
+                    color_discrete_sequence=px.colors.qualitative.Pastel
+                )
+                fig_family.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    xaxis_tickangle=-45
+                )
+                st.plotly_chart(fig_family, use_container_width=True)
             
-            fig_family = px.bar(
-                family_obesity,
-                barmode='group',
-                title='Impacto do Histórico Familiar',
-                labels={'value': 'Frequência', 'family_history': 'Histórico Familiar'},
-                color_discrete_sequence=px.colors.qualitative.Pastel
-            )
-            fig_family.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_tickangle=-45
-            )
-            st.plotly_chart(fig_family, use_container_width=True)
-        
-        # Consumo de alimentos calóricos
-        col3, col4 = st.columns(2)
-        
-        with col3:
-            favc_obesity = pd.crosstab(df_filtered['FAVC'], df_filtered['Obesity'])
-            favc_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in favc_obesity.columns]
-            favc_obesity.index = ['Sim' if idx == 'yes' else 'Não' for idx in favc_obesity.index]
+            # Consumo de alimentos calóricos
+            col3, col4 = st.columns(2)
             
-            fig_favc = px.bar(
-                favc_obesity,
-                barmode='group',
-                title='Impacto de Alimentos Altamente Calóricos',
-                labels={'value': 'Frequência', 'FAVC': 'Alimentos Calóricos'},
-                color_discrete_sequence=px.colors.qualitative.Pastel
-            )
-            fig_favc.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_tickangle=-45
-            )
-            st.plotly_chart(fig_favc, use_container_width=True)
-        
-        with col4:
-            # Consumo de vegetais
-            fcvc_obesity = df_filtered.groupby('Obesity')['FCVC'].mean()
-            fcvc_obesity.index = [OBESITY_LEVELS_PT.get(idx, idx) for idx in fcvc_obesity.index]
+            with col3:
+                favc_obesity = pd.crosstab(df_filtered['FAVC'], df_filtered['Obesity'])
+                favc_obesity.columns = [OBESITY_LEVELS_PT.get(col, col) for col in favc_obesity.columns]
+                favc_obesity.index = ['Sim' if idx == 'yes' else 'Não' for idx in favc_obesity.index]
+                
+                fig_favc = px.bar(
+                    favc_obesity,
+                    barmode='group',
+                    title='Impacto de Alimentos Altamente Calóricos',
+                    labels={'value': 'Frequência', 'FAVC': 'Alimentos Calóricos'},
+                    color_discrete_sequence=px.colors.qualitative.Pastel
+                )
+                fig_favc.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    xaxis_tickangle=-45
+                )
+                st.plotly_chart(fig_favc, use_container_width=True)
             
-            fig_fcvc = px.bar(
-                x=fcvc_obesity.index,
-                y=fcvc_obesity.values,
-                title='Consumo Médio de Vegetais por Nível de Obesidade',
-                labels={'x': 'Nível de Obesidade', 'y': 'Consumo Médio de Vegetais'},
-                color=fcvc_obesity.values,
-                color_continuous_scale='Greens'
-            )
-            fig_fcvc.update_layout(
-                showlegend=False,
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_tickangle=-45
-            )
-            st.plotly_chart(fig_fcvc, use_container_width=True)
+            with col4:
+                # Consumo de vegetais
+                fcvc_obesity = df_filtered.groupby('Obesity')['FCVC'].mean()
+                fcvc_obesity.index = [OBESITY_LEVELS_PT.get(idx, idx) for idx in fcvc_obesity.index]
+                
+                fig_fcvc = px.bar(
+                    x=fcvc_obesity.index,
+                    y=fcvc_obesity.values,
+                    title='Consumo Médio de Vegetais por Nível de Obesidade',
+                    labels={'x': 'Nível de Obesidade', 'y': 'Consumo Médio de Vegetais'},
+                    color=fcvc_obesity.values,
+                    color_continuous_scale='Greens'
+                )
+                fig_fcvc.update_layout(
+                    showlegend=False,
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    xaxis_tickangle=-45
+                )
+                st.plotly_chart(fig_fcvc, use_container_width=True)
+        
+        except Exception as e:
+            st.error(f"Erro ao gerar gráficos de hábitos e estilo de vida: {str(e)}")
+            st.info("Tente recarregar a página ou ajustar os filtros.")
         
         st.markdown("---")
         
