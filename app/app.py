@@ -1539,8 +1539,8 @@ with st.sidebar:
     
     selected = option_menu(
         menu_title=None,
-        options=["Início", "Predição de Obesidade", "Insights e Métricas"],
-        icons=["house", "activity", "graph-up"],
+        options=["Início", "Predição de Obesidade", "Insights e Métricas", "Sobre o Sistema"],
+        icons=["house", "activity", "graph-up", "info-circle"],
         menu_icon="cast",
         default_index=0,
         styles={
@@ -1563,26 +1563,6 @@ with st.sidebar:
             },
         }
     )
-    
-    st.markdown("---")
-    
-    # Seção Sobre o Sistema
-    st.markdown("### ℹ️ Sobre o Sistema")
-    st.markdown("""
-    Este sistema foi desenvolvido como parte do Tech Challenge 4.
-    
-    **Funcionalidades:**
-    - Predição do nível de obesidade
-    - Análise de probabilidades por classe
-    - Dashboard com insights analíticos
-    - Recomendações baseadas nos dados
-    
-    **Modelo:**
-    - Algoritmo: Random Forest
-    - Acurácia: 98.58%
-    
-    Desenvolvido para auxiliar profissionais de saúde
-    """)
 
 # Página Início
 if selected == "Início":
@@ -2749,6 +2729,100 @@ elif selected == "Insights e Métricas":
     
     else:
         st.error("Não foi possível carregar os dados. Verifique se o arquivo existe.")
+
+# Página Sobre o Sistema
+elif selected == "Sobre o Sistema":
+    st.title("ℹ️ Sobre o Sistema")
+    st.markdown("---")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown("""
+        ### 📋 Descrição
+        
+        Este sistema foi desenvolvido como parte do **Tech Challenge 4 - FIAP**, com o objetivo de criar 
+        uma ferramenta de Machine Learning para auxiliar médicos e médicas na previsão do nível de obesidade 
+        de pacientes, fornecendo suporte para a tomada de decisão clínica.
+        """)
+        
+        st.markdown("""
+        ### 🎯 Funcionalidades
+        
+        - **Predição do nível de obesidade:** Sistema preditivo baseado em Machine Learning
+        - **Análise de probabilidades por classe:** Visualização das probabilidades para cada nível de obesidade
+        - **Dashboard com insights analíticos:** Análises estatísticas e visualizações interativas
+        - **Recomendações baseadas nos dados:** Sugestões personalizadas para cada predição
+        - **Exportação de relatórios:** Geração de relatórios em PDF para documentação
+        """)
+        
+        st.markdown("""
+        ### 🤖 Modelo de Machine Learning
+        
+        - **Algoritmo:** Random Forest
+        - **Acurácia:** 98.58%
+        - **F1-Score:** 98.58%
+        - **Precision:** 98.59%
+        - **Recall:** 98.58%
+        - **Validação:** Validação cruzada implementada
+        
+        O modelo foi treinado com **2.111 registros** e utiliza **16 variáveis de entrada** para prever 
+        **7 níveis diferentes de obesidade**.
+        """)
+        
+        st.markdown("""
+        ### 📊 Dados
+        
+        - **Total de registros:** 2.111
+        - **Variáveis de entrada:** 16
+        - **Variável alvo:** Obesity (7 classes)
+        - **Divisão treino/teste:** 80/20 (1.688/423)
+        """)
+    
+    with col2:
+        st.markdown("### 🏥 Objetivo")
+        st.info("""
+        Desenvolvido para auxiliar profissionais de saúde na identificação precoce de riscos de obesidade 
+        e na tomada de decisões clínicas baseadas em dados.
+        """)
+        
+        st.markdown("### 📚 Tecnologias")
+        st.markdown("""
+        - **Python 3.x**
+        - **scikit-learn** (Machine Learning)
+        - **Streamlit** (Interface Web)
+        - **Plotly** (Visualizações)
+        - **pandas, numpy** (Processamento)
+        - **reportlab** (Geração de PDFs)
+        """)
+        
+        st.markdown("### 📄 Licença")
+        st.markdown("""
+        Este projeto foi desenvolvido para fins educacionais como parte do Tech Challenge - FIAP.
+        """)
+    
+    st.markdown("---")
+    
+    st.markdown("### 👥 Autores")
+    st.markdown("""
+    Este projeto foi desenvolvido pela equipe de alunos do Tech Challenge 4 - FIAP:
+    """)
+    
+    # Grid de autores em 2 colunas
+    col_aut1, col_aut2 = st.columns(2)
+    
+    with col_aut1:
+        st.markdown("""
+        - **Alysson Tenório**
+        - **Erico Leopoldino Mota**
+        - **Henrique Bruno Oliveira Lima**
+        """)
+    
+    with col_aut2:
+        st.markdown("""
+        - **Joao Paulo Pinheiro Aguiar**
+        - **Laert Valois Rios Carneiro**
+        """)
     
     st.markdown("---")
     st.markdown("""
