@@ -138,7 +138,22 @@ A aplicação (`app/app.py`) possui três páginas principais:
 
 ## 👥 Autores
 
-Este projeto foi desenvolvido como parte do Tech Challenge - FIAP.
+Este projeto foi desenvolvido como parte do Tech Challenge - FIAP pelos alunos:
+
+**Alysson Tenório**
+- alyssontr@bnb.gov.br
+
+**Erico Leopoldino Mota**
+- erico_mota@hotmail.com
+
+**Henrique Bruno Oliveira Lima**
+- henriquebol@bnb.gov.br
+
+**Joao Paulo Pinheiro Aguiar**
+- joaopaulop.aguiar@gmail.com
+
+**Laert Valois Rios Carneiro**
+- laertvalois@bnb.gov.br
 
 ## 📄 Licença
 
