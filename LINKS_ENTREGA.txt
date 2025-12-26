@@ -8,9 +8,8 @@ LINKS DE ENTREGA
 IMPORTANTE: Preencha os campos [INSERIR LINK...] antes da entrega!
 
 1. APLICAÇÃO STREAMLIT (Sistema Preditivo + Dashboard):
-   [INSERIR LINK DO STREAMLIT CLOUD AQUI]
-   Exemplo: https://techchallenge4-8xfxhplwctf2drfpkg7oq3.streamlit.app
-   
+   https://techchallenge4-8xfxhplwctf2drfpkg7oq3.streamlit.app/
+      
    Nota: A aplicação contém tanto o sistema preditivo quanto o dashboard
    analítico integrados em uma única aplicação com menu lateral.
 
@@ -18,10 +17,8 @@ IMPORTANTE: Preencha os campos [INSERIR LINK...] antes da entrega!
    https://github.com/laertvalois/Tech_Challenge_4
 
 3. VÍDEO DE APRESENTAÇÃO:
-   [INSERIR LINK DO VÍDEO AQUI]
-   Exemplo: https://youtube.com/watch?v=... ou link do Google Drive
-   
-   Duração recomendada: 4-10 minutos
+   https://www.youtube.com/watch?v=pYngg3Z-jDA
+      
    Conteúdo: Estratégia, demonstração do sistema preditivo e dashboard,
    visão de negócio
 
