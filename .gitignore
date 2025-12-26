@@ -54,6 +54,14 @@ data/*.db
 # OS
 .DS_Store
 Thumbs.db
+*.tmp
+*.temp
+
+# Variáveis de ambiente e configurações sensíveis
+.env
+.env.local
+.env.*.local
+*.env
 
 # Logs
 *.log
@@ -66,12 +74,11 @@ OPCOES_GRAFICO_ATIVIDADE_FISICA.md
 ALTERNATIVAS_GRAFICO_ATIVIDADE_FISICA.py
 RESUMO_REVISAO.md
 RESUMO_ATUALIZACAO_DOCUMENTACAO.md
+RESUMO_PROJETO.md
 verificar_setup.py
 
-# Scripts duplicados de push (manter apenas push_completo_github.ps1)
-push_github.ps1
-push_now.ps1
-push_to_github.ps1
+# Scripts locais de push/commit (não versionar)
+*.ps1
 
 # Imagens de teste/screenshots (assets)
 assets/
